@@ -1,26 +1,64 @@
 @import "tailwindcss";
 
+@theme {
+  /* Culorile noastre locked-in */
+  --color-brand-red: #B81D24;
+  --color-brand-metal: #8C8C8C;
+  --color-brand-paper: #F4F1EA;
+  --color-brand-dark: #121212;
+
+  /* Mapare fonturi pentru a fi folosite ca clase (ex: font-bebas) */
+  --font-bebas: var(--font-bebas-neue);
+  --font-mono: var(--font-roboto-mono);
+}
+
+/* Reset și Styles Globale */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  background-color: var(--color-brand-paper);
+  color: var(--color-brand-dark);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  /* Folosim fontul mono ca default pentru textul de rând */
+  font-family: var(--font-roboto-mono), monospace;
+  background-color: var(--color-brand-paper);
+  color: var(--color-brand-dark);
+  position: relative;
+}
+
+/* Textura de Grain (The "Gritty" Vibe) */
+body::after {
+  content: "";
+  position: fixed; /* Fixed ca să stea pe loc la scroll */
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  /* SVG Noise corectat pentru vizibilitate perfectă */
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity: 0.05; 
+  pointer-events: none; /* Te lasă să dai click prin ea pe butoane */
+  z-index: 9999; /* Pune textura peste absolut tot */
+}
+
+/* Selecție text cu culoarea brandului */
+::selection {
+  background-color: var(--color-brand-red);
+  color: white;
+}
+
+/* Animație pentru Ticker-ul infinit */
+@keyframes ticker {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%); /* Merge până la jumătate, apoi reia invizibil */
+  }
+}
+
+.animate-ticker {
+  display: inline-flex;
+  white-space: nowrap;
+  animation: ticker 15s linear infinite; 
 }
