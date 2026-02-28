@@ -14,11 +14,15 @@ export default function Hero() {
         <p className="font-mono text-lg mb-8 max-w-md normal-case leading-tight">
           Nu facem povești, facem crustă. Smash burger-ul care a cucerit cartierul. Carne. Foc. Chiflă. Atât.
         </p>
+       
         <div className="flex flex-wrap gap-4">
-          <button className="bg-brand-red text-white font-bebas text-3xl px-10 py-4 hover:bg-brand-dark transition-all transform hover:-translate-y-1 shadow-[4px_4px_0px_0px_rgba(18,18,18,1)]">
-            COMANDĂ ACUM
-          </button>
-        </div>
+            <a 
+              href="#menu"
+              className="inline-block text-center bg-brand-red text-white font-bebas text-3xl px-10 py-4 hover:bg-brand-dark transition-all transform hover:-translate-y-1 shadow-[4px_4px_0px_0px_rgba(18,18,18,1)]"
+            >
+              COMANDĂ ACUM
+            </a>
+          </div>
       </div>
 
       {/* IMAGE SIDE */}
