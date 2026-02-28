@@ -6,10 +6,10 @@ export default function Hero() {
       {/* TEXT SIDE */}
       <div className="flex-1 p-8 md:p-16 flex flex-col justify-center border-b-2 md:border-b-0 md:border-r-2 border-brand-dark bg-brand-paper relative z-10">
         <h1 className="font-bebas text-7xl md:text-9xl leading-[0.8] mb-6 text-brand-dark italic">
-          Raw. <br />
-          Gritty. <br />
-          <span className="text-brand-red">Brutal</span> <br />
-          Gustos.
+        <span className="text-brand-red">Foc</span> <br />
+          Presa. <br />
+          <span className="text-brand-red">CRUSTĂ</span> <br />
+          Atat.
         </h1>
         <p className="font-mono text-lg mb-8 max-w-md normal-case leading-tight">
           Nu facem povești, facem crustă. Smash burger-ul care a cucerit cartierul. Carne. Foc. Chiflă. Atât.

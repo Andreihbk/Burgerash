@@ -14,7 +14,7 @@ const robotoMono = Roboto_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Burgerash | Raw. Gritty. Brutal Gustos.",
+  title: "Burgerash | Foc. Presa. Crustă.",
   description: "Cel mai bun smash burger din cartier.",
 };
 

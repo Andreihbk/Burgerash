@@ -6,7 +6,7 @@ export default function Footer() {
           <a href="#" className="hover:text-brand-red transition-colors">INSTAGRAM</a>
           <a href="#" className="hover:text-brand-red transition-colors">TIKTOK</a>
         </div>
-        <span className="font-mono text-xs text-brand-metal">RAW. GRITTY. BRUTAL GUSTOS.</span>
+        <span className="font-mono text-xs text-brand-metal">FOC. PRESA. CRUSTA. </span>
       </footer>
     );
   }
