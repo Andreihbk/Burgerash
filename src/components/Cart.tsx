@@ -32,12 +32,14 @@ export default function Cart() {
       {/* Sertarul */}
       <div className="relative w-full md:w-[450px] bg-brand-paper h-full border-l-2 border-brand-dark flex flex-col uppercase animate-in slide-in-from-right duration-300">
         
-        {/* HEADER */}
-        <div className="p-6 border-b-2 border-brand-dark flex justify-between items-center bg-brand-red text-white shrink-0">
-          <h2 className="font-bebas text-5xl">COMANDA TA</h2>
+        {/* HEADER */}
+    
+        <div className="p-4 md:p-6 border-b-2 border-brand-dark flex justify-between items-center bg-brand-red text-white shrink-0">
+        
+          <h2 className="font-bebas text-4xl md:text-5xl whitespace-nowrap mr-4">COMANDA TA</h2>
           <button 
             onClick={toggleCart} 
-            className="font-mono text-2xl font-bold hover:scale-110 transition-transform"
+            className="font-mono text-2xl font-bold hover:scale-110 transition-transform shrink-0"
           >
             [ X ]
           </button>
