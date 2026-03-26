@@ -15,12 +15,23 @@ export default function Hero() {
           Nu facem povești, facem crustă. Smash burger-ul care a cucerit cartierul. Carne. Foc. Chiflă. Atât.
         </p>
        
-        <div className="flex flex-wrap gap-4">
+        {/* BUTOANE DELIVERY */}
+        <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 mt-4">
             <a 
-              href="#menu"
+              href="#tazz-link" // Aici vei pune link-ul real de la Tazz mai târziu
+              target="_blank" 
+              rel="noopener noreferrer"
               className="inline-block text-center bg-brand-red text-white font-bebas text-3xl px-10 py-4 hover:bg-brand-dark transition-all transform hover:-translate-y-1 shadow-[4px_4px_0px_0px_rgba(18,18,18,1)]"
             >
-              COMANDĂ ACUM
+              COMANDĂ PE TAZZ
+            </a>
+            <a 
+              href="#glovo-link" // Aici vei pune link-ul real de la Glovo
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block text-center bg-[#FFC244] text-[#121212] font-bebas text-3xl px-10 py-4 hover:bg-white transition-all transform hover:-translate-y-1 shadow-[4px_4px_0px_0px_rgba(18,18,18,1)] border-2 border-transparent hover:border-brand-dark"
+            >
+              COMANDĂ PE GLOVO
             </a>
           </div>
       </div>

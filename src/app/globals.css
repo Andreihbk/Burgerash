@@ -2,9 +2,9 @@
 
 @theme {
   /* Culorile noastre locked-in */
-  --color-brand-red: #B81D24;
+  --color-brand-red: #7F011F;
   --color-brand-metal: #8C8C8C;
-  --color-brand-paper: #F4F1EA;
+  --color-brand-paper: #F5EBD0;
   --color-brand-dark: #121212;
 
   /* Mapare fonturi pentru a fi folosite ca clase (ex: font-bebas) */
@@ -44,7 +44,7 @@ body::after {
 /* Selecție text cu culoarea brandului */
 ::selection {
   background-color: var(--color-brand-red);
-  color: white;
+  color: var(--color-brand-paper);
 }
 
 /* Animație pentru Ticker-ul infinit */
