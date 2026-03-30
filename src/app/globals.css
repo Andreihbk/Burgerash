@@ -10,6 +10,11 @@
   /* Mapare fonturi pentru a fi folosite ca clase (ex: font-bebas) */
   --font-bebas: var(--font-bebas-neue);
   --font-mono: var(--font-roboto-mono);
+
+  --font-nunito: var(--font-nunito);
+  --font-eatvetica: var(--font-eatvetica);
+
+
 }
 
 /* Reset și Styles Globale */

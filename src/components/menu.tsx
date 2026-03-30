@@ -85,22 +85,20 @@ export default function Menu() {
   return (
     <section id="menu" className="bg-brand-paper p-8 md:p-16 border-b-2 border-brand-dark">
       <div className="flex justify-between items-end mb-12 border-b-2 border-brand-dark pb-4">
-        <h2 className="font-bebas text-6xl text-brand-dark">MENIUL HONEST</h2>
-        <span className="font-mono text-brand-red hidden md:block">/// DELIVERY GATA ÎN 15 MINUTE</span>
+        <h2 className="font-eatvetica tracking-wide text-6xl md:text-7xl text-brand-dark">MENIUL HONEST</h2>
+        <span className="font-nunito font-bold tracking-widest text-brand-red hidden md:block">/// DELIVERY GATA IN 15 MINUTE</span>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-[2px] bg-brand-dark border-2 border-brand-dark">
+        {/* Am scos 'index' pentru că acum aplicăm designul peste tot la fel */}
         {menuItems.map((item) => (
           <div 
             key={item.id} 
             onClick={() => addToCart({ id: item.id, name: item.name, price: item.price })}
-            // Am pus culorile noi pentru hover, potrivite cu tema Light Sand
             className="bg-brand-paper group cursor-pointer p-6 md:p-8 flex flex-col justify-between hover:bg-[#D9D1BF] active:bg-[#C9C1AF] transition-colors relative"
           >
-            {/* Aici am adăugat flex-1 și flex-col ca să se întindă corect */}
             <div className="pointer-events-none flex-1 flex flex-col">
               
-              {/* MAGIA NOUĂ: ZONA DE IMAGINE */}
               {item.image && (
                 <div className="w-full h-48 md:h-56 mb-6 flex items-center justify-center overflow-hidden">
                   <img 
@@ -113,24 +111,30 @@ export default function Menu() {
               
               <div className="flex justify-between items-start mb-4">
                 <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
-                  <h3 className="font-bebas text-4xl text-brand-dark">{item.name}</h3>
+                  {/* Titlul cu Eatvetica */}
+                  <h3 className="font-eatvetica tracking-wide text-4xl md:text-5xl text-brand-dark">
+                    {item.name}
+                  </h3>
+                  {/* Badge-ul cu Eatvetica */}
                   {item.tag && (
-                    <span className="self-start font-mono text-xs font-bold bg-brand-red text-white px-2 py-1 tracking-wider shadow-[2px_2px_0px_0px_rgba(18,18,18,1)]">
+                    <span className="self-start font-eatvetica text-sm tracking-widest bg-brand-red text-white px-2 py-1 shadow-[2px_2px_0px_0px_rgba(18,18,18,1)]">
                       {item.tag}
                     </span>
                   )}
                 </div>
-                <span className="font-mono text-xl bg-brand-dark text-brand-paper px-2 py-1 shrink-0">{item.price}</span>
+                {/* Prețul cu Nunito gros */}
+                <span className="font-nunito font-black text-xl md:text-2xl bg-brand-dark text-brand-paper px-2 py-1 shrink-0">{item.price}</span>
               </div>
               
-              <p className="font-mono text-sm normal-case text-brand-dark/80 mb-6 max-w-[80%]">
+              {/* Descrierea cu Nunito (cu diacritice) */}
+              <p className="font-nunito font-bold text-base normal-case text-brand-dark/80 mb-6 max-w-[80%]">
                 {item.desc}
               </p>
             </div>
             
-            {/* Am adăugat mt-auto ca butonul să stea mereu lipit de marginea de jos */}
-            <span className="self-start font-bebas text-xl text-brand-red group-hover:text-brand-dark underline decoration-2 underline-offset-4 transition-colors pointer-events-none mt-auto">
-              + ADAUGĂ ÎN COȘ
+            {/* Buton Eatvetica curățat de diacritice */}
+            <span className="self-start font-eatvetica tracking-wide text-2xl text-brand-red group-hover:text-brand-dark underline decoration-2 underline-offset-4 transition-colors pointer-events-none mt-auto">
+              + ADAUGA IN COS
             </span>
           </div>
         ))}

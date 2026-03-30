@@ -26,36 +26,35 @@ export default function Navbar() {
 
   return (
     <>
-      {/* MODIFICAT: p-4 pe mobil, p-6 pe desktop */}
       <nav className="border-b-2 border-brand-dark p-4 md:p-6 flex justify-between items-center bg-brand-paper sticky top-0 z-50">
         
-        {/* LOGO: text-3xl pe mobil, text-4xl pe desktop */}
-        <span className="font-bebas text-3xl md:text-4xl tracking-tighter text-brand-red relative z-50">
+        {/* LOGO: Trecut pe Eatvetica și mărit pentru impact */}
+        <span className="font-eatvetica text-4xl md:text-5xl tracking-tighter text-brand-red relative z-50 mt-1">
           burgerash
         </span>
 
-        {/* LINK-URI DESKTOP */}
-        <div className="hidden md:flex gap-8 font-mono text-sm font-bold">
-          <a href="#menu" className="hover:underline decoration-brand-red decoration-2">Meniu</a>
-          <a href="#location" className="hover:underline decoration-brand-red decoration-2">Locație</a>
-          <a href="#contact" className="hover:underline decoration-brand-red decoration-2">Contact</a>
+        {/* LINK-URI DESKTOP: Eatvetica, font mai mare, fără diacritice, underline mai fin */}
+        <div className="hidden md:flex gap-8 font-eatvetica text-2xl mt-1 tracking-wide">
+          <a href="#menu" className="hover:underline decoration-brand-red decoration-2 underline-offset-4">Meniu</a>
+          <a href="#location" className="hover:underline decoration-brand-red decoration-2 underline-offset-4">Locatie</a>
+          <a href="#contact" className="hover:underline decoration-brand-red decoration-2 underline-offset-4">Contact</a>
         </div>
 
-        {/* CONTROALE DREAPTA: gap-2 pe mobil, gap-4 pe desktop */}
+        {/* CONTROALE DREAPTA */}
         <div className="flex items-center gap-2 md:gap-4 relative z-50">
           <button 
             onClick={toggleCart}
-            // BUTON CART: padding și text mai mici pe mobil
-            className={`px-3 py-1.5 md:px-4 md:py-2 font-bebas text-base md:text-lg transition-all duration-300 cursor-pointer ${
+            // BUTON CART: Trecut pe Eatvetica
+            className={`px-3 py-1.5 md:px-4 md:py-2 font-eatvetica text-xl md:text-2xl tracking-wide transition-all duration-300 cursor-pointer mt-1 ${
               isAnimating 
                 ? 'bg-brand-red text-white scale-110 shadow-[4px_4px_0px_0px_rgba(18,18,18,1)]' 
-                : 'bg-brand-dark text-brand-paper hover:bg-brand-red'
+                : 'bg-brand-dark text-brand-paper hover:bg-brand-red hover:text-white'
             }`}
           >
             CART ({totalItems})
           </button>
 
-          {/* BUTON HAMBURGER: Liniile făcute w-7 în loc de w-8 ca să fie un pic mai finuțe */}
+          {/* BUTON HAMBURGER */}
           <button 
             onClick={toggleMobileMenu}
             className="md:hidden flex flex-col gap-1.5 justify-center items-center w-8 h-8 cursor-pointer"
@@ -73,13 +72,15 @@ export default function Navbar() {
           isMobileMenuOpen ? 'translate-y-0' : '-translate-y-full'
         }`}
       >
-        <div className="flex flex-col gap-10 font-bebas text-7xl text-brand-dark text-center uppercase">
+        {/* Linkuri overlay de mobil: Trecute pe Eatvetica și curățate de diacritice */}
+        <div className="flex flex-col gap-10 font-eatvetica tracking-wide text-7xl text-brand-dark text-center uppercase">
           <a href="#menu" onClick={closeMobileMenu} className="hover:text-brand-red transition-colors">Meniu</a>
-          <a href="#location" onClick={closeMobileMenu} className="hover:text-brand-red transition-colors">Locație</a>
+          <a href="#location" onClick={closeMobileMenu} className="hover:text-brand-red transition-colors">Locatie</a>
           <a href="#contact" onClick={closeMobileMenu} className="hover:text-brand-red transition-colors">Contact</a>
         </div>
         
-        <div className="absolute bottom-10 font-mono text-sm text-brand-metal">
+        {/* Motto overlay de mobil: Mărit la text-2xl ca să dea bine */}
+        <div className="absolute bottom-10 font-eatvetica text-2xl tracking-widest text-brand-metal">
           FOC. PRESA. CRUSTA. ATAT.
         </div>
       </div>

@@ -32,27 +32,25 @@ export default function Cart() {
       {/* Sertarul */}
       <div className="relative w-full md:w-[450px] bg-brand-paper h-full border-l-2 border-brand-dark flex flex-col uppercase animate-in slide-in-from-right duration-300">
         
-        {/* HEADER */}
-    
+        {/* HEADER */}
         <div className="p-4 md:p-6 border-b-2 border-brand-dark flex justify-between items-center bg-brand-red text-white shrink-0">
-        
-          <h2 className="font-bebas text-4xl md:text-5xl whitespace-nowrap mr-4">COMANDA TA</h2>
+          <h2 className="font-eatvetica text-4xl md:text-5xl whitespace-nowrap mr-4 tracking-wide">COMANDA TA</h2>
           <button 
             onClick={toggleCart} 
-            className="font-mono text-2xl font-bold hover:scale-110 transition-transform shrink-0"
+            className="font-eatvetica text-3xl md:text-4xl hover:scale-110 transition-transform shrink-0 mt-1"
           >
             [ X ]
           </button>
         </div>
 
-        {/* BARA DE LIVRARE GRATUITĂ */}
-        <div className="bg-[#EAE5D9] border-b-2 border-brand-dark p-4 shrink-0 font-mono text-sm text-center">
+        {/* BARA DE LIVRARE GRATUITĂ (Nunito - suportă diacritice) */}
+        <div className="bg-[#D9D1BF] border-b-2 border-brand-dark p-4 shrink-0 font-nunito font-black text-sm text-center">
           {remainingForFreeDelivery > 0 ? (
-            <p className="mb-2 text-brand-dark font-bold">
+            <p className="mb-2 text-brand-dark">
               MAI BAGĂ DE <span className="text-brand-red text-lg">{remainingForFreeDelivery} RON</span> PENTRU LIVRARE MOCA.
             </p>
           ) : (
-            <p className="mb-2 text-brand-red font-bold text-lg">
+            <p className="mb-2 text-brand-red text-lg">
               BOOM! AI LIVRARE GRATUITĂ.
             </p>
           )}
@@ -66,57 +64,57 @@ export default function Cart() {
         </div>
 
         {/* LISTA DE PRODUSE */}
-        <div className="flex-1 overflow-y-auto p-6 space-y-4 font-mono text-brand-dark bg-brand-paper">
+        <div className="flex-1 overflow-y-auto p-6 space-y-4 text-brand-dark bg-brand-paper">
           {items.length === 0 ? (
-            <div className="h-full flex flex-col items-center justify-center text-center opacity-50">
-              <span className="text-6xl mb-4">🍔</span>
-              <p>COȘUL E GOL.</p>
-              <p>BAGA NIȘTE CARNE PE PLITĂ.</p>
+            <div className="h-full flex flex-col items-center justify-center text-center opacity-50 font-eatvetica text-3xl text-brand-metal">
+              <span className="text-6xl mb-6">🍔</span>
+              <p>COSUL E GOL.</p>
+              <p>BAGA NISTE CARNE PE PLITA.</p>
             </div>
           ) : (
             <>
               {items.map(item => (
                 <div key={item.id} className="border-2 border-brand-dark p-4 flex flex-col gap-4 bg-white shadow-[2px_2px_0px_0px_rgba(18,18,18,1)]">
                    <div className="flex justify-between items-start">
-                     <p className="font-bold text-lg">{item.name}</p>
-                     <p className="text-brand-red font-bold whitespace-nowrap">{item.price}</p>
+                     <p className="font-eatvetica text-2xl tracking-wide">{item.name}</p>
+                     <p className="font-nunito text-xl text-brand-red font-black whitespace-nowrap">{item.price}</p>
                    </div>
                    
                    {/* CONTROALE CANTITATE */}
                    <div className="flex justify-between items-center mt-auto">
-                     <div className="flex items-center border-2 border-brand-dark">
+                     <div className="flex items-center border-2 border-brand-dark font-nunito font-black text-lg">
                        <button 
                          onClick={() => updateQuantity(item.id, -1)}
-                         className="px-3 py-1 bg-brand-paper hover:bg-brand-red hover:text-white transition-colors border-r-2 border-brand-dark font-bold"
+                         className="px-4 py-1 bg-brand-paper hover:bg-brand-red hover:text-white transition-colors border-r-2 border-brand-dark"
                        >
                          -
                        </button>
-                       <span className="px-4 py-1 font-bold">{item.quantity}</span>
+                       <span className="px-5 py-1">{item.quantity}</span>
                        <button 
                          onClick={() => updateQuantity(item.id, 1)}
-                         className="px-3 py-1 bg-brand-paper hover:bg-brand-red hover:text-white transition-colors border-l-2 border-brand-dark font-bold"
+                         className="px-4 py-1 bg-brand-paper hover:bg-brand-red hover:text-white transition-colors border-l-2 border-brand-dark"
                        >
                          +
                        </button>
                      </div>
                      <button 
                        onClick={() => removeFromCart(item.id)} 
-                       className="text-brand-metal text-sm font-bold hover:text-brand-red hover:underline decoration-2 underline-offset-4"
+                       className="font-eatvetica text-xl text-brand-metal hover:text-brand-red hover:underline decoration-2 underline-offset-4 mt-1"
                      >
-                       ȘTERGE
+                       STERGE
                      </button>
                    </div>
                 </div>
               ))}
 
-              {/* NOTĂ PENTRU BUCĂTĂRIE */}
-              <div className="pt-4">
-                <label className="block font-bold text-sm mb-2">NOTĂ PENTRU BUCĂTĂRIE / LIVRATOR:</label>
+              {/* NOTĂ PENTRU BUCĂTĂRIE (Nunito - suportă diacritice) */}
+              <div className="pt-4 font-nunito">
+                <label className="block font-black text-sm mb-2 text-brand-dark">NOTĂ PENTRU BUCĂTĂRIE / LIVRATOR:</label>
                 <textarea 
                   value={orderNote}
                   onChange={(e) => setOrderNote(e.target.value)}
                   placeholder="Fără ceapă, interfon 42, etc..."
-                  className="w-full border-2 border-brand-dark bg-white p-3 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-brand-red resize-none h-24 normal-case placeholder:uppercase"
+                  className="w-full border-2 border-brand-dark bg-white p-3 text-sm font-bold focus:outline-none focus:ring-2 focus:ring-brand-red resize-none h-24 normal-case placeholder:uppercase"
                 />
               </div>
             </>
@@ -126,14 +124,15 @@ export default function Cart() {
         {/* FOOTER COȘ (TOTAL & CHECKOUT) */}
         <div className="p-6 border-t-2 border-brand-dark bg-brand-paper shrink-0">
           <div className="flex justify-between items-end mb-6">
-            <span className="font-mono text-xl font-bold">TOTAL:</span>
-            <span className="font-bebas text-5xl text-brand-red">{currentTotal} RON</span>
+            <span className="font-eatvetica text-3xl tracking-wide">TOTAL:</span>
+            <span className="font-eatvetica text-5xl md:text-6xl text-brand-red">{currentTotal} RON</span>
           </div>
           <button 
             disabled={items.length === 0}
-            className="w-full font-bebas text-3xl bg-brand-dark text-brand-paper py-5 hover:bg-brand-red transition-colors shadow-[4px_4px_0px_0px_rgba(18,18,18,1)] hover:shadow-none hover:translate-y-1 hover:translate-x-1 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:translate-x-0 disabled:hover:shadow-[4px_4px_0px_0px_rgba(18,18,18,1)]"
+            onClick={() => alert("GRATARUL SE INCALZESTE. Lansam curand! Momentan facem ultimele teste de crusta.")}
+            className="w-full font-eatvetica text-3xl md:text-4xl tracking-wide bg-brand-dark text-brand-paper py-5 hover:bg-brand-red transition-colors shadow-[4px_4px_0px_0px_rgba(18,18,18,1)] hover:shadow-none hover:translate-y-1 hover:translate-x-1 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:translate-x-0 disabled:hover:shadow-[4px_4px_0px_0px_rgba(18,18,18,1)]"
           >
-            {items.length === 0 ? 'COȘUL E GOL' : 'MERGI LA CASĂ 🛒'}
+            {items.length === 0 ? 'COSUL E GOL' : 'MERGI LA CASA 🛒'}
           </button>
         </div>
 
