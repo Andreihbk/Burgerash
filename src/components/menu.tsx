@@ -4,16 +4,79 @@ import { useCartStore } from '@/store/cartStore';
 
 const menuItems = [
   // BURGERI
-  { id: 1, name: "CLASSIC SMASH", price: "32 RON", desc: "2x Smash vită, dublu cheddar matur, castraveți murați, sosul casei.", tag: "POPULAR" },
-  { id: 2, name: "OKLAHOMA ONION", price: "34 RON", desc: "2x Smash vită presată cu o tonă de ceapă subțire pe plită, cheddar, muștar.", tag: "NOU" },
-  { id: 3, name: "VIPER CHILI", price: "36 RON", desc: "2x Smash vită, cheddar, dulceață de ardei iute, jalapenos, mayo.", tag: "HOT 🔥" },
-  { id: 4, name: "THE NEIGHBORHOOD", price: "45 RON", desc: "3x Smash vită, triplu cheddar, bacon crocant, inele de ceapă." },
+  { 
+    id: 1, 
+    name: "CLASSIC", 
+    price: "36 RON", 
+    desc: "100% Vită proaspătă, cheddar matur, castraveți murați, sosul casei. Clasic și corect.", 
+    tag: "POPULAR", 
+    image: "/images/menu/classic.png" 
+  },
+  { 
+    id: 2, 
+    name: "DOUBLE TROUBLE", 
+    price: "43 RON", 
+    desc: "2x Vită suculentă, dublu cheddar, ceapă, muștar, ketchup. Mai multă carne, mai multă treabă.", 
+    image: "/images/menu/double.png" 
+  },
+  { 
+    id: 3, 
+    name: "THE NEIGHBORHOOD", 
+    price: "46 RON", 
+    desc: "2x Vită, dublu cheddar, munți de bacon crocant, sos BBQ. Pentru băieții grei.", 
+    image: "/images/menu/chapo.png" 
+  },
+  { 
+    id: 4, 
+    name: "HOTBOY", 
+    price: "40 RON", 
+    desc: "Vită proaspătă, cheddar, dulceață de ardei iute, jalapenos, mayo. Arde, dar îți place.", 
+    tag: "HOT 🔥", 
+    image: "/images/menu/hotboy.png" 
+  },
+  { 
+    id: 5, 
+    name: "CRISPY CHICKEN", 
+    price: "36 RON", 
+    desc: "Pui tăvălit prin unt și prăjit crocant, salată coleslaw proaspătă, castraveți murați.", 
+    tag: "NOU", 
+    image: "/images/menu/chicken.png" // Asigură-te că pui o poză cu numele ăsta în folder
+  },
+  { 
+    id: 6, 
+    name: "VEGGIE HONEST", 
+    price: "32 RON", 
+    desc: "Chiftea plant-based cinstită, cheddar, roșie, salată verde, sosul casei. Fără carne, mult gust.", 
+    image: "/images/menu/veggie.png" 
+  },
   // SIDES
-  { id: 5, name: "DIRTY FRIES", price: "18 RON", desc: "Cartofi dublu prăjiți, sos fierbinte de brânză, bacon bites presărat." },
-  { id: 6, name: "SIMPLY FRIES", price: "12 RON", desc: "Cartofi prăjiți în stil clasic, sare de mare. Simplu și curat." },
+  { 
+    id: 7, 
+    name: "DIRTY FRIES", 
+    price: "18 RON", 
+    desc: "Cartofi dublu prăjiți, sos fierbinte de brânză, bacon bites presărat.", 
+    image: "/images/menu/dirty.png" 
+  },
+  { 
+    id: 8, 
+    name: "SIMPLY FRIES", 
+    price: "12 RON", 
+    desc: "Cartofi prăjiți în stil clasic, sare de mare. Simplu și curat.", 
+    image: "/images/menu/fries.png"  
+  },
   // DRINKS
-  { id: 7, name: "COLA LA STICLĂ", price: "10 RON", desc: "Clasica sticlă de sticlă de 250ml. Rece gheață, cum trebuie." },
-  { id: 8, name: "BERE DE CARTIER", price: "18 RON", desc: "O bere artizanală locală (IPA), super aromată, rece ca gheața." },
+  { 
+    id: 9, 
+    name: "COLA LA STICLĂ", 
+    price: "10 RON", 
+    desc: "Clasica sticlă de sticlă de 250ml. Rece gheață, cum trebuie." 
+  },
+  { 
+    id: 10, 
+    name: "BERE DE CARTIER", 
+    price: "18 RON", 
+    desc: "O bere artizanală locală (IPA), super aromată, rece ca gheața." 
+  },
 ];
 
 export default function Menu() {
@@ -26,20 +89,31 @@ export default function Menu() {
         <span className="font-mono text-brand-red hidden md:block">/// DELIVERY GATA ÎN 15 MINUTE</span>
       </div>
 
-      {/* Am folosit gap-[2px] și bg-brand-dark pentru a crea borduri perfecte automat */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-[2px] bg-brand-dark border-2 border-brand-dark">
         {menuItems.map((item) => (
           <div 
             key={item.id} 
             onClick={() => addToCart({ id: item.id, name: item.name, price: item.price })}
-            className="bg-brand-paper group cursor-pointer p-6 md:p-8 flex flex-col justify-between hover:bg-[#EAE5D9] active:bg-[#d5cfc1] transition-colors relative"
+            // Am pus culorile noi pentru hover, potrivite cu tema Light Sand
+            className="bg-brand-paper group cursor-pointer p-6 md:p-8 flex flex-col justify-between hover:bg-[#D9D1BF] active:bg-[#C9C1AF] transition-colors relative"
           >
-            <div className="pointer-events-none">
+            {/* Aici am adăugat flex-1 și flex-col ca să se întindă corect */}
+            <div className="pointer-events-none flex-1 flex flex-col">
+              
+              {/* MAGIA NOUĂ: ZONA DE IMAGINE */}
+              {item.image && (
+                <div className="w-full h-48 md:h-56 mb-6 flex items-center justify-center overflow-hidden">
+                  <img 
+                    src={item.image} 
+                    alt={item.name} 
+                    className="w-full h-full object-contain drop-shadow-[8px_8px_0px_rgba(18,18,18,0.15)] group-hover:scale-110 transition-transform duration-300"
+                  />
+                </div>
+              )}
               
               <div className="flex justify-between items-start mb-4">
                 <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
                   <h3 className="font-bebas text-4xl text-brand-dark">{item.name}</h3>
-                  {/* BADGE-UL VIZUAL (Apare doar dacă produsul are un "tag") */}
                   {item.tag && (
                     <span className="self-start font-mono text-xs font-bold bg-brand-red text-white px-2 py-1 tracking-wider shadow-[2px_2px_0px_0px_rgba(18,18,18,1)]">
                       {item.tag}
@@ -54,7 +128,8 @@ export default function Menu() {
               </p>
             </div>
             
-            <span className="self-start font-bebas text-xl text-brand-red group-hover:text-brand-dark underline decoration-2 underline-offset-4 transition-colors pointer-events-none">
+            {/* Am adăugat mt-auto ca butonul să stea mereu lipit de marginea de jos */}
+            <span className="self-start font-bebas text-xl text-brand-red group-hover:text-brand-dark underline decoration-2 underline-offset-4 transition-colors pointer-events-none mt-auto">
               + ADAUGĂ ÎN COȘ
             </span>
           </div>
