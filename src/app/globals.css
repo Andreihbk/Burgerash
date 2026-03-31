@@ -67,3 +67,57 @@ body::after {
   white-space: nowrap;
   animation: ticker 15s linear infinite; 
 }
+/* Overlay de monitor industrial (CRT) */
+.scanlines::before {
+  content: " ";
+  display: block;
+  position: fixed;
+  top: 0; left: 0; bottom: 0; right: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), 
+              linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+  z-index: 999;
+  background-size: 100% 3px, 3px 100%;
+  pointer-events: none;
+  opacity: 0.4;
+}
+
+/* Cursorul Crosshair personalizat */
+.custom-cursor {
+  cursor: none;
+}
+
+/* Efectul de Glitch Tactic */
+.glitch-hover:hover {
+  animation: glitch-skew 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both infinite;
+  color: #E63946; /* text-brand-red */
+  text-shadow: 3px 0px 0px rgba(0,255,255,0.5), -3px 0px 0px rgba(255,0,0,0.5);
+}
+
+@keyframes glitch-skew {
+  0% { transform: skew(0deg); }
+  20% { transform: skew(-10deg); }
+  40% { transform: skew(10deg); }
+  60% { transform: skew(-5deg); }
+  80% { transform: skew(5deg); }
+  100% { transform: skew(0deg); }
+}
+
+/* Animație pentru banda de pericol */
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+.animate-marquee {
+  display: inline-block;
+  white-space: nowrap;
+  animation: marquee 20s linear infinite;
+}
+
+/* Flash scurt la hover pe poze */
+@keyframes tactical-flash {
+  0% { opacity: 0.8; background-color: white; }
+  100% { opacity: 0; background-color: transparent; }
+}
+.animate-flash {
+  animation: tactical-flash 0.2s ease-out forwards;
+}

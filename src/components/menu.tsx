@@ -21,7 +21,7 @@ const menuItems = [
   },
   { 
     id: 3, 
-    name: "THE NEIGHBORHOOD", 
+    name: "THE NEIGHBOR", 
     price: "46 RON", 
     desc: "2x Vită, dublu cheddar, munți de bacon crocant, sos BBQ. Pentru băieții grei.", 
     image: "/images/menu/chapo.png" 
@@ -67,7 +67,7 @@ const menuItems = [
   // DRINKS
   { 
     id: 9, 
-    name: "COLA LA STICLĂ", 
+    name: "COLA LA STICLA", 
     price: "10 RON", 
     desc: "Clasica sticlă de sticlă de 250ml. Rece gheață, cum trebuie." 
   },

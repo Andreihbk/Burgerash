@@ -1,5 +1,5 @@
 "use client";
-
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useCartStore } from '@/store/cartStore';
 
@@ -39,6 +39,15 @@ export default function Navbar() {
           <a href="#location" className="hover:underline decoration-brand-red decoration-2 underline-offset-4">Locatie</a>
           <a href="#contact" className="hover:underline decoration-brand-red decoration-2 underline-offset-4">Contact</a>
         </div>
+        {/* BUTONUL TACTIC PENTRU CATERING */}
+          <Link href="/catering" className="group flex items-center gap-2 border-2 border-brand-red px-4 py-1.5 hover:bg-brand-red transition-all cursor-none ml-4">
+            {/* Punctul de alertă (pulse) */}
+            <span className="w-2 h-2 bg-brand-red rounded-full animate-pulse group-hover:bg-white"></span>
+            {/* Textul butonului */}
+            <span className="font-eatvetica text-brand-red text-xl uppercase tracking-widest group-hover:text-white mt-1">
+              UNITATEA MOBILA
+            </span>
+          </Link>
 
         {/* CONTROALE DREAPTA */}
         <div className="flex items-center gap-2 md:gap-4 relative z-50">
@@ -65,6 +74,7 @@ export default function Navbar() {
           </button>
         </div>
       </nav>
+
 
       {/* OVERLAY MENIU MOBIL */}
       <div 
