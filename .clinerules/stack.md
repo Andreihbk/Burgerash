@@ -1,0 +1,1 @@
+Stack: Next.js App Router, Tailwind CSS, TypeScript, Lucide React, Supabase.

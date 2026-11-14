@@ -1,7 +1,7 @@
 "use client";
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { useCartStore } from '@/store/cartStore';
+import { useCartStore } from '@/_archive/store/cartStore';
 
 export default function Navbar() {
   const items = useCartStore((state) => state.items);

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCartStore } from '@/store/cartStore';
+import { useCartStore } from '@/_archive/store/cartStore';
 
 export default function Cart() {
   const { 

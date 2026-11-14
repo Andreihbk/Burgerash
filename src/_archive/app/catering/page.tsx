@@ -1,7 +1,8 @@
 "use client";
 import React, { useState } from 'react';
-import { Crosshair, Redacted, HUDCorners } from '@/components/ui/Tactical';
-import Navbar from '@/components/Navbar';
+import { Crosshair, Redacted, HUDCorners } from '@/_archive/components/ui/Tactical';
+import Navbar from '@/_archive/components/Navbar';
+
 
 export default function CateringPage() {
   // STATE-UL MAGIC: Aici controlăm dacă efectele sunt pornite sau oprite

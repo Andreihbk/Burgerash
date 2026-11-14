@@ -1,64 +1,53 @@
 @import "tailwindcss";
 
 @theme {
-  /* Culorile noastre locked-in */
-  --color-brand-red: #7F011F;
-  --color-brand-metal: #8C8C8C;
-  --color-brand-paper: #F5EBD0;
-  --color-brand-dark: #121212;
+  /* Brand Colors: Butter Cream (#F5E6CC), Burgundy (#790D20), Charcoal (#332420), White (#FFFFFF) */
+  --color-butter-cream: #F5E6CC;
+  --color-burgundy: #790D20;
+  --color-charcoal: #332420;
+  --color-white: #FFFFFF;
 
-  /* Mapare fonturi pentru a fi folosite ca clase (ex: font-bebas) */
+  --color-brand-paper: #F5E6CC;
+  --color-brand-cream: #F5E6CC;
+  --color-brand-red: #790D20;
+  --color-brand-burgundy: #790D20;
+  --color-brand-dark: #332420;
+  --color-brand-charcoal: #332420;
+  --color-brand-metal: #790D20;
+
+  /* Font mappings */
   --font-bebas: var(--font-bebas-neue);
   --font-mono: var(--font-roboto-mono);
-
   --font-nunito: var(--font-nunito);
   --font-eatvetica: var(--font-eatvetica);
-
-
 }
 
-/* Reset și Styles Globale */
+/* Reset and Global Styles */
 :root {
-  background-color: var(--color-brand-paper);
-  color: var(--color-brand-dark);
+  background-color: #F5E6CC;
+  color: #332420;
 }
 
 body {
-  /* Folosim fontul mono ca default pentru textul de rând */
   font-family: var(--font-roboto-mono), monospace;
-  background-color: var(--color-brand-paper);
-  color: var(--color-brand-dark);
+  background-color: #F5E6CC;
+  color: #332420;
   position: relative;
 }
 
-/* Textura de Grain (The "Gritty" Vibe) */
-body::after {
-  content: "";
-  position: fixed; /* Fixed ca să stea pe loc la scroll */
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  /* SVG Noise corectat pentru vizibilitate perfectă */
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-  opacity: 0.05; 
-  pointer-events: none; /* Te lasă să dai click prin ea pe butoane */
-  z-index: 9999; /* Pune textura peste absolut tot */
-}
-
-/* Selecție text cu culoarea brandului */
+/* Text Selection */
 ::selection {
-  background-color: var(--color-brand-red);
-  color: var(--color-brand-paper);
+  background-color: #790D20;
+  color: #F5E6CC;
 }
 
-/* Animație pentru Ticker-ul infinit */
+/* Infinite Ticker Animation */
 @keyframes ticker {
   0% {
     transform: translateX(0);
   }
   100% {
-    transform: translateX(-50%); /* Merge până la jumătate, apoi reia invizibil */
+    transform: translateX(-50%);
   }
 }
 
@@ -67,30 +56,31 @@ body::after {
   white-space: nowrap;
   animation: ticker 15s linear infinite; 
 }
-/* Overlay de monitor industrial (CRT) */
+
+/* CRT Scanlines Overlay */
 .scanlines::before {
   content: " ";
   display: block;
   position: fixed;
   top: 0; left: 0; bottom: 0; right: 0;
-  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), 
-              linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+  background: linear-gradient(rgba(51, 36, 32, 0) 50%, rgba(51, 36, 32, 0.1) 50%), 
+              linear-gradient(90deg, rgba(121, 13, 32, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
   z-index: 999;
   background-size: 100% 3px, 3px 100%;
   pointer-events: none;
   opacity: 0.4;
 }
 
-/* Cursorul Crosshair personalizat */
+/* Custom Crosshair Cursor */
 .custom-cursor {
   cursor: none;
 }
 
-/* Efectul de Glitch Tactic */
+/* Tactical Glitch Hover Effect */
 .glitch-hover:hover {
   animation: glitch-skew 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both infinite;
-  color: #E63946; /* text-brand-red */
-  text-shadow: 3px 0px 0px rgba(0,255,255,0.5), -3px 0px 0px rgba(255,0,0,0.5);
+  color: #790D20;
+  text-shadow: 3px 0px 0px rgba(121,13,32,0.5), -3px 0px 0px rgba(51,36,32,0.5);
 }
 
 @keyframes glitch-skew {
@@ -102,7 +92,7 @@ body::after {
   100% { transform: skew(0deg); }
 }
 
-/* Animație pentru banda de pericol */
+/* Marquee Danger Tape */
 @keyframes marquee {
   0% { transform: translateX(0%); }
   100% { transform: translateX(-50%); }
@@ -113,7 +103,7 @@ body::after {
   animation: marquee 20s linear infinite;
 }
 
-/* Flash scurt la hover pe poze */
+/* Tactical Flash */
 @keyframes tactical-flash {
   0% { opacity: 0.8; background-color: white; }
   100% { opacity: 0; background-color: transparent; }

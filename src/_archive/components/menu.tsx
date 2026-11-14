@@ -1,6 +1,6 @@
 "use client";
 
-import { useCartStore } from '@/store/cartStore';
+import { useCartStore } from '@/_archive/store/cartStore';
 
 const menuItems = [
   // BURGERI
