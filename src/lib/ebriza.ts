@@ -39,6 +39,10 @@ function getConfig(): EbrizaConfig {
   };
 }
 
+export function isEbrizaMockMode(): boolean {
+  return getConfig().mock;
+}
+
 // ---------- Safe logging ----------
 
 /** Masks phone-like digit runs (keeps last 3 digits) so logs never hold full numbers. */

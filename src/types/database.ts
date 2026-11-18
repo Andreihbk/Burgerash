@@ -10,7 +10,7 @@ export type FulfillmentType = "delivery" | "pickup";
 
 export type PaymentMethod = "cash_on_delivery" | "card_on_delivery" | "online_card";
 
-export type EbrizaSyncStatus = "pending" | "synced" | "failed" | "skipped";
+export type EbrizaSyncStatus = "pending" | "sent" | "failed" | "skipped";
 
 export interface Category {
   id: string;
@@ -91,6 +91,7 @@ export interface Order {
   ebriza_bill_id: string | null;
   ebriza_sync_status: EbrizaSyncStatus;
   ebriza_error: string | null;
+  ebriza_error_code: string | null;
   created_at: string;
   updated_at: string;
   items?: OrderItem[];

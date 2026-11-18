@@ -1,7 +1,8 @@
-import { NextResponse } from "next/server";
+import { after, NextResponse } from "next/server";
 import { isSupabaseConfigured, supabase } from "@/lib/supabase";
 import { priceOrder, PricingError, type RequestedItem } from "@/lib/pricing";
 import { normalizeRoPhone, PHONE_ERROR } from "@/lib/phone";
+import { syncOrderToEbriza } from "@/lib/ebriza-sync";
 import type { FulfillmentType, PaymentMethod } from "@/types/database";
 
 const FULFILLMENT_TYPES: FulfillmentType[] = ["delivery", "pickup"];
@@ -96,7 +97,29 @@ export async function POST(req: Request) {
     );
   }
 
-  // Ebriza sync comes later (plan task 1.5), AFTER the order is safely stored.
+  // Push to Ebriza AFTER the order is stored, once the response is sent: a slow or down POS
+  // never delays or fails the customer. The outcome is saved on the order (sync status, code, bill id).
+  after(() =>
+    syncOrderToEbriza(
+      {
+        id: created.id,
+        order_number: created.order_number,
+        fulfillment_type: fulfillmentType,
+        payment_method: paymentMethod,
+        customer_name: customerName,
+        customer_phone: normalizedPhone,
+        customer_email: optionalText(body.customer_email, 200),
+        delivery_address: fulfillmentType === "delivery" ? deliveryAddress : null,
+        delivery_details: optionalText(body.delivery_details),
+        order_note: optionalText(body.order_note),
+        delivery_fee: totals.delivery_fee,
+        tip_amount: totals.tip_amount,
+        total_amount: totals.total_amount,
+        cutlery_sets: totals.cutlery_sets,
+      },
+      items,
+    ),
+  );
 
   return NextResponse.json({
     success: true,

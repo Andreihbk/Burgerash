@@ -50,10 +50,18 @@ Definition of done for every task: `npm run build` + `npm run lint` pass.
         Confirm Ebriza does not multiply it again.
       - openbillwithclient response shape is undocumented: we read `id` as bill id if present
         (else null) and keep the raw response. Confirm the real field.
-- [ ] 1.4 `src/lib/ebriza-sku-map.ts` (catalog id -> POS SKU), filled in later.
-- [ ] 1.5 Call the adapter from `/api/orders` AFTER the Supabase insert; failure must never
+- [x] 1.4 `src/lib/ebriza-sku-map.ts` (catalog id -> POS SKU), filled in later.
+      All values `null` (TODO, fill in E.5). Unmapped ids log `0104` loudly and are never pushed;
+      in mock mode only they get a `TODO-<id>` placeholder so the pipeline can be tested.
+      The push uses this map, not the `ebriza_sku` snapshot from catalog.ts.
+- [x] 1.5 Call the adapter from `/api/orders` AFTER the Supabase insert; failure must never
       lose the order (store `ebriza_sync_status` + error, allow retry).
       DONE WHEN: in mock mode an order creates a fake bill and the status is saved.
+      `src/lib/ebriza-sync.ts`, run via `after()` so the customer response never waits for Ebriza.
+      Migration `supabase/migrations/20261118000000_ebriza_sync_columns.sql` (run it in the
+      Supabase SQL Editor): status `pending|sent|failed|skipped` (`synced` -> `sent`) + `ebriza_error_code`.
+      Not built yet: the retry action itself (the data to drive it is stored). On retry on path 2,
+      call `getBillByExternal` first (skill rule 7).
 
 ## Phase 2 - Staff apps (Supabase Realtime)
 - [ ] 2.1 `/kitchen` KDS, 3 columns
