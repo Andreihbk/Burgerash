@@ -39,8 +39,17 @@ Definition of done for every task: `npm run build` + `npm run lint` pass.
       `EBRIZA_PATH` (1 = clientid only, 2 = app credentials).
       8s timeout, never throws (returns `EbrizaResult`), phone numbers redacted in logs.
       Tests: `npm test` (vitest, `src/lib/ebriza.test.ts`).
-- [ ] 1.3 Payload builder: Supabase order -> `/bills/openbillwithclient`
+- [x] 1.3 Payload builder: Supabase order -> `/bills/openbillwithclient`
       (type 1002 delivery fee, 1003 cutlery, 1000 tip; modifiers via lock/isMod).
+      `src/lib/ebriza-payload.ts` (pure) + tests. Missing SKU throws `EbrizaPayloadError` 0104.
+      Defaults: name split first word / rest (single word -> both); address street = full string,
+      city/county București, country România; one payment = total (cash 0, card on delivery 10,
+      online 2).
+      Open questions for the real Ebriza test:
+      - Modifier quantity: we send product quantity (2x CLASIC + cheddar -> cheddar qty 2).
+        Confirm Ebriza does not multiply it again.
+      - openbillwithclient response shape is undocumented: we read `id` as bill id if present
+        (else null) and keep the raw response. Confirm the real field.
 - [ ] 1.4 `src/lib/ebriza-sku-map.ts` (catalog id -> POS SKU), filled in later.
 - [ ] 1.5 Call the adapter from `/api/orders` AFTER the Supabase insert; failure must never
       lose the order (store `ebriza_sync_status` + error, allow retry).
