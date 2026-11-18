@@ -22,7 +22,7 @@
   /* Per-product sticker accents, sampled from docs/brand/IMG_4143.jpeg (sticker sheet).
      Use ONLY for that product's sticker. These + the 3 brand tokens are the only allowed colors. */
   --color-sticker-classic: #0B391C;   /* CLASIC    - forest green */
-  --color-sticker-double: #6D050A;    /* DUBLE     - oxblood */
+  --color-sticker-double: #6D050A;    /* DOUBLE    - oxblood */
   --color-sticker-cheesy: #EE9E23;    /* CHEESY    - cheddar (text in brand wine) */
   --color-sticker-hot-boy: #B50711;   /* HOT BOY   - chili red */
   --color-sticker-hot-honey: #650329; /* HOT HONEY - plum */
@@ -125,4 +125,30 @@ body {
 }
 .animate-flash {
   animation: tactical-flash 0.2s ease-out forwards;
+}
+
+/* Cart badge bump after "add to cart" */
+@keyframes badge-pop {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.45); }
+  100% { transform: scale(1); }
+}
+.animate-badge-pop {
+  animation: badge-pop 0.45s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+
+/* "Adăugat în coș" toast */
+@keyframes toast-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-toast-in {
+  animation: toast-in 0.2s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-badge-pop,
+  .animate-toast-in {
+    animation: none;
+  }
 }

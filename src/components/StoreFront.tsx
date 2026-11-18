@@ -1,31 +1,125 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { INITIAL_CATEGORIES, INITIAL_MODIFIERS, INITIAL_PRODUCTS } from "@/lib/catalog";
 import { useCartStore } from "@/store/cartStore";
 import { BurgerStamp } from "./BurgerStamp";
+import { BrandLogo } from "./BrandLogo";
 import CartDrawer from "./CartDrawer";
 import { OrderItemModifier, Product } from "@/types/database";
-import { ShoppingBag, Plus, Clock, SlidersHorizontal, X, Check, MapPin, Flame } from "lucide-react";
+import { ShoppingBag, Plus, Clock, SlidersHorizontal, X, Check, MapPin, Flame, ArrowRight } from "lucide-react";
+
+// Header has a fixed height so the category bar can stick right under it.
+const HEADER_HEIGHT = 72;
+const ALL_TAB = "all";
+
+// Static catalog: every active category with its available products, in menu order.
+const MENU_SECTIONS = INITIAL_CATEGORIES.filter((c) => c.is_active)
+  .sort((a, b) => a.position - b.position)
+  .map((category) => ({
+    category,
+    products: INITIAL_PRODUCTS.filter((p) => p.category_id === category.id && p.is_available).sort(
+      (a, b) => a.position - b.position
+    ),
+  }))
+  .filter((s) => s.products.length > 0);
+
+const sectionDomId = (categoryId: string) => `meniu-${categoryId}`;
+
+const HERO_STICKERS = ["prod-classic", "prod-hot-boy", "prod-double"].map(
+  (id) => INITIAL_PRODUCTS.find((p) => p.id === id) ?? null
+);
+
+const formatLei = (value: number) => (Number.isInteger(value) ? `${value}` : value.toFixed(2));
+
+const prefersReducedMotion = () =>
+  typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+const isCustomizable = (product: Product) =>
+  product.category_id === "cat-burgers" || product.category_id === "cat-chicken";
 
 export default function Storefront() {
-  const [activeCategory, setActiveCategory] = useState<string>("cat-burgers");
+  const [activeTab, setActiveTab] = useState<string>(ALL_TAB);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [selectedModifiers, setSelectedModifiers] = useState<OrderItemModifier[]>([]);
   const [itemNote, setItemNote] = useState<string>("");
   const [itemQty, setItemQty] = useState<number>(1);
+  const [toast, setToast] = useState<{ key: number; name: string } | null>(null);
+  const [badgeBump, setBadgeBump] = useState(0);
+
+  const barRef = useRef<HTMLDivElement>(null);
+  const menuTopRef = useRef<HTMLDivElement>(null);
+  const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const toastSeq = useRef(0);
 
   const addItem = useCartStore((state) => state.addItem);
   const openCart = useCartStore((state) => state.openCart);
   const totalItems = useCartStore((state) => state.getTotalItemsCount());
+  const grandTotal = useCartStore((state) => state.getGrandTotal());
 
-  const filteredProducts = INITIAL_PRODUCTS.filter(
-    (p) => p.category_id === activeCategory && p.is_available
-  );
+  // Scroll spy: the active tab is the last section whose top has passed under the sticky bar.
+  useEffect(() => {
+    const onScroll = () => {
+      const offset = HEADER_HEIGHT + (barRef.current?.offsetHeight ?? 0) + 16;
+      let current = ALL_TAB;
+      for (const { category } of MENU_SECTIONS) {
+        const el = document.getElementById(sectionDomId(category.id));
+        if (el && el.getBoundingClientRect().top <= offset) current = category.id;
+      }
+      setActiveTab(current);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
-  const isCustomizable = (product: Product) =>
-    product.category_id === "cat-burgers" || product.category_id === "cat-chicken";
+  // Keep the active tab visible inside the horizontally scrolling bar (mobile).
+  useEffect(() => {
+    const bar = barRef.current;
+    const tab = bar?.querySelector<HTMLElement>(`[data-tab="${activeTab}"]`);
+    if (!bar || !tab) return;
+    bar.scrollTo({
+      left: tab.offsetLeft - (bar.clientWidth - tab.offsetWidth) / 2,
+      behavior: prefersReducedMotion() ? "auto" : "smooth",
+    });
+  }, [activeTab]);
+
+  useEffect(() => {
+    return () => {
+      if (toastTimer.current) clearTimeout(toastTimer.current);
+    };
+  }, []);
+
+  const scrollToTab = (tabId: string) => {
+    const target =
+      tabId === ALL_TAB ? menuTopRef.current : document.getElementById(sectionDomId(tabId));
+    if (!target) return;
+    const offset = HEADER_HEIGHT + (barRef.current?.offsetHeight ?? 0) + 12;
+    window.scrollTo({
+      top: target.getBoundingClientRect().top + window.scrollY - offset,
+      behavior: prefersReducedMotion() ? "auto" : "smooth",
+    });
+    setActiveTab(tabId);
+  };
+
+  const handleAdd = (
+    product: Product,
+    modifiers?: OrderItemModifier[],
+    note?: string,
+    quantity?: number
+  ) => {
+    addItem(product, modifiers, note, quantity);
+    setBadgeBump((n) => n + 1);
+    toastSeq.current += 1;
+    setToast({ key: toastSeq.current, name: product.name });
+    if (toastTimer.current) clearTimeout(toastTimer.current);
+    toastTimer.current = setTimeout(() => setToast(null), 2600);
+  };
+
+  const handleOpenCartFromToast = () => {
+    setToast(null);
+    openCart();
+  };
 
   const handleOpenModal = (product: Product) => {
     setSelectedProduct(product);
@@ -52,55 +146,62 @@ export default function Storefront() {
 
   const handleConfirmModal = () => {
     if (!selectedProduct) return;
-    addItem(selectedProduct, selectedModifiers, itemNote, itemQty);
+    handleAdd(selectedProduct, selectedModifiers, itemNote, itemQty);
     setSelectedProduct(null);
   };
 
+  const tabs = [
+    { id: ALL_TAB, name: "TOT MENIUL" },
+    ...MENU_SECTIONS.map(({ category }) => ({ id: category.id, name: category.name })),
+  ];
+
   return (
     <div className="min-h-screen bg-[#F5E6CC] text-[#332420] font-nunito pb-24">
-      {/* TOP HEADER / APP BAR */}
-      <header className="sticky top-0 z-40 bg-[#332420] text-[#F5E6CC] border-b-2 border-[#332420] px-6 py-4 flex items-center justify-between shadow-md">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-[#790D20] border-2 border-[#F5E6CC] flex items-center justify-center font-bebas text-2xl text-white">
-            B
-          </div>
-          <div>
-            <h1 className="font-bebas tracking-wider text-2xl leading-none">
-              BURGERASH
-            </h1>
-            <p className="text-[10px] tracking-widest font-mono text-[#F5E6CC]/70 mt-0.5">
-              HAND CRAFTED SMASH BURGERS
-            </p>
-          </div>
-        </div>
+      {/* TOP HEADER / APP BAR (fixed height: HEADER_HEIGHT) */}
+      <header
+        style={{ height: HEADER_HEIGHT }}
+        className="sticky top-0 z-40 bg-[#332420] text-[#F5E6CC] border-b-2 border-[#332420] px-4 sm:px-6 flex items-center justify-between gap-3 shadow-md"
+      >
+        <a href="#" className="flex flex-col justify-center min-w-0" aria-label="burgerash, începutul paginii">
+          <BrandLogo className="h-8 w-auto text-[#F5E6CC]" />
+          <p className="hidden sm:block text-[10px] tracking-widest font-mono text-[#F5E6CC]/70 mt-0.5">
+            HAND CRAFTED SMASH BURGERS
+          </p>
+        </a>
 
         <div className="flex items-center gap-4">
           <a
             href="#lightboard"
-            className="hidden md:inline-block font-bebas text-lg tracking-wider text-[#F5E6CC]/80 hover:text-white transition-colors"
+            className="hidden md:inline-block font-bebas text-lg tracking-wider text-[#F5E6CC]/80 hover:text-[#F5E6CC] transition-colors"
           >
             PANOU MENIU
           </a>
           <a
             href="#location"
-            className="hidden md:inline-block font-bebas text-lg tracking-wider text-[#F5E6CC]/80 hover:text-white transition-colors"
+            className="hidden md:inline-block font-bebas text-lg tracking-wider text-[#F5E6CC]/80 hover:text-[#F5E6CC] transition-colors"
           >
             LOCAȚIE
           </a>
 
           <div className="hidden sm:flex items-center gap-2 text-xs font-mono bg-[#F5E6CC]/10 px-3 py-1.5 rounded-full border border-[#F5E6CC]/20">
-            <Clock className="w-3.5 h-3.5 text-[#E23D28]"/>
+            <Clock className="w-3.5 h-3.5 text-[#F5E6CC]"/>
             <span>Gata în ~15 min</span>
           </div>
 
           <button
             onClick={openCart}
-            className="relative bg-[#790D20] text-white px-4 py-2 rounded-lg font-bebas text-xl tracking-wide flex items-center gap-2 border-2 border-[#F5E6CC] shadow-[3px_3px_0px_0px_#121212] hover:translate-y-[-2px] active:translate-y-[0px] transition-all"
+            aria-label={`Coș, ${totalItems} produse`}
+            className="relative bg-[#790D20] text-[#F5E6CC] px-4 py-2 rounded-lg font-bebas text-xl tracking-wide flex items-center gap-2 border-2 border-[#F5E6CC] shadow-[3px_3px_0px_0px_#F5E6CC] hover:translate-y-[-2px] active:translate-y-[0px] transition-all"
           >
             <ShoppingBag className="w-5 h-5"/>
             <span>COȘ</span>
             {totalItems > 0 && (
-              <span className="absolute -top-2 -right-2 bg-[#F5E6CC] text-[#332420] font-mono text-xs font-black w-6 h-6 rounded-full flex items-center justify-center border-2 border-[#332420]">
+              <span
+                key={badgeBump}
+                className={`absolute -top-2 -right-2 bg-[#F5E6CC] text-[#332420] font-mono text-xs font-black w-6 h-6 rounded-full flex items-center justify-center border-2 border-[#332420] ${
+                  badgeBump > 0 ? "animate-badge-pop" : ""
+                }`}
+              >
                 {totalItems}
               </span>
             )}
@@ -108,9 +209,9 @@ export default function Storefront() {
         </div>
       </header>
 
-      {/* HERO SPLIT: TEXT + VIDEO */}
+      {/* HERO SPLIT: TEXT + STICKER STACK */}
       <section className="grid grid-cols-1 lg:grid-cols-12 border-b-4 border-[#332420] bg-[#F5E6CC]">
-        <div className="lg:col-span-7 p-8 md:p-14 flex flex-col justify-center border-b-4 lg:border-b-0 lg:border-r-4 border-[#332420]">
+        <div className="lg:col-span-7 px-4 py-10 sm:p-14 flex flex-col justify-center border-b-4 lg:border-b-0 lg:border-r-4 border-[#332420]">
           <div className="inline-flex items-center gap-2 self-start bg-[#790D20] text-[#F5E6CC] font-mono text-xs font-bold tracking-widest px-3 py-1.5 mb-6 shadow-[3px_3px_0px_0px_#332420]">
             <Flame className="w-4 h-4"/>
             <span>100% VITĂ BLACK ANGUS PRESATĂ PE PLITĂ</span>
@@ -126,12 +227,13 @@ export default function Storefront() {
           </p>
 
           <div className="flex flex-wrap gap-4">
-            <a
-              href="#menu-grid"
-              className="bg-[#790D20] text-white font-bebas text-2xl tracking-wider px-8 py-4 rounded-lg border-2 border-[#332420] shadow-[4px_4px_0px_0px_#332420] hover:bg-[#332420] transition-all"
+            <button
+              type="button"
+              onClick={() => scrollToTab(ALL_TAB)}
+              className="bg-[#790D20] text-[#F5E6CC] font-bebas text-2xl tracking-wider px-8 py-4 rounded-lg border-2 border-[#332420] shadow-[4px_4px_0px_0px_#332420] hover:bg-[#332420] transition-all"
             >
               COMANDĂ ACUM
-            </a>
+            </button>
             <a
               href="#lightboard"
               className="bg-[#F5E6CC] text-[#332420] font-bebas text-2xl tracking-wider px-8 py-4 rounded-lg border-2 border-[#332420] shadow-[4px_4px_0px_0px_#332420] hover:bg-[#332420] hover:text-[#F5E6CC] transition-all"
@@ -141,123 +243,102 @@ export default function Storefront() {
           </div>
         </div>
 
-        <div className="lg:col-span-5 relative min-h-[340px] lg:min-h-[480px] bg-[#332420] overflow-hidden flex items-center justify-center">
-          <video
-            src="/videos/hero-video.mp4"
-            autoPlay
-            loop
-            muted
-            playsInline
-            poster="/images/burger-hero.png"
-            className="object-cover w-full h-full absolute inset-0 opacity-90"
-          />
-          <div className="relative z-10 p-6 mt-auto w-full bg-gradient-to-t from-black/80 via-black/30 to-transparent text-[#F5E6CC]">
-            <p className="font-bebas text-2xl tracking-wide">
-              GOOD BURGERS /// GOOD PEOPLE /// ALWAYS
-            </p>
+        <div className="lg:col-span-5 bg-[#790D20] overflow-hidden flex flex-col items-center justify-center gap-6 px-4 pt-10 pb-6 lg:min-h-[480px]">
+          {/* Three stickers, stacked and slightly rotated, with the hard charcoal shadow */}
+          <div className="relative w-[300px] h-[260px] sm:w-[400px] sm:h-[340px]" aria-hidden="true">
+            <BurgerStamp
+              product={HERO_STICKERS[0]}
+              className="absolute left-0 top-2 w-40 h-40 sm:w-52 sm:h-52 rotate-[-10deg] drop-shadow-[6px_6px_0px_#332420]"
+            />
+            <BurgerStamp
+              product={HERO_STICKERS[1]}
+              className="absolute right-0 top-0 w-40 h-40 sm:w-52 sm:h-52 rotate-[9deg] drop-shadow-[6px_6px_0px_#332420]"
+            />
+            <BurgerStamp
+              product={HERO_STICKERS[2]}
+              className="absolute left-1/2 bottom-0 -translate-x-1/2 w-44 h-44 sm:w-56 sm:h-56 rotate-[-3deg] drop-shadow-[6px_6px_0px_#332420]"
+            />
           </div>
+          <p className="font-bebas text-2xl tracking-wide text-[#F5E6CC] text-center">
+            GOOD BURGERS /// GOOD PEOPLE /// ALWAYS
+          </p>
         </div>
       </section>
 
-      {/* CATEGORIES STICKY BAR */}
-      <div
-        id="menu-grid"
-        className="sticky top-[74px] z-30 bg-[#F5E6CC] border-b-2 border-[#332420] px-4 py-3 shadow-sm overflow-x-auto"
+      {/* CATEGORIES STICKY BAR: scrolls to each section, highlights the current one */}
+      <nav
+        ref={barRef}
+        aria-label="Categorii meniu"
+        style={{ top: HEADER_HEIGHT }}
+        className="sticky z-30 bg-[#F5E6CC] border-b-2 border-[#332420] px-4 py-3 shadow-sm overflow-x-auto"
       >
-        <div className="max-w-6xl mx-auto flex gap-3 justify-start sm:justify-center">
-          {INITIAL_CATEGORIES.map((cat) => (
-            <button
-              key={cat.id}
-              onClick={() => setActiveCategory(cat.id)}
-              className={`font-bebas text-xl tracking-wide px-5 py-2 rounded-lg transition-all whitespace-nowrap border-2 ${
-                activeCategory === cat.id
-                  ? "bg-[#790D20] text-white border-[#332420] shadow-[3px_3px_0px_0px_#332420]"
-                  : "bg-white text-[#332420] border-[#332420] hover:bg-[#332420]/10"
-              }`}
-            >
-              {cat.name}
-            </button>
-          ))}
+        <div className="w-max mx-auto flex gap-3">
+          {tabs.map((tab) => {
+            const active = activeTab === tab.id;
+            return (
+              <button
+                key={tab.id}
+                type="button"
+                data-tab={tab.id}
+                aria-current={active ? "true" : undefined}
+                onClick={() => scrollToTab(tab.id)}
+                className={`font-bebas text-xl tracking-wide px-5 py-2 rounded-lg transition-all whitespace-nowrap border-2 border-[#332420] ${
+                  active
+                    ? "bg-[#790D20] text-[#F5E6CC] shadow-[3px_3px_0px_0px_#332420]"
+                    : "bg-[#F5E6CC] text-[#332420] hover:bg-[#332420]/10"
+                }`}
+              >
+                {tab.name}
+              </button>
+            );
+          })}
         </div>
-      </div>
+      </nav>
 
-      {/* PRODUCTS INTERACTIVE CARDS */}
+      {/* FULL MENU: one section per category */}
       <main className="max-w-6xl mx-auto px-4 py-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredProducts.map((product) => (
-            <div
-              key={product.id}
-              className="bg-white border-2 border-[#332420] rounded-xl p-5 flex flex-col justify-between shadow-[5px_5px_0px_0px_#332420] hover:translate-y-[-3px] transition-all relative group"
-            >
-              <div>
-                {/* Sticker instead of photo (photos kept in public/images/menu for later) */}
-                <div className="w-full h-52 mb-4 flex items-center justify-center bg-[#F5E6CC]/50 rounded-lg border border-[#332420]/15">
-                  <BurgerStamp
+        <div ref={menuTopRef} id="meniu" className="mb-8">
+          <p className="font-mono text-xs font-bold tracking-widest text-[#790D20]">COMANDĂ ONLINE</p>
+          <h2 className="font-bebas text-5xl sm:text-6xl tracking-wide text-[#332420] leading-none">
+            TOT MENIUL
+          </h2>
+        </div>
+
+        <div className="space-y-14">
+          {MENU_SECTIONS.map(({ category, products }) => (
+            <section key={category.id} id={sectionDomId(category.id)} aria-labelledby={`${sectionDomId(category.id)}-title`}>
+              <div className="flex items-center gap-4 mb-6">
+                <h3
+                  id={`${sectionDomId(category.id)}-title`}
+                  className="font-bebas text-4xl tracking-wide text-[#332420] shrink-0"
+                >
+                  {category.name}
+                </h3>
+                <div className="flex-1 h-2 border-y-2 border-[#332420]" />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {products.map((product) => (
+                  <ProductCard
+                    key={product.id}
                     product={product}
-                    className="h-44 w-44 rotate-[-6deg] group-hover:rotate-0 transition-transform duration-300 drop-shadow-[4px_4px_0px_rgba(51,36,32,0.25)]"
+                    onAdd={() => handleAdd(product)}
+                    onCustomize={isCustomizable(product) ? () => handleOpenModal(product) : undefined}
                   />
-                </div>
-
-                <div className="mb-2">
-                  <h3 className="font-bebas text-3xl tracking-wide text-[#332420]">
-                    {product.name}
-                  </h3>
-                </div>
-
-                <p className="font-nunito font-bold text-sm text-[#332420]/75 mb-6">
-                  {product.description}
-                </p>
+                ))}
               </div>
-
-              <div className="flex items-center justify-between pt-4 border-t-2 border-[#332420]/10 mt-auto gap-2">
-                <div>
-                  <span className="text-[10px] font-mono text-[#332420]/60 block">
-                    {product.weight_grams ? `GRAMAJ ${product.weight_grams}G` : "PREȚ"}
-                  </span>
-                  <span className="font-nunito font-black text-2xl text-[#332420]">
-                    {product.price} <span className="text-sm font-bold">RON</span>
-                  </span>
-                </div>
-
-                <div className="flex items-center gap-2">
-                  {isCustomizable(product) && (
-                    <button
-                      onClick={() => handleOpenModal(product)}
-                      className="bg-[#F5E6CC] text-[#332420] border-2 border-[#332420] px-3 py-2.5 rounded-lg font-bebas text-base flex items-center gap-1 hover:bg-[#332420] hover:text-[#F5E6CC] transition-colors"
-                      title="Personalizează ingredientele"
-                    >
-                      <SlidersHorizontal className="w-4 h-4"/>
-                      <span>EXTRA</span>
-                    </button>
-                  )}
-
-                  <button
-                    onClick={() => addItem(product)}
-                    className="bg-[#790D20] text-white border-2 border-[#332420] px-4 py-2.5 rounded-lg font-bebas text-lg flex items-center gap-1.5 shadow-[2px_2px_0px_0px_#332420] hover:bg-[#332420] active:translate-y-[1px] transition-all"
-                  >
-                    <Plus className="w-5 h-5 stroke-[3]"/>
-                    <span>ADAUGĂ</span>
-                  </button>
-                </div>
-              </div>
-            </div>
+            </section>
           ))}
         </div>
 
         {/* PANOUL LUMINOS RETRO (CA ÎN POZA OFICIALĂ DIN LOCAȚIE) */}
         <section id="lightboard" className="mt-20 max-w-xl mx-auto">
           <div className="bg-[#790D20] p-4 rounded-xl shadow-[10px_10px_0px_0px_#332420] border-4 border-[#332420]">
-            <div className="bg-[#FFF5DE] text-[#790D20] p-6 sm:p-10 rounded-lg shadow-inner border-2 border-[#790D20]/30 relative">
+            <div className="bg-[#F5E6CC] text-[#790D20] p-6 sm:p-10 rounded-lg shadow-inner border-2 border-[#790D20]/30 relative">
               {/* Header Panou */}
               <div className="text-center mb-8">
                 <div className="inline-flex flex-col items-center">
-                  <div className="w-14 h-12 border-4 border-[#790D20] rounded-t-full mb-1 relative flex flex-col justify-end p-1 gap-0.5">
-                    <div className="h-1 bg-[#790D20] w-full rounded" />
-                    <div className="h-1 bg-[#790D20] w-full rounded" />
-                  </div>
-                  <h2 className="font-nunito font-black text-4xl sm:text-5xl tracking-tight text-[#790D20]">
-                    burgerash
-                  </h2>
+                  <BrandLogo layout="stacked" className="h-20 sm:h-24 w-auto text-[#790D20]" />
                   <p className="font-nunito font-bold text-xs tracking-widest text-[#332420]">
                     hand crafted burgers
                   </p>
@@ -272,7 +353,7 @@ export default function Storefront() {
                     items: [
                       { name: "CLASIC", price: 36 },
                       { name: "HOT BOY", price: 39 },
-                      { name: "DUBLE", price: 46 },
+                      { name: "DOUBLE", price: 46 },
                     ],
                   },
                   {
@@ -339,7 +420,7 @@ export default function Storefront() {
           className="mt-20 grid grid-cols-1 md:grid-cols-2 border-4 border-[#332420] rounded-xl overflow-hidden shadow-[6px_6px_0px_0px_#332420]"
         >
           <div className="bg-[#332420] text-[#F5E6CC] p-8 md:p-10">
-            <div className="inline-flex items-center gap-2 text-[#E23D28] font-mono text-xs font-bold mb-2">
+            <div className="inline-flex items-center gap-2 text-[#F5E6CC] font-mono text-xs font-bold mb-2">
               <MapPin className="w-4 h-4"/>
               <span>CARTIERUL CRUSTEI</span>
             </div>
@@ -350,7 +431,7 @@ export default function Storefront() {
               Fix lângă liceu, în Sector 6, București. Urmărește mirosul de vită Black Angus caramelizată pe plită.
             </p>
             <div className="font-mono text-sm space-y-1.5 border-t border-[#F5E6CC]/20 pt-4">
-              <p className="text-[#E23D28] font-bold">PROGRAMUL DE FOC:</p>
+              <p className="text-[#F5E6CC] font-bold">PROGRAMUL DE FOC:</p>
               <p>Luni - Vineri: 10:00 - 22:00</p>
               <p>Sâmbătă - Duminică: 12:00 - 00:00</p>
             </div>
@@ -517,7 +598,119 @@ export default function Storefront() {
         </div>
       </footer>
 
+      {/* TOAST: added to cart (does not open the drawer) */}
+      <div
+        role="status"
+        aria-live="polite"
+        className="fixed z-50 left-4 right-4 bottom-24 md:left-auto md:right-6 md:bottom-6 pointer-events-none flex justify-center md:justify-end"
+      >
+        {toast && (
+          <div
+            key={toast.key}
+            className="animate-toast-in pointer-events-auto flex items-center gap-4 bg-[#332420] text-[#F5E6CC] border-2 border-[#F5E6CC] rounded-lg px-4 py-3 shadow-[4px_4px_0px_0px_#790D20]"
+          >
+            <Check className="w-5 h-5 shrink-0 stroke-[3]" />
+            <div className="min-w-0">
+              <p className="font-nunito font-black text-sm leading-tight">Adăugat în coș</p>
+              <p className="font-mono text-[11px] text-[#F5E6CC]/70 truncate">{toast.name}</p>
+            </div>
+            <button
+              type="button"
+              onClick={handleOpenCartFromToast}
+              className="font-nunito font-extrabold text-sm underline underline-offset-4 whitespace-nowrap hover:text-[#F5E6CC]/80"
+            >
+              Vezi coșul
+            </button>
+          </div>
+        )}
+      </div>
+
+      {/* MOBILE STICKY CART BAR (<768px) */}
+      {totalItems > 0 && (
+        <div
+          className="md:hidden fixed inset-x-0 bottom-0 z-40 bg-[#F5E6CC] border-t-2 border-[#332420] px-4 pt-3"
+          style={{ paddingBottom: "max(0.75rem, env(safe-area-inset-bottom))" }}
+        >
+          <button
+            type="button"
+            onClick={openCart}
+            className="w-full flex items-center justify-between gap-3 bg-[#790D20] text-[#F5E6CC] font-bebas text-2xl tracking-wide px-5 py-3 rounded-lg border-2 border-[#332420] shadow-[3px_3px_0px_0px_#332420] active:translate-y-[1px] transition-all"
+          >
+            <span>
+              COȘ (
+              <span key={badgeBump} className={`inline-block ${badgeBump > 0 ? "animate-badge-pop" : ""}`}>
+                {totalItems}
+              </span>
+              ) · {formatLei(grandTotal)} LEI
+            </span>
+            <ArrowRight className="w-6 h-6 stroke-[3]" aria-hidden="true" />
+          </button>
+        </div>
+      )}
+
       <CartDrawer/>
+    </div>
+  );
+}
+
+function ProductCard({
+  product,
+  onAdd,
+  onCustomize,
+}: {
+  product: Product;
+  onAdd: () => void;
+  onCustomize?: () => void;
+}) {
+  return (
+    <div className="bg-white border-2 border-[#332420] rounded-xl p-5 flex flex-col justify-between shadow-[5px_5px_0px_0px_#332420] hover:translate-y-[-3px] transition-all relative group">
+      <div>
+        {/* Sticker instead of photo (photos kept in public/images/menu for later) */}
+        <div className="w-full h-52 mb-4 flex items-center justify-center bg-[#F5E6CC]/50 rounded-lg border border-[#332420]/15">
+          <BurgerStamp
+            product={product}
+            className="h-44 w-44 rotate-[-6deg] group-hover:rotate-0 transition-transform duration-300 drop-shadow-[4px_4px_0px_rgba(51,36,32,0.25)]"
+          />
+        </div>
+
+        <h4 className="font-bebas text-3xl tracking-wide text-[#332420] mb-2">{product.name}</h4>
+
+        <p className="font-nunito font-bold text-sm text-[#332420]/75 mb-6">{product.description}</p>
+      </div>
+
+      <div className="flex items-center justify-between pt-4 border-t-2 border-[#332420]/10 mt-auto gap-2">
+        <div>
+          <span className="text-[10px] font-mono text-[#332420]/60 block">
+            {product.weight_grams ? `GRAMAJ ${product.weight_grams}G` : "PREȚ"}
+          </span>
+          <span className="font-nunito font-black text-2xl text-[#332420]">
+            {product.price} <span className="text-sm font-bold">RON</span>
+          </span>
+        </div>
+
+        <div className="flex items-center gap-2">
+          {onCustomize && (
+            <button
+              type="button"
+              onClick={onCustomize}
+              className="bg-[#F5E6CC] text-[#332420] border-2 border-[#332420] px-3 py-2.5 rounded-lg font-bebas text-base flex items-center gap-1 hover:bg-[#332420] hover:text-[#F5E6CC] transition-colors"
+              title="Personalizează ingredientele"
+            >
+              <SlidersHorizontal className="w-4 h-4"/>
+              <span>EXTRA</span>
+            </button>
+          )}
+
+          <button
+            type="button"
+            onClick={onAdd}
+            className="bg-[#790D20] text-[#F5E6CC] border-2 border-[#332420] px-4 py-2.5 rounded-lg font-bebas text-lg flex items-center gap-1.5 shadow-[2px_2px_0px_0px_#332420] hover:bg-[#332420] active:translate-y-[1px] transition-all"
+          >
+            <Plus className="w-5 h-5 stroke-[3]"/>
+            <span>ADAUGĂ</span>
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

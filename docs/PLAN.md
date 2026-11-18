@@ -13,11 +13,22 @@ Definition of done for every task: `npm run build` + `npm run lint` pass.
       - Order numbers BRG-XXXX from Postgres sequence `order_number_seq`.
       - Order + items saved in one transaction via `create_order` rpc; error returned on failure.
       - `updated_at` trigger on `orders`. Removed `files.txt`, `setup-claude-config.sh`.
-- [ ] 0.1 Supabase cloud project exists, `supabase/schema.sql` applied, `.env.local` set
+- [x] 0.1 Supabase cloud project exists, `supabase/schema.sql` applied, `.env.local` set
       DONE WHEN: a test order from the storefront appears in the `orders` table.
 - [ ] 0.2 Vercel env vars set (Supabase keys; later Ebriza vars). No secrets in git history.
       DONE WHEN: the live site places an order into Supabase.
 - [ ] 0.3 Add `.env.example` names only; confirm `.env*` is gitignored.
+
+## Storefront
+- [x] S.1 Rename DUBLE to DOUBLE (catalog, sticker, menu board); other names unchanged.
+- [x] S.2 Hero: video removed (file deleted); stack of 3 rotated stickers (CLASIC, HOT BOY, DOUBLE)
+      with hard shadow, sized for 375px.
+- [x] S.3 Header: real SVG logo (burger icon + lowercase "burgerash", as on the menu board).
+- [x] S.4 Menu: all categories shown as sections with headings; sticky category bar ("TOT MENIUL"
+      first) scrolls to each section and highlights the current one.
+- [x] S.5 Cart: adding does not open the drawer; toast "Adăugat în coș" + "Vezi coșul", badge
+      animation; mobile (<768px) sticky bottom bar "COȘ (n) · total LEI →" opens the drawer.
+- [x] S.6 /font-test removed (did not exist).
 
 ## Phase 1 - Ebriza adapter (works in mock mode, no credentials needed)
 - [ ] 1.1 Fix `src/types/ebriza.ts` against `.claude/skills/ebriza-api/reference.md`.
@@ -44,6 +55,14 @@ Definition of done for every task: `npm run build` + `npm run lint` pass.
 - [ ] 4.1 Staff login (Supabase Auth) on /kitchen /dispatch /rider /admin
 - [ ] 4.2 Replace permissive RLS with real policies
 - [ ] 4.3 End-to-end test: cart -> order -> POS -> status back
+
+## Before launch
+- [ ] L.1 Opening hours + open/closed badge (block or warn on orders when closed)
+- [ ] L.2 Allergens per product (shown on cards / product detail)
+- [ ] L.3 Order status page via secret link
+- [ ] L.4 Delivery zone (check address before accepting delivery orders)
+- [ ] L.5 Legal pages: terms, GDPR privacy, ANPC links, company details
+- [ ] L.6 Cart upsell (fries, sauces, drinks)
 
 ## Parallel track - Ebriza (no code)
 - [ ] E.1 Message Ebriza support (see questions below)

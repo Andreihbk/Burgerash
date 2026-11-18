@@ -74,7 +74,7 @@ export const useCartStore = create<CartState>()(
               ...updated[existingIndex],
               quantity: updated[existingIndex].quantity + quantity,
             };
-            return { items: updated, isOpen: true };
+            return { items: updated };
           }
 
           return {
@@ -89,7 +89,6 @@ export const useCartStore = create<CartState>()(
                 unitPriceWithModifiers,
               },
             ],
-            isOpen: true,
           };
         });
       },
@@ -137,7 +136,7 @@ export const useCartStore = create<CartState>()(
       },
     }),
     {
-      name: "burgerash-cart-v2", // v2: product names renamed (stickers); drops stale carts
+      name: "burgerash-cart-v3", // v3: DUBLE renamed to DOUBLE; drops stale carts
       partialize: (state) => ({
         items: state.items,
         fulfillmentType: state.fulfillmentType,

@@ -19,7 +19,7 @@ interface StickerStyle {
 
 const PRODUCT_STICKERS: Record<string, StickerStyle> = {
   "prod-classic": { lines: ["CLASIC"], accent: "var(--color-sticker-classic)" },
-  "prod-double": { lines: ["DUBLE"], accent: "var(--color-sticker-double)" },
+  "prod-double": { lines: ["DOUBLE"], accent: "var(--color-sticker-double)" },
   "prod-cheesy": { lines: ["CHEESY"], accent: "var(--color-sticker-cheesy)", ink: WINE },
   "prod-hot-boy": { lines: ["HOT BOY"], accent: "var(--color-sticker-hot-boy)" },
   "prod-hot-honey": { lines: ["HOT HONEY"], accent: "var(--color-sticker-hot-honey)" },

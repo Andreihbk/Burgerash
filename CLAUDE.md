@@ -23,7 +23,7 @@ Staff apps must keep working if Ebriza is slow or down.
   Roboto Mono only for small accents. No other fonts.
 - Product visuals are SVG stickers (BurgerStamp.tsx), not photos.
 - Product names follow the stickers, in Romanian, everywhere (catalog, cards, cart, stickers):
-  CLASIC, DUBLE, HOT BOY, CHEESY, HOT HONEY, CHICKEN BURGER. Fries, sauces, drinks keep their
+  CLASIC, DOUBLE, HOT BOY, CHEESY, HOT HONEY, CHICKEN BURGER. Fries, sauces, drinks keep their
   names. Prices follow the menu board.
 - No /events page.
 - Order numbers: BRG-XXXX. Free delivery over 120 RON.

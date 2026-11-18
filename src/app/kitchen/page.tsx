@@ -40,7 +40,7 @@ export default function KitchenPage() {
                 <span>acum 3 min</span>
               </div>
               <ul className="font-mono text-sm font-bold space-y-1">
-                <li>2x DUBLE</li>
+                <li>2x DOUBLE</li>
                 <li>1x Cartofi Prăjiți Speciali</li>
                 <li>1x Sos usturoi</li>
               </ul>
