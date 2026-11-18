@@ -48,6 +48,8 @@ body {
   background-color: #F5E6CC;
   color: #332420;
   position: relative;
+  /* Hero stickers / halo overhang the viewport edge: clip (not hidden, keeps sticky working) */
+  overflow-x: clip;
 }
 
 /* Text Selection */

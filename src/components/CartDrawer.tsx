@@ -125,7 +125,7 @@ export default function CartDrawer() {
       {/* Backdrop */}
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity" onClick={closeCart} />
 
-      <div className="absolute inset-y-0 right-0 flex w-full max-w-md pl-10 sm:pl-0">
+      <div className="absolute inset-y-0 right-0 flex w-full max-w-md">
         <div className="w-full min-w-0 bg-brand-paper border-l-4 border-brand-dark flex flex-col shadow-2xl">
           {/* Drawer Header */}
           <div className="bg-brand-dark text-brand-paper px-6 py-4 flex items-center justify-between border-b-2 border-brand-dark">
@@ -426,10 +426,17 @@ export default function CartDrawer() {
                 <span>Subtotal produse:</span>
                 <span>{formatLei(subtotal)}</span>
               </div>
-              <div className="flex justify-between gap-3 font-nunito font-semibold text-sm">
-                <span>Taxă livrare:</span>
-                <span>{deliveryFee === 0 ? "GRATUIT (peste 120 LEI)" : formatLei(deliveryFee)}</span>
-              </div>
+              {fulfillmentType === "delivery" && (
+                <>
+                  <div className="flex justify-between gap-3 font-nunito font-semibold text-sm">
+                    <span>Taxă livrare:</span>
+                    <span>{deliveryFee === 0 ? "GRATUIT" : formatLei(deliveryFee)}</span>
+                  </div>
+                  {subtotal < 120 && (
+                    <p className="font-nunito text-xs text-[#332420]/70">Livrare gratuită de la 120 LEI</p>
+                  )}
+                </>
+              )}
               {tipAmount > 0 && (
                 <div className="flex justify-between gap-3 font-nunito font-semibold text-sm text-brand-red">
                   <span>Bacșiș echipă:</span>

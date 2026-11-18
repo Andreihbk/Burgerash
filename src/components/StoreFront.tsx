@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { forwardRef, memo, useCallback, useEffect, useImperativeHandle, useRef, useState } from "react";
 import Link from "next/link";
 import { INITIAL_CATEGORIES, INITIAL_MODIFIERS, INITIAL_PRODUCTS } from "@/lib/catalog";
 import { useCartStore } from "@/store/cartStore";
@@ -8,7 +8,7 @@ import { useCartHydrated } from "@/store/useCartHydrated";
 import { formatLei } from "@/lib/format";
 import { BurgerStamp } from "./BurgerStamp";
 import { BrandLogo } from "./BrandLogo";
-import MenuBoard from "./MenuBoard";
+import MenuBoardBase from "./MenuBoard";
 import CartDrawer from "./CartDrawer";
 import TodayAtBurgerash from "./TodayAtBurgerash";
 import { heroStatusLine, scheduleLines, shortStatusLabel, statusLabel } from "@/lib/hours";
@@ -100,6 +100,39 @@ function HeroStickers({
 const prefersReducedMotion = () =>
   typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+// Board is memoized: nothing in the storefront's own state can re-render it. Only `lit` changes it.
+const MenuBoard = memo(MenuBoardBase);
+const BOARD_LINKED_NAMES = Object.keys(BOARD_LINE_TO_ID);
+
+export interface StickerStackHandle {
+  /** Board line hovered/focused: pause the shuffle and bring that product's sticker to the top. */
+  hover: (productId: string | null, active: boolean) => void;
+}
+
+// Owns the shuffle state so a 4s tick re-renders only the stickers, never the board or the page.
+const StickerStack = forwardRef<StickerStackHandle, { size: number; modalOpen: boolean; onPick: (p: Product) => void }>(
+  function StickerStack({ size, modalOpen, onPick }, ref) {
+    const [order, setOrder] = useState<string[]>(() => HERO_PRODUCTS.map((p) => p.id));
+    const [paused, setPaused] = useState(false);
+
+    useImperativeHandle(ref, () => ({
+      hover: (id, active) => {
+        setPaused(active);
+        if (id) setOrder((prev) => [id, ...prev.filter((x) => x !== id)]);
+      },
+    }), []);
+
+    // Every ~4s the top sticker goes to the back. Off with reduced motion, while hovering/focusing, and while the modal is open.
+    useEffect(() => {
+      if (paused || modalOpen || prefersReducedMotion()) return;
+      const id = setInterval(() => setOrder(([top, ...rest]) => [...rest, top]), 4000);
+      return () => clearInterval(id);
+    }, [paused, modalOpen]);
+
+    return <HeroStickers order={order} size={size} onPick={onPick} onPause={setPaused} />;
+  },
+);
+
 const isCustomizable = (product: Product) =>
   product.category_id === "cat-burgers" || product.category_id === "cat-chicken";
 
@@ -112,8 +145,7 @@ export default function Storefront() {
   const [toast, setToast] = useState<{ key: number; name: string } | null>(null);
   const [badgeBump, setBadgeBump] = useState(0);
   const status = useOpeningStatus();
-  const [stickerOrder, setStickerOrder] = useState<string[]>(() => HERO_PRODUCTS.map((p) => p.id));
-  const [stickersPaused, setStickersPaused] = useState(false);
+  const stickersRef = useRef<StickerStackHandle>(null);
 
   const barRef = useRef<HTMLDivElement>(null);
   const menuTopRef = useRef<HTMLDivElement>(null);
@@ -155,19 +187,9 @@ export default function Storefront() {
     });
   }, [activeTab]);
 
-  // Sticker shuffle: every ~4s the top sticker goes to the back. Off with reduced motion,
-  // while hovering/focusing the stack or board, and while the customize modal is open.
-  useEffect(() => {
-    if (stickersPaused || selectedProduct || prefersReducedMotion()) return;
-    const id = setInterval(() => setStickerOrder(([top, ...rest]) => [...rest, top]), 4000);
-    return () => clearInterval(id);
-  }, [stickersPaused, selectedProduct]);
-
-  const handleBoardLine = (name: string | null) => {
-    setStickersPaused(name !== null);
-    const id = name ? BOARD_LINE_TO_ID[name] : null;
-    if (id) setStickerOrder((prev) => [id, ...prev.filter((x) => x !== id)]);
-  };
+  const handleBoardLine = useCallback((name: string | null) => {
+    stickersRef.current?.hover(name ? BOARD_LINE_TO_ID[name] ?? null : null, name !== null);
+  }, []);
 
   useEffect(() => {
     return () => {
@@ -326,7 +348,7 @@ export default function Storefront() {
 
           {/* Mobile sticker stack (pure SVG, no cart state) */}
           <div className="self-center my-5 md:hidden">
-            <HeroStickers order={stickerOrder} size={112} onPick={handleOpenModal} onPause={setStickersPaused} />
+            <StickerStack size={112} modalOpen={!!selectedProduct} onPick={handleOpenModal} />
           </div>
 
           <button
@@ -353,10 +375,10 @@ export default function Storefront() {
         </div>
 
         <div className="relative">
-          <MenuBoard lit={status ? status.open : false} linkedNames={Object.keys(BOARD_LINE_TO_ID)} onLineActive={handleBoardLine} />
+          <MenuBoard lit={status ? status.open : false} linkedNames={BOARD_LINKED_NAMES} onLineActive={handleBoardLine} />
           {/* md+: stickers slapped over the board's top corner (scaled down at md) */}
           <div className="hidden md:block absolute -top-14 -right-4 lg:-top-16 lg:-right-10 z-10 origin-top-right md:scale-[0.65] lg:scale-100">
-            <HeroStickers order={stickerOrder} size={104} onPick={handleOpenModal} onPause={setStickersPaused} />
+            <StickerStack ref={stickersRef} size={104} modalOpen={!!selectedProduct} onPick={handleOpenModal} />
           </div>
         </div>
       </section>
