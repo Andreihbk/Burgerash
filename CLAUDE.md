@@ -32,6 +32,7 @@ Staff apps must keep working if Ebriza is slow or down.
 - Naming: PascalCase components, camelCase/kebab-case utilities.
 
 ## Where to look
+- Design direction: docs/DESIGN.md (read before any UI work)
 - Plan and status: docs/PLAN.md (do ONE task per session, update the checkboxes when done)
 - Ebriza API facts: .claude/skills/ebriza-api/reference.md (source of truth, do not guess)
 - Procedures: skills in .claude/skills/ (ebriza-api, staff-screen, pre-push-check)

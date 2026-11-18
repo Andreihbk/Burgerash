@@ -33,6 +33,9 @@ Definition of done for every task: `npm run build` + `npm run lint` pass.
 - [x] C.2 Customize modal: sticky footer (qty + live "ADAUGĂ · n LEI"), EXTRA / FĂRĂ groups,
       note label without KDS, thin brand scrollbar (modal + cart drawer). Checkout items already in C.1.
 - [x] S.6 /font-test removed (did not exist).
+- [x] D.1 Design direction (docs/DESIGN.md) + new hero: menu board (MenuBoard.tsx) in the hero with sticker
+      stack over its corner (desktop), board right below on mobile; old board section removed; hero status
+      line from hours.ts (never "open" while closed); short status in mobile header.
 
 ## Phase 1 - Ebriza adapter (works in mock mode, no credentials needed)
 - [x] 1.1 Fix `src/types/ebriza.ts` against `.claude/skills/ebriza-api/reference.md`.

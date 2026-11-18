@@ -6,12 +6,13 @@ import { INITIAL_CATEGORIES, INITIAL_MODIFIERS, INITIAL_PRODUCTS } from "@/lib/c
 import { useCartStore } from "@/store/cartStore";
 import { BurgerStamp } from "./BurgerStamp";
 import { BrandLogo } from "./BrandLogo";
+import MenuBoard from "./MenuBoard";
 import CartDrawer from "./CartDrawer";
 import TodayAtBurgerash from "./TodayAtBurgerash";
-import { PREP_TEXT, scheduleLines, statusLabel } from "@/lib/hours";
+import { PREP_TEXT, heroStatusLine, scheduleLines, shortStatusLabel, statusLabel } from "@/lib/hours";
 import { useOpeningStatus } from "@/lib/useOpeningStatus";
 import { OrderItemModifier, Product } from "@/types/database";
-import { ShoppingBag, Plus, Clock, SlidersHorizontal, X, Check, MapPin, Flame, ArrowRight } from "lucide-react";
+import { ShoppingBag, Plus, Clock, SlidersHorizontal, X, Check, MapPin, ArrowRight } from "lucide-react";
 
 // Header has a fixed height so the category bar can stick right under it.
 const HEADER_HEIGHT = 72;
@@ -33,6 +34,18 @@ const sectionDomId = (categoryId: string) => `meniu-${categoryId}`;
 const HERO_STICKERS = ["prod-classic", "prod-hot-boy", "prod-double"].map(
   (id) => INITIAL_PRODUCTS.find((p) => p.id === id) ?? null
 );
+
+// Three overlapping round stickers, positioned inside a relatively positioned parent.
+function HeroStickers({ className }: { className: string }) {
+  const shadow = "drop-shadow-[4px_4px_0px_#332420]";
+  return (
+    <>
+      <BurgerStamp product={HERO_STICKERS[0]} className={`absolute left-0 top-3 rotate-[-10deg] ${shadow} ${className}`} />
+      <BurgerStamp product={HERO_STICKERS[1]} className={`absolute right-0 top-0 rotate-[9deg] ${shadow} ${className}`} />
+      <BurgerStamp product={HERO_STICKERS[2]} className={`absolute left-1/2 bottom-0 -translate-x-1/2 rotate-[-3deg] ${shadow} ${className}`} />
+    </>
+  );
+}
 
 const formatLei = (value: number) => (Number.isInteger(value) ? `${value}` : value.toFixed(2));
 
@@ -188,6 +201,16 @@ export default function Storefront() {
           </a>
 
           {status && (
+            <div className="flex lg:hidden items-center gap-1.5 text-xs font-mono" aria-label="Program">
+              <span
+                aria-hidden
+                className={`w-2 h-2 rounded-full ${status.open ? "bg-[#F5E6CC]" : "border border-[#F5E6CC]"}`}
+              />
+              <span>{shortStatusLabel(status)}</span>
+            </div>
+          )}
+
+          {status && (
             <div
               className="hidden lg:flex items-center gap-2 text-xs font-mono"
               aria-label="Program"
@@ -226,59 +249,40 @@ export default function Storefront() {
         </div>
       </header>
 
-      {/* HERO SPLIT: TEXT + STICKER STACK */}
-      <section className="grid grid-cols-1 lg:grid-cols-12 border-b-4 border-[#332420] bg-[#F5E6CC]">
-        <div className="lg:col-span-7 px-4 py-10 sm:p-14 flex flex-col justify-center border-b-4 lg:border-b-0 lg:border-r-4 border-[#332420]">
-          <div className="inline-flex items-center gap-2 self-start bg-[#790D20] text-[#F5E6CC] font-mono text-xs font-bold tracking-widest px-3 py-1.5 mb-6 shadow-[3px_3px_0px_0px_#332420]">
-            <Flame className="w-4 h-4"/>
-            <span>100% VITĂ BLACK ANGUS PRESATĂ PE PLITĂ</span>
+      {/* HERO: title + stickers + COMANDĂ; the lightbox menu board sits on the right (below on mobile) */}
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 pt-6 pb-10 lg:pt-14 lg:pb-16 grid grid-cols-1 lg:grid-cols-2 lg:items-center gap-6 lg:gap-14">
+        <div className="flex flex-col items-start">
+          <h1 className="font-bebas text-5xl sm:text-7xl lg:text-8xl leading-[0.9] tracking-wide text-[#332420]">
+            NU FACEM MEDIUM.
+            <br />
+            FACEM <span className="text-[#790D20]">CRUSTĂ.</span>
+          </h1>
+
+          {/* Mobile sticker stack (pure SVG, no cart state) */}
+          <div className="relative self-center w-[260px] h-[150px] my-5 lg:hidden" aria-hidden="true">
+            <HeroStickers className="w-28 h-28" />
           </div>
 
-          <h2 className="font-bebas text-6xl sm:text-8xl leading-[0.88] tracking-wide mb-6 text-[#332420]">
-            FOC. PRESĂ. <br />
-            <span className="text-[#790D20]">CRUSTĂ.</span> ATÂT.
-          </h2>
+          <button
+            type="button"
+            onClick={() => scrollToTab(ALL_TAB)}
+            className="mt-2 lg:mt-8 min-h-[52px] bg-[#790D20] text-[#F5E6CC] font-bebas text-2xl tracking-wider px-10 py-3 rounded-lg border-2 border-[#332420] shadow-[4px_4px_0px_0px_#332420] hover:bg-[#332420] active:translate-y-px transition-colors duration-200"
+          >
+            COMANDĂ
+          </button>
 
-          <p className="font-nunito font-bold text-base sm:text-lg text-[#332420]/80 max-w-xl mb-8">
-            Nu facem povești, facem crustă. Burgerul care a cucerit cartierul — comandă direct aici pentru ridicare rapidă sau livrare la ușă.
+          {/* Empty until the client knows the time (no false "open" claim in SSR) */}
+          <p className="font-mono text-xs sm:text-sm text-[#332420] mt-4 min-h-5" aria-live="polite">
+            {status ? heroStatusLine(status) : ""}
           </p>
-
-          <div className="flex flex-wrap gap-4">
-            <button
-              type="button"
-              onClick={() => scrollToTab(ALL_TAB)}
-              className="bg-[#790D20] text-[#F5E6CC] font-bebas text-2xl tracking-wider px-8 py-4 rounded-lg border-2 border-[#332420] shadow-[4px_4px_0px_0px_#332420] hover:bg-[#332420] transition-all"
-            >
-              COMANDĂ ACUM
-            </button>
-            <a
-              href="#lightboard"
-              className="bg-[#F5E6CC] text-[#332420] font-bebas text-2xl tracking-wider px-8 py-4 rounded-lg border-2 border-[#332420] shadow-[4px_4px_0px_0px_#332420] hover:bg-[#332420] hover:text-[#F5E6CC] transition-all"
-            >
-              VEZI PANOUL DE PREȚURI
-            </a>
-          </div>
         </div>
 
-        <div className="lg:col-span-5 bg-[#790D20] overflow-hidden flex flex-col items-center justify-center gap-6 px-4 pt-10 pb-6 lg:min-h-[480px]">
-          {/* Three stickers, stacked and slightly rotated, with the hard charcoal shadow */}
-          <div className="relative w-[300px] h-[260px] sm:w-[400px] sm:h-[340px]" aria-hidden="true">
-            <BurgerStamp
-              product={HERO_STICKERS[0]}
-              className="absolute left-0 top-2 w-40 h-40 sm:w-52 sm:h-52 rotate-[-10deg] drop-shadow-[6px_6px_0px_#332420]"
-            />
-            <BurgerStamp
-              product={HERO_STICKERS[1]}
-              className="absolute right-0 top-0 w-40 h-40 sm:w-52 sm:h-52 rotate-[9deg] drop-shadow-[6px_6px_0px_#332420]"
-            />
-            <BurgerStamp
-              product={HERO_STICKERS[2]}
-              className="absolute left-1/2 bottom-0 -translate-x-1/2 w-44 h-44 sm:w-56 sm:h-56 rotate-[-3deg] drop-shadow-[6px_6px_0px_#332420]"
-            />
+        <div className="relative">
+          <MenuBoard />
+          {/* Desktop: stickers slapped over the board's top corner */}
+          <div className="hidden lg:block absolute -top-10 -right-8 w-56 h-56" aria-hidden="true">
+            <HeroStickers className="w-32 h-32" />
           </div>
-          <p className="font-bebas text-2xl tracking-wide text-[#F5E6CC] text-center">
-            GOOD BURGERS /// GOOD PEOPLE /// ALWAYS
-          </p>
         </div>
       </section>
 
@@ -349,89 +353,6 @@ export default function Storefront() {
             </section>
           ))}
         </div>
-
-        {/* PANOUL LUMINOS RETRO (CA ÎN POZA OFICIALĂ DIN LOCAȚIE) */}
-        <section id="lightboard" className="mt-20 max-w-xl mx-auto">
-          <div className="bg-[#790D20] p-4 rounded-xl shadow-[10px_10px_0px_0px_#332420] border-4 border-[#332420]">
-            <div className="bg-[#F5E6CC] text-[#790D20] p-6 sm:p-10 rounded-lg shadow-inner border-2 border-[#790D20]/30 relative">
-              {/* Header Panou */}
-              <div className="text-center mb-8">
-                <div className="inline-flex flex-col items-center">
-                  <BrandLogo layout="stacked" className="h-20 sm:h-24 w-auto text-[#790D20]" />
-                  <p className="font-nunito font-bold text-xs tracking-widest text-[#332420]">
-                    hand crafted burgers
-                  </p>
-                </div>
-              </div>
-
-              {/* Secțiunile Panoului Luminos */}
-              <div className="space-y-6">
-                {[
-                  {
-                    title: "BURGERS",
-                    items: [
-                      { name: "CLASIC", price: 36 },
-                      { name: "HOT BOY", price: 39 },
-                      { name: "DOUBLE", price: 46 },
-                    ],
-                  },
-                  {
-                    title: "CHICKEN",
-                    items: [
-                      { name: "CHICKEN BURGER", price: 38 },
-                      { name: "HOT HONEY", price: 38 },
-                    ],
-                  },
-                  {
-                    title: "SIDES & SAUCES",
-                    items: [
-                      { name: "FRIES", price: 13 },
-                      { name: "SAUCES", price: 5 },
-                    ],
-                  },
-                  {
-                    title: "DRINKS",
-                    items: [
-                      { name: "COLA", price: 9 },
-                      { name: "FANTA", price: 9 },
-                      { name: "SPRITE", price: 9 },
-                      { name: "WATER", price: 8 },
-                    ],
-                  },
-                ].map((group) => (
-                  <div key={group.title} className="relative pr-5">
-                    <div className="flex items-center gap-3 mb-2">
-                      <h3 className="font-bebas text-2xl tracking-wider text-[#332420] shrink-0">
-                        {group.title}
-                      </h3>
-                      <div className="flex-1 h-2 border-y-2 border-[#790D20] rounded-tr-xl" />
-                    </div>
-                    <div className="space-y-1.5 pl-1 border-r-4 border-double border-[#790D20] pr-4">
-                      {group.items.map((it) => (
-                        <div
-                          key={it.name}
-                          className="flex justify-between items-center font-nunito font-black text-base text-[#332420]"
-                        >
-                          <span>{it.name}</span>
-                          <span>{it.price}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Footer Panou Luminos */}
-              <div className="mt-8 pt-4 border-t-4 border-double border-[#790D20] flex justify-end">
-                <div className="font-nunito font-black text-xs tracking-widest text-[#332420] leading-tight text-right">
-                  <p>GOOD BURGERS</p>
-                  <p>GOOD PEOPLE</p>
-                  <p>ALWAYS</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
 
         {/* SECȚIUNEA LOCAȚIE & PROGRAM */}
         <section

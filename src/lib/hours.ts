@@ -82,6 +82,17 @@ export function statusLabel(status: OpeningStatus): string {
   return `Închis · deschidem ${status.next?.when} la ${status.next?.time}`;
 }
 
+/** Short header label: "Deschis" / "Închis". */
+export function shortStatusLabel(status: OpeningStatus): string {
+  return status.open ? "Deschis" : "Închis";
+}
+
+/** Hero line. Never claims the grill is on while closed. */
+export function heroStatusLine(status: OpeningStatus): string {
+  if (status.open) return "Plita e pornită · gata în ~15 min";
+  return `Plita e oprită · deschidem ${status.next?.when} la ${status.next?.time}`;
+}
+
 /** Weekly schedule grouped for display, e.g. [{ label: "Luni - Vineri", hours: "10:00 - 22:00" }, ...]. */
 export function scheduleLines(): { label: string; hours: string }[] {
   const fmt = (h: DayHours) => `${formatTime(h.open)} - ${formatTime(h.close)}`;
