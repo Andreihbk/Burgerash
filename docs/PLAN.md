@@ -81,7 +81,8 @@ Definition of done for every task: `npm run build` + `npm run lint` pass.
 - [ ] 4.3 End-to-end test: cart -> order -> POS -> status back
 
 ## Before launch
-- [ ] L.1 Opening hours + open/closed badge (block or warn on orders when closed)
+- [x] L.1 Opening hours + open/closed badge (block or warn on orders when closed)
+  - Hours live in src/lib/hours.ts only; server rejects closed orders (403). TODO: set real CONTACT.phone / CONTACT.address there (hidden on the site until set).
 - [ ] L.2 Allergens per product (shown on cards / product detail)
 - [ ] L.3 Order status page via secret link
 - [ ] L.4 Delivery zone (check address before accepting delivery orders)

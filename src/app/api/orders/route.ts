@@ -2,6 +2,7 @@ import { after, NextResponse } from "next/server";
 import { isSupabaseConfigured, supabase } from "@/lib/supabase";
 import { priceOrder, PricingError, type RequestedItem } from "@/lib/pricing";
 import { normalizeRoPhone, PHONE_ERROR } from "@/lib/phone";
+import { CLOSED_ORDER_ERROR, getStatus } from "@/lib/hours";
 import { syncOrderToEbriza } from "@/lib/ebriza-sync";
 import type { FulfillmentType, PaymentMethod } from "@/types/database";
 
@@ -32,6 +33,10 @@ export async function POST(req: Request) {
   const paymentMethod = body.payment_method as PaymentMethod;
   if (!FULFILLMENT_TYPES.includes(fulfillmentType)) return badRequest("Tip de livrare invalid.");
   if (!PAYMENT_METHODS.includes(paymentMethod)) return badRequest("Metodă de plată invalidă.");
+
+  if (!getStatus().open) {
+    return NextResponse.json({ error: CLOSED_ORDER_ERROR, code: "closed" }, { status: 403 });
+  }
 
   const customerName = optionalText(body.customer_name, 120);
   const customerPhone = optionalText(body.customer_phone, 40);

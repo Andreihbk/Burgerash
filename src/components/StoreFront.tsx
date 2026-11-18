@@ -7,6 +7,9 @@ import { useCartStore } from "@/store/cartStore";
 import { BurgerStamp } from "./BurgerStamp";
 import { BrandLogo } from "./BrandLogo";
 import CartDrawer from "./CartDrawer";
+import TodayAtBurgerash from "./TodayAtBurgerash";
+import { PREP_TEXT, scheduleLines, statusLabel } from "@/lib/hours";
+import { useOpeningStatus } from "@/lib/useOpeningStatus";
 import { OrderItemModifier, Product } from "@/types/database";
 import { ShoppingBag, Plus, Clock, SlidersHorizontal, X, Check, MapPin, Flame, ArrowRight } from "lucide-react";
 
@@ -47,6 +50,7 @@ export default function Storefront() {
   const [itemQty, setItemQty] = useState<number>(1);
   const [toast, setToast] = useState<{ key: number; name: string } | null>(null);
   const [badgeBump, setBadgeBump] = useState(0);
+  const status = useOpeningStatus();
 
   const barRef = useRef<HTMLDivElement>(null);
   const menuTopRef = useRef<HTMLDivElement>(null);
@@ -183,9 +187,22 @@ export default function Storefront() {
             LOCAȚIE
           </a>
 
+          {status && (
+            <div
+              className="hidden lg:flex items-center gap-2 text-xs font-mono"
+              aria-label="Program"
+            >
+              <span
+                aria-hidden
+                className={`w-2 h-2 rounded-full ${status.open ? "bg-[#F5E6CC]" : "border border-[#F5E6CC]"}`}
+              />
+              <span>{statusLabel(status)}</span>
+            </div>
+          )}
+
           <div className="hidden sm:flex items-center gap-2 text-xs font-mono bg-[#F5E6CC]/10 px-3 py-1.5 rounded-full border border-[#F5E6CC]/20">
             <Clock className="w-3.5 h-3.5 text-[#F5E6CC]"/>
-            <span>Gata în ~15 min</span>
+            <span>{PREP_TEXT}</span>
           </div>
 
           <button
@@ -297,6 +314,8 @@ export default function Storefront() {
 
       {/* FULL MENU: one section per category */}
       <main className="max-w-6xl mx-auto px-4 py-10">
+        <TodayAtBurgerash status={status} />
+
         <div ref={menuTopRef} id="meniu" className="mb-8">
           <p className="font-mono text-xs font-bold tracking-widest text-[#790D20]">COMANDĂ ONLINE</p>
           <h2 className="font-bebas text-5xl sm:text-6xl tracking-wide text-[#332420] leading-none">
@@ -432,8 +451,11 @@ export default function Storefront() {
             </p>
             <div className="font-mono text-sm space-y-1.5 border-t border-[#F5E6CC]/20 pt-4">
               <p className="text-[#F5E6CC] font-bold">PROGRAMUL DE FOC:</p>
-              <p>Luni - Vineri: 10:00 - 22:00</p>
-              <p>Sâmbătă - Duminică: 12:00 - 00:00</p>
+              {scheduleLines().map((l) => (
+                <p key={l.label}>
+                  {l.label}: {l.hours}
+                </p>
+              ))}
             </div>
           </div>
 

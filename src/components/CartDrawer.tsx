@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useCartStore } from "@/store/cartStore";
 import { normalizeRoPhone, PHONE_ERROR } from "@/lib/phone";
+import { useOpeningStatus } from "@/lib/useOpeningStatus";
 import { X, Trash2, Plus, Minus, ShoppingBag, ArrowRight, CheckCircle2 } from "lucide-react";
 
 const ERROR_TEXT = "Nu am putut trimite comanda. Încearcă din nou în câteva secunde.";
@@ -40,6 +41,8 @@ export default function CartDrawer() {
   const [orderNumber, setOrderNumber] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [phoneError, setPhoneError] = useState("");
+  const openingStatus = useOpeningStatus();
+  const isClosed = openingStatus !== null && !openingStatus.open;
 
   if (!isOpen) return null;
 
@@ -49,6 +52,7 @@ export default function CartDrawer() {
 
   const handleCheckoutSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isClosed) return;
     const phone = normalizeRoPhone(formData.phone);
     if (!phone) {
       setPhoneError(PHONE_ERROR);
@@ -92,13 +96,13 @@ export default function CartDrawer() {
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error);
+      if (!res.ok) throw new Error(res.status < 500 && data.error ? data.error : ERROR_TEXT);
 
       setOrderNumber(data.order_number || "BRG-999");
       clearCart();
       setStep("success");
-    } catch {
-      setErrorMessage(ERROR_TEXT);
+    } catch (err) {
+      setErrorMessage(err instanceof Error && err.message ? err.message : ERROR_TEXT);
     } finally {
       setIsSubmitting(false);
     }
@@ -373,10 +377,10 @@ export default function CartDrawer() {
 
                 <button
                   type="submit"
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || isClosed}
                   className="w-full bg-brand-red text-white font-bebas text-2xl py-4 rounded-lg shadow-[4px_4px_0px_0px_#121212] hover:bg-brand-dark transition-all mt-6 disabled:opacity-50"
                 >
-                  {isSubmitting ? "SE TRIMITE..." : `PLASEAZĂ COMANDA · ${Math.round(grandTotal)} LEI`}
+                  {isClosed ? "Suntem închiși acum" : isSubmitting ? "SE TRIMITE..." : `PLASEAZĂ COMANDA · ${Math.round(grandTotal)} LEI`}
                 </button>
               </form>
             )}
