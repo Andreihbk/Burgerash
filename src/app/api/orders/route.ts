@@ -1,89 +1,104 @@
 import { NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase";
+import { isSupabaseConfigured, supabase } from "@/lib/supabase";
+import { priceOrder, PricingError, type RequestedItem } from "@/lib/pricing";
+import type { FulfillmentType, PaymentMethod } from "@/types/database";
+
+const FULFILLMENT_TYPES: FulfillmentType[] = ["delivery", "pickup"];
+const PAYMENT_METHODS: PaymentMethod[] = ["cash_on_delivery", "card_on_delivery", "online_card"];
+
+function optionalText(value: unknown, max = 500): string | null {
+  return typeof value === "string" && value.trim() ? value.trim().slice(0, max) : null;
+}
+
+function badRequest(message: string) {
+  return NextResponse.json({ error: message }, { status: 400 });
+}
 
 export async function POST(req: Request) {
-  try {
-    const body = await req.json();
-    const {
-      fulfillment_type,
-      payment_method,
-      customer_name,
-      customer_phone,
-      customer_email,
-      delivery_address,
-      delivery_details,
-      order_note,
-      subtotal,
-      delivery_fee,
-      tip_amount,
-      total_amount,
-      cutlery_sets,
-      items,
-    } = body;
-
-    // 1. Generare număr unic de comandă (Ex: BRG-1042)
-    const randomNum = Math.floor(1000 + Math.random() * 9000);
-    const orderNumber = `BRG-${randomNum}`;
-
-    // 2. Salvare în Supabase
-    const { data: orderData, error: orderError } = await supabase
-      .from("orders")
-      .insert({
-        order_number: orderNumber,
-        status: "pending",
-        fulfillment_type,
-        payment_method,
-        is_paid: false,
-        customer_name,
-        customer_phone,
-        customer_email,
-        delivery_address,
-        delivery_details,
-        order_note,
-        subtotal,
-        delivery_fee,
-        tip_amount,
-        total_amount,
-        cutlery_sets,
-        ebriza_sync_status: "pending",
-      })
-      .select()
-      .single();
-
-    if (orderError) {
-      console.error("Supabase order insert error:", orderError);
-      return NextResponse.json({ error: orderError.message }, { status: 500 });
-    }
-
-    // 3. Salvare linii de comandă (order_items)
-    const orderItemsPayload = items.map((item: any) => ({
-      order_id: orderData.id,
-      product_id: item.product_id || null,
-      product_name: item.product_name,
-      ebriza_sku: item.ebriza_sku || null,
-      quantity: item.quantity,
-      unit_price: item.unit_price,
-      total_price: item.total_price,
-      modifiers: item.modifiers || [],
-      note: item.note || null,
-    }));
-
-    const { error: itemsError } = await supabase.from("order_items").insert(orderItemsPayload);
-
-    if (itemsError) {
-      console.error("Supabase order items insert error:", itemsError);
-    }
-
-    // 4. Integrare opțională cu Ebriza (dacă ai setat variabilele în .env.local)
-    // Aici va trimite POST /bills/openbillwithclient când ai cheile active
-
-    return NextResponse.json({
-      success: true,
-      order_id: orderData.id,
-      order_number: orderNumber,
-    });
-  } catch (err: any) {
-    console.error("API Error creating order:", err);
-    return NextResponse.json({ error: err.message || "Eroare internă de server" }, { status: 500 });
+  if (!isSupabaseConfigured) {
+    return NextResponse.json({ error: "Comenzile nu sunt disponibile momentan." }, { status: 503 });
   }
+
+  let body: Record<string, unknown>;
+  try {
+    body = await req.json();
+  } catch {
+    return badRequest("Cerere invalidă.");
+  }
+
+  const fulfillmentType = body.fulfillment_type as FulfillmentType;
+  const paymentMethod = body.payment_method as PaymentMethod;
+  if (!FULFILLMENT_TYPES.includes(fulfillmentType)) return badRequest("Tip de livrare invalid.");
+  if (!PAYMENT_METHODS.includes(paymentMethod)) return badRequest("Metodă de plată invalidă.");
+
+  const customerName = optionalText(body.customer_name, 120);
+  const customerPhone = optionalText(body.customer_phone, 40);
+  const deliveryAddress = optionalText(body.delivery_address);
+  if (!customerName || !customerPhone) return badRequest("Numele și telefonul sunt obligatorii.");
+  if (fulfillmentType === "delivery" && !deliveryAddress) return badRequest("Adresa este obligatorie.");
+
+  if (!Array.isArray(body.items)) return badRequest("Coșul este gol.");
+
+  // Only ids, quantities and notes are taken from the client; all prices come from catalog.ts.
+  const requestedItems: RequestedItem[] = body.items.map((raw: unknown) => {
+    const item = (raw ?? {}) as Record<string, unknown>;
+    const modifiers = Array.isArray(item.modifiers) ? item.modifiers : [];
+    return {
+      product_id: item.product_id,
+      quantity: item.quantity,
+      note: item.note,
+      modifier_ids: modifiers
+        .map((m) => (m && typeof m === "object" ? (m as { id?: unknown }).id : m))
+        .filter((id): id is string => typeof id === "string"),
+    };
+  });
+
+  let priced;
+  try {
+    priced = priceOrder({
+      items: requestedItems,
+      fulfillmentType,
+      tipAmount: body.tip_amount,
+      cutlerySets: body.cutlery_sets,
+    });
+  } catch (err) {
+    if (err instanceof PricingError) return badRequest(err.message);
+    throw err;
+  }
+
+  const { items, ...totals } = priced;
+
+  // Order + items are inserted in one Postgres transaction (supabase/schema.sql: create_order).
+  const { data, error } = await supabase.rpc("create_order", {
+    p_order: {
+      fulfillment_type: fulfillmentType,
+      payment_method: paymentMethod,
+      customer_name: customerName,
+      customer_phone: customerPhone,
+      customer_email: optionalText(body.customer_email, 200),
+      delivery_address: fulfillmentType === "delivery" ? deliveryAddress : null,
+      delivery_details: optionalText(body.delivery_details),
+      order_note: optionalText(body.order_note),
+      ...totals,
+    },
+    p_items: items,
+  });
+
+  const created = Array.isArray(data) ? data[0] : data;
+  if (error || !created) {
+    console.error("Supabase create_order error:", error);
+    return NextResponse.json(
+      { error: "Comanda nu a putut fi salvată. Încearcă din nou." },
+      { status: 500 }
+    );
+  }
+
+  // Ebriza sync comes later (plan task 1.5), AFTER the order is safely stored.
+
+  return NextResponse.json({
+    success: true,
+    order_id: created.id,
+    order_number: created.order_number,
+    ...totals,
+  });
 }

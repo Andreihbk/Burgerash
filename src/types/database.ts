@@ -59,7 +59,7 @@ export interface OrderItemModifier {
 export interface OrderItem {
   id: string;
   order_id: string;
-  product_id: string | null;
+  product_id: string | null; // Catalog id (e.g. "prod-classic"), not a DB uuid
   product_name: string;
   ebriza_sku: string | null;
   quantity: number;

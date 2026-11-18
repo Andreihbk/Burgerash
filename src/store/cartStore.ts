@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { FulfillmentType, OrderItemModifier, Product } from "@/types/database";
+import { getDeliveryFee } from "@/lib/pricing";
 
 export interface CartLineItem {
   cartItemId: string; // Hash unic produs + modificatori + notă
@@ -33,8 +34,6 @@ interface CartState {
   getGrandTotal: () => number;
 }
 
-export const DELIVERY_FEE_STANDARD = 12.0;
-export const FREE_DELIVERY_THRESHOLD = 120.0;
 
 function buildCartItemId(productId: string, modifiers: OrderItemModifier[], note: string): string {
   const modKey = modifiers
@@ -127,9 +126,7 @@ export const useCartStore = create<CartState>()(
 
       getDeliveryFee: () => {
         const { fulfillmentType, getSubtotal } = get();
-        const subtotal = getSubtotal();
-        if (fulfillmentType === "pickup" || subtotal === 0) return 0;
-        return subtotal >= FREE_DELIVERY_THRESHOLD ? 0 : DELIVERY_FEE_STANDARD;
+        return getDeliveryFee(getSubtotal(), fulfillmentType);
       },
 
       getGrandTotal: () => {

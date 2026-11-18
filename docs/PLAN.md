@@ -4,6 +4,15 @@ Rule: one task per Claude Code session. Tick the box and commit when done.
 Definition of done for every task: `npm run build` + `npm run lint` pass.
 
 ## Phase 0 - Foundations
+- [x] 0.0 Fix order pipeline
+      - Build fix (BurgerStamp null text).
+      - `order_items.product_id` is text (catalog id); name, unit price, SKU kept as snapshots.
+      - Schema moved to `supabase/schema.sql`; `.env.example` tracked via `!.env.example`.
+      - `/api/orders` recalculates prices, modifiers, subtotal, delivery fee, total from `catalog.ts`
+        (`src/lib/pricing.ts`); client prices ignored.
+      - Order numbers BRG-XXXX from Postgres sequence `order_number_seq`.
+      - Order + items saved in one transaction via `create_order` rpc; error returned on failure.
+      - `updated_at` trigger on `orders`. Removed `files.txt`, `setup-claude-config.sh`.
 - [ ] 0.1 Supabase cloud project exists, `supabase/schema.sql` applied, `.env.local` set
       DONE WHEN: a test order from the storefront appears in the `orders` table.
 - [ ] 0.2 Vercel env vars set (Supabase keys; later Ebriza vars). No secrets in git history.

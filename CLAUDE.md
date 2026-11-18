@@ -11,8 +11,8 @@ Staff apps must keep working if Ebriza is slow or down.
 ## Structure
 - src/app: page, layout, globals.css, kitchen/ dispatch/ rider/ admin/, api/orders/route.ts
 - src/components: StoreFront, CartDrawer, BurgerStamp
-- src/lib: catalog.ts, supabase.ts, ebriza.ts
-- src/store/cartStore.ts - src/types/{database,ebriza}.ts - supabase/schema.sql
+- src/lib: catalog.ts, pricing.ts (server-side order pricing), supabase.ts, ebriza.ts
+- src/store/cartStore.ts - src/types/{database,ebriza}.ts - supabase/schema.sql (repo root)
 
 ## Hard rules
 - Brand tokens are fixed: #790D20 wine, #F5E6CC sand, #332420 charcoal; Eatvetica headings;

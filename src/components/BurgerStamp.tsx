@@ -30,7 +30,7 @@ style={{ width: "92px", height: "92px" }}
 burgerash
 </span>
 <span className="font-eatvetica font-black text-xs tracking-tighter my-0.5 line-clamp-1">
-{text.split("//")[0].trim()}
+{(text ?? "").split("//")[0].trim()}
 </span>
 {weightGrams && (
 <span className="font-mono text-[9px] font-bold tracking-tight bg-black/10 px-1 py-0.5 rounded">
