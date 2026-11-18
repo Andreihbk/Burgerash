@@ -33,7 +33,8 @@ Definition of done for every task: `npm run build` + `npm run lint` pass.
 - [x] S.6 /font-test removed (did not exist).
 
 ## Phase 1 - Ebriza adapter (works in mock mode, no credentials needed)
-- [ ] 1.1 Fix `src/types/ebriza.ts` against `.claude/skills/ebriza-api/reference.md`.
+- [x] 1.1 Fix `src/types/ebriza.ts` against `.claude/skills/ebriza-api/reference.md`.
+      Const objects instead of enums; undocumented fields removed; error codes + result types.
 - [ ] 1.2 `src/lib/ebriza.ts`: token (Basic auth, cache, refresh on 401), `EBRIZA_MOCK=true` mode,
       `EBRIZA_PATH` (1 = clientid only, 2 = app credentials).
 - [ ] 1.3 Payload builder: Supabase order -> `/bills/openbillwithclient`
