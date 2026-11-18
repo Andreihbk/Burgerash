@@ -47,9 +47,9 @@ const BOARD_LINE_TO_ID: Record<string, string> = {
 // Fan layout per stack position (0 = top). Offsets are % of the sticker's own size,
 // so the same layout works at any sticker size.
 const STICKER_SLOTS = [
-  { x: 84, y: 22, r: -3, z: 30 },
-  { x: 0, y: 0, r: -10, z: 20 },
-  { x: 168, y: 8, r: 9, z: 10 },
+  { x: 84, y: 22, r: -3, z: 30, s: 1 },
+  { x: 0, y: 0, r: -10, z: 20, s: 0.95 },
+  { x: 168, y: 12, r: 9, z: 10, s: 0.9 },
 ];
 
 // Three fanned round stickers (tap = customize). `order` lists product ids, top first.
@@ -85,9 +85,9 @@ function HeroStickers({
               width: size,
               height: size,
               zIndex: slot.z,
-              transform: `translate(${slot.x}%, ${slot.y}%) rotate(${slot.r}deg)`,
+              transform: `translate(${slot.x}%, ${slot.y}%) rotate(${slot.r}deg) scale(${slot.s})`,
             }}
-            className="absolute left-0 top-0 rounded-full drop-shadow-[4px_4px_0px_#332420] transition-transform duration-[250ms] ease-out motion-reduce:transition-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#790D20]"
+            className="absolute left-0 top-0 rounded-full drop-shadow-[4px_4px_0px_#332420] hero-sticker focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#790D20]"
           >
             <BurgerStamp product={product} className="h-full w-full" />
           </button>
@@ -313,9 +313,9 @@ export default function Storefront() {
       </header>
 
       {/* HERO: title + stickers + COMANDĂ; the lightbox menu board sits on the right (below on mobile) */}
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 pt-6 pb-6 lg:pt-10 lg:pb-6 grid grid-cols-1 lg:grid-cols-2 lg:items-center gap-6 lg:gap-14 lg:min-h-[calc(100svh-72px-4.5rem)]">
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 pt-6 pb-6 md:pt-16 lg:pt-20 grid grid-cols-1 md:grid-cols-2 md:items-center gap-6 md:gap-8 lg:gap-14 md:min-h-[min(calc(100svh-9rem),52rem)]">
         <div className="flex flex-col items-start">
-          <h1 className="font-bebas text-5xl sm:text-7xl lg:text-8xl leading-[0.9] tracking-wide text-[#332420]">
+          <h1 className="font-bebas text-5xl sm:text-7xl md:text-5xl lg:text-7xl xl:text-8xl leading-[0.9] tracking-wide text-[#332420]">
             NU FACEM MEDIUM.
             <br />
             FACEM <span className="text-[#790D20]">CRUSTĂ.</span>
@@ -325,14 +325,14 @@ export default function Storefront() {
           </p>
 
           {/* Mobile sticker stack (pure SVG, no cart state) */}
-          <div className="self-center my-5 lg:hidden">
+          <div className="self-center my-5 md:hidden">
             <HeroStickers order={stickerOrder} size={112} onPick={handleOpenModal} onPause={setStickersPaused} />
           </div>
 
           <button
             type="button"
             onClick={() => scrollToTab(ALL_TAB)}
-            className="mt-2 lg:mt-8 min-h-[52px] bg-[#790D20] text-[#F5E6CC] font-bebas text-2xl tracking-wider px-10 py-3 rounded-lg border-2 border-[#332420] shadow-[4px_4px_0px_0px_#332420] hover:bg-[#332420] active:translate-y-px transition-colors duration-200"
+            className="mt-2 md:mt-6 lg:mt-8 min-h-[52px] bg-[#790D20] text-[#F5E6CC] font-bebas text-2xl tracking-wider px-10 py-3 rounded-lg border-2 border-[#332420] shadow-[4px_4px_0px_0px_#332420] hover:bg-[#332420] active:translate-y-px transition-colors duration-200"
           >
             COMANDĂ
           </button>
@@ -353,9 +353,9 @@ export default function Storefront() {
         </div>
 
         <div className="relative">
-          <MenuBoard linkedNames={Object.keys(BOARD_LINE_TO_ID)} onLineActive={handleBoardLine} />
-          {/* Desktop: stickers slapped over the board's top corner */}
-          <div className="hidden lg:block absolute -top-16 -right-10 z-10">
+          <MenuBoard lit={status ? status.open : false} linkedNames={Object.keys(BOARD_LINE_TO_ID)} onLineActive={handleBoardLine} />
+          {/* md+: stickers slapped over the board's top corner (scaled down at md) */}
+          <div className="hidden md:block absolute -top-14 -right-4 lg:-top-16 lg:-right-10 z-10 origin-top-right md:scale-[0.65] lg:scale-100">
             <HeroStickers order={stickerOrder} size={104} onPick={handleOpenModal} onPause={setStickersPaused} />
           </div>
         </div>

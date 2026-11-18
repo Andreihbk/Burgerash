@@ -6,13 +6,16 @@ import { BrandLogo } from "./BrandLogo";
 export default function MenuBoard({
   linkedNames = [],
   onLineActive,
+  lit = true,
 }: {
+  /** Sign switched on (open) or off (closed). */
+  lit?: boolean;
   /** Lines that react to hover/focus (they bring their sticker to the top of the stack). */
   linkedNames?: string[];
   onLineActive?: (name: string | null) => void;
 }) {
   return (
-    <section id="lightboard" aria-label="Panou meniu" className="lightbox-board w-full mx-auto scroll-mt-24">
+    <section id="lightboard" data-lit={lit ? "on" : "off"} aria-label="Panou meniu" className="lightbox-board w-full mx-auto scroll-mt-24">
       <div className="lightbox-frame bg-[#790D20] p-[1em] rounded-[0.75em] border-4 border-[#332420]">
         <div className="lightbox-panel bg-[#F5E6CC] text-[#790D20] p-[1.5em] sm:p-[2em] rounded-lg border-2 border-[#790D20]/30 relative">
           {/* Header Panou */}

@@ -193,16 +193,54 @@ body {
   background-image: radial-gradient(ellipse at center, rgba(245, 230, 204, 0) 45%, rgba(51, 36, 32, 0.13) 100%);
   box-shadow: inset 0 0 2em rgba(121, 13, 32, 0.12);
 }
-/* One-time neon "power on" flicker, 600ms */
-@keyframes lightbox-on {
-  0% { filter: brightness(0.55); }
-  12% { filter: brightness(1); }
-  22% { filter: brightness(0.6); }
-  38% { filter: brightness(1.05); }
-  48% { filter: brightness(0.75); }
-  100% { filter: brightness(1); }
+/* LED row along the inner edge of the wine frame (sand dots with a soft warm glow).
+   Lit (open): one short power-on flicker, then a slow 5s breathing glow. Off (closed): dim, board darker. */
+.lightbox-frame { position: relative; }
+.lightbox-frame::after {
+  content: "";
+  position: absolute;
+  inset: 0.28em;
+  pointer-events: none;
+  --led: radial-gradient(circle at center, #F5E6CC 0 0.13em, rgba(245, 230, 204, 0.5) 0.17em, rgba(245, 230, 204, 0) 0.38em);
+  background-image: var(--led), var(--led), var(--led), var(--led);
+  background-size: 1.2em 0.8em, 1.2em 0.8em, 0.8em 1.2em, 0.8em 1.2em;
+  background-position: 0 0, 0 100%, 0 0, 100% 0;
+  background-repeat: repeat-x, repeat-x, repeat-y, repeat-y;
+  opacity: 0.1;
+  transition: opacity 0.6s ease-in-out;
 }
-.lightbox-board { animation: lightbox-on 0.6s steps(1, end) 1 both; }
+.lightbox-board::before { transition: opacity 0.6s ease-in-out; }
+.lightbox-panel { transition: filter 0.6s ease-in-out; }
+.lightbox-board[data-lit="on"] .lightbox-frame {
+  box-shadow: 0.6em 0.6em 0 0 #332420, inset 0 0 1.4em rgba(245, 230, 204, 0.4), 0 0 1.6em rgba(245, 230, 204, 0.35);
+}
+.lightbox-board[data-lit="on"] .lightbox-frame::after {
+  opacity: 1;
+  animation: led-on 0.7s steps(1, end) 1 both, led-breathe 5s ease-in-out 0.7s infinite;
+}
+.lightbox-board[data-lit="off"]::before { opacity: 0; }
+.lightbox-board[data-lit="off"] .lightbox-panel { filter: brightness(0.86); }
+@keyframes led-on {
+  0% { opacity: 0.1; }
+  14% { opacity: 1; }
+  26% { opacity: 0.2; }
+  42% { opacity: 1; }
+  54% { opacity: 0.45; }
+  100% { opacity: 1; }
+}
+@keyframes led-breathe {
+  0%, 100% { opacity: 0.82; }
+  50% { opacity: 1; }
+}
 @media (prefers-reduced-motion: reduce) {
-  .lightbox-board { animation: none; }
+  .lightbox-board[data-lit="on"] .lightbox-frame::after { animation: none; opacity: 1; }
+  .lightbox-board::before, .lightbox-panel, .lightbox-frame::after { transition: none; }
+}
+
+/* Hero sticker shuffle: 600ms ease-in-out; z-order flips at the midpoint so nothing pops. */
+.hero-sticker {
+  transition: transform 600ms ease-in-out, z-index 0s linear 300ms;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-sticker { transition: none; }
 }
