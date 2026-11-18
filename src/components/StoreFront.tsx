@@ -33,19 +33,67 @@ const MENU_SECTIONS = INITIAL_CATEGORIES.filter((c) => c.is_active)
 
 const sectionDomId = (categoryId: string) => `meniu-${categoryId}`;
 
-const HERO_STICKERS = ["prod-classic", "prod-hot-boy", "prod-double"].map(
-  (id) => INITIAL_PRODUCTS.find((p) => p.id === id) ?? null
-);
+const HERO_PRODUCTS = ["prod-classic", "prod-hot-boy", "prod-double"]
+  .map((id) => INITIAL_PRODUCTS.find((p) => p.id === id))
+  .filter((p): p is Product => !!p);
 
-// Three overlapping round stickers, positioned inside a relatively positioned parent.
-function HeroStickers({ className }: { className: string }) {
-  const shadow = "drop-shadow-[4px_4px_0px_#332420]";
+// Menu board line name -> hero sticker product id.
+const BOARD_LINE_TO_ID: Record<string, string> = {
+  CLASIC: "prod-classic",
+  "HOT BOY": "prod-hot-boy",
+  DOUBLE: "prod-double",
+};
+
+// Fan layout per stack position (0 = top). Offsets are % of the sticker's own size,
+// so the same layout works at any sticker size.
+const STICKER_SLOTS = [
+  { x: 84, y: 22, r: -3, z: 30 },
+  { x: 0, y: 0, r: -10, z: 20 },
+  { x: 168, y: 8, r: 9, z: 10 },
+];
+
+// Three fanned round stickers (tap = customize). `order` lists product ids, top first.
+function HeroStickers({
+  order,
+  size,
+  onPick,
+  onPause,
+}: {
+  order: string[];
+  size: number;
+  onPick: (product: Product) => void;
+  onPause: (paused: boolean) => void;
+}) {
   return (
-    <>
-      <BurgerStamp product={HERO_STICKERS[0]} className={`absolute left-0 top-3 rotate-[-10deg] ${shadow} ${className}`} />
-      <BurgerStamp product={HERO_STICKERS[1]} className={`absolute right-0 top-0 rotate-[9deg] ${shadow} ${className}`} />
-      <BurgerStamp product={HERO_STICKERS[2]} className={`absolute left-1/2 bottom-0 -translate-x-1/2 rotate-[-3deg] ${shadow} ${className}`} />
-    </>
+    <div
+      className="relative"
+      style={{ width: size * 2.68, height: size * 1.22 }}
+      onMouseEnter={() => onPause(true)}
+      onMouseLeave={() => onPause(false)}
+      onFocus={() => onPause(true)}
+      onBlur={() => onPause(false)}
+    >
+      {HERO_PRODUCTS.map((product) => {
+        const slot = STICKER_SLOTS[Math.max(0, order.indexOf(product.id))];
+        return (
+          <button
+            key={product.id}
+            type="button"
+            onClick={() => onPick(product)}
+            aria-label={`Personalizează ${product.name}`}
+            style={{
+              width: size,
+              height: size,
+              zIndex: slot.z,
+              transform: `translate(${slot.x}%, ${slot.y}%) rotate(${slot.r}deg)`,
+            }}
+            className="absolute left-0 top-0 rounded-full drop-shadow-[4px_4px_0px_#332420] transition-transform duration-[250ms] ease-out motion-reduce:transition-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#790D20]"
+          >
+            <BurgerStamp product={product} className="h-full w-full" />
+          </button>
+        );
+      })}
+    </div>
   );
 }
 
@@ -64,6 +112,8 @@ export default function Storefront() {
   const [toast, setToast] = useState<{ key: number; name: string } | null>(null);
   const [badgeBump, setBadgeBump] = useState(0);
   const status = useOpeningStatus();
+  const [stickerOrder, setStickerOrder] = useState<string[]>(() => HERO_PRODUCTS.map((p) => p.id));
+  const [stickersPaused, setStickersPaused] = useState(false);
 
   const barRef = useRef<HTMLDivElement>(null);
   const menuTopRef = useRef<HTMLDivElement>(null);
@@ -104,6 +154,20 @@ export default function Storefront() {
       behavior: prefersReducedMotion() ? "auto" : "smooth",
     });
   }, [activeTab]);
+
+  // Sticker shuffle: every ~4s the top sticker goes to the back. Off with reduced motion,
+  // while hovering/focusing the stack or board, and while the customize modal is open.
+  useEffect(() => {
+    if (stickersPaused || selectedProduct || prefersReducedMotion()) return;
+    const id = setInterval(() => setStickerOrder(([top, ...rest]) => [...rest, top]), 4000);
+    return () => clearInterval(id);
+  }, [stickersPaused, selectedProduct]);
+
+  const handleBoardLine = (name: string | null) => {
+    setStickersPaused(name !== null);
+    const id = name ? BOARD_LINE_TO_ID[name] : null;
+    if (id) setStickerOrder((prev) => [id, ...prev.filter((x) => x !== id)]);
+  };
 
   useEffect(() => {
     return () => {
@@ -263,8 +327,8 @@ export default function Storefront() {
           </h1>
 
           {/* Mobile sticker stack (pure SVG, no cart state) */}
-          <div className="relative self-center w-[260px] h-[150px] my-5 lg:hidden" aria-hidden="true">
-            <HeroStickers className="w-28 h-28" />
+          <div className="self-center my-5 lg:hidden">
+            <HeroStickers order={stickerOrder} size={112} onPick={handleOpenModal} onPause={setStickersPaused} />
           </div>
 
           <button
@@ -282,10 +346,10 @@ export default function Storefront() {
         </div>
 
         <div className="relative">
-          <MenuBoard />
+          <MenuBoard linkedNames={Object.keys(BOARD_LINE_TO_ID)} onLineActive={handleBoardLine} />
           {/* Desktop: stickers slapped over the board's top corner */}
-          <div className="hidden lg:block absolute -top-10 -right-8 w-56 h-56" aria-hidden="true">
-            <HeroStickers className="w-32 h-32" />
+          <div className="hidden lg:block absolute -top-16 -right-10 z-10">
+            <HeroStickers order={stickerOrder} size={104} onPick={handleOpenModal} onPause={setStickersPaused} />
           </div>
         </div>
       </section>

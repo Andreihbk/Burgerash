@@ -20,10 +20,12 @@ export default function TodayAtBurgerash({ status }: { status: OpeningStatus | n
       </div>
 
       <ul className="font-nunito font-bold text-sm space-y-2 sm:justify-self-end">
-        <li className="flex items-center gap-2">
-          <Clock className="w-4 h-4 text-[#790D20]" aria-hidden />
-          <span>{PREP_TEXT}</span>
-        </li>
+        {status?.open && (
+          <li className="flex items-center gap-2">
+            <Clock className="w-4 h-4 text-[#790D20]" aria-hidden />
+            <span>{PREP_TEXT}</span>
+          </li>
+        )}
         {CONTACT.address && (
           <li className="flex items-center gap-2">
             <MapPin className="w-4 h-4 text-[#790D20]" aria-hidden />

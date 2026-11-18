@@ -1,7 +1,16 @@
+"use client";
+
 import { BrandLogo } from "./BrandLogo";
 
 // Lightbox menu board, as on the physical sign. Prices follow the menu board.
-export default function MenuBoard() {
+export default function MenuBoard({
+  linkedNames = [],
+  onLineActive,
+}: {
+  /** Lines that react to hover/focus (they bring their sticker to the top of the stack). */
+  linkedNames?: string[];
+  onLineActive?: (name: string | null) => void;
+}) {
   return (
     <section id="lightboard" aria-label="Panou meniu" className="w-full max-w-xl mx-auto scroll-mt-24">
       <div className="bg-[#790D20] p-4 rounded-xl shadow-[10px_10px_0px_0px_#332420] border-4 border-[#332420]">
@@ -62,7 +71,16 @@ export default function MenuBoard() {
                   {group.items.map((it) => (
                     <div
                       key={it.name}
-                      className="flex justify-between items-center font-nunito font-black text-base text-[#332420]"
+                      {...(onLineActive && linkedNames.includes(it.name)
+                        ? {
+                            tabIndex: 0,
+                            onMouseEnter: () => onLineActive(it.name),
+                            onMouseLeave: () => onLineActive(null),
+                            onFocus: () => onLineActive(it.name),
+                            onBlur: () => onLineActive(null),
+                          }
+                        : {})}
+                      className="flex justify-between items-center font-nunito font-black text-base text-[#332420] rounded focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#790D20]"
                     >
                       <span>{it.name}</span>
                       <span>{it.price}</span>
