@@ -5,7 +5,7 @@ export default function RiderPage() {
     <div className="min-h-screen bg-[#F5E6CC] text-[#332420] flex flex-col max-w-md mx-auto border-x-4 border-[#332420]">
       {/* Rider App Header */}
       <header className="border-b-4 border-[#332420] bg-[#790D20] text-[#FFFFFF] p-4 flex justify-between items-center">
-        <Link href="/" className="font-eatvetica text-xl uppercase text-[#FFFFFF]">
+        <Link href="/" className="font-bebas text-xl uppercase text-[#FFFFFF]">
           &larr; Burgerash Rider
         </Link>
         <span className="font-mono text-xs font-bold bg-[#332420] text-[#F5E6CC] px-2 py-1">
@@ -20,7 +20,7 @@ export default function RiderPage() {
             LIVRARE ACTIVĂ #1039
           </div>
 
-          <h2 className="font-eatvetica text-2xl uppercase text-[#332420] mb-2">
+          <h2 className="font-bebas text-2xl uppercase text-[#332420] mb-2">
             Adresă Client
           </h2>
           <p className="font-nunito font-bold text-base text-[#332420] mb-4">

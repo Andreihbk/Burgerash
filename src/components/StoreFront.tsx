@@ -21,7 +21,7 @@ export default function Storefront() {
   const totalItems = useCartStore((state) => state.getTotalItemsCount());
 
   const filteredProducts = INITIAL_PRODUCTS.filter(
-    (p) => p.category_id === activeCategory
+    (p) => p.category_id === activeCategory && p.is_available
   );
 
   const isCustomizable = (product: Product) =>
@@ -61,11 +61,11 @@ export default function Storefront() {
       {/* TOP HEADER / APP BAR */}
       <header className="sticky top-0 z-40 bg-[#332420] text-[#F5E6CC] border-b-2 border-[#332420] px-6 py-4 flex items-center justify-between shadow-md">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-[#790D20] border-2 border-[#F5E6CC] flex items-center justify-center font-eatvetica text-2xl text-white">
+          <div className="w-10 h-10 rounded-full bg-[#790D20] border-2 border-[#F5E6CC] flex items-center justify-center font-bebas text-2xl text-white">
             B
           </div>
           <div>
-            <h1 className="font-eatvetica tracking-wider text-2xl leading-none">
+            <h1 className="font-bebas tracking-wider text-2xl leading-none">
               BURGERASH
             </h1>
             <p className="text-[10px] tracking-widest font-mono text-[#F5E6CC]/70 mt-0.5">
@@ -77,13 +77,13 @@ export default function Storefront() {
         <div className="flex items-center gap-4">
           <a
             href="#lightboard"
-            className="hidden md:inline-block font-eatvetica text-lg tracking-wider text-[#F5E6CC]/80 hover:text-white transition-colors"
+            className="hidden md:inline-block font-bebas text-lg tracking-wider text-[#F5E6CC]/80 hover:text-white transition-colors"
           >
             PANOU MENIU
           </a>
           <a
             href="#location"
-            className="hidden md:inline-block font-eatvetica text-lg tracking-wider text-[#F5E6CC]/80 hover:text-white transition-colors"
+            className="hidden md:inline-block font-bebas text-lg tracking-wider text-[#F5E6CC]/80 hover:text-white transition-colors"
           >
             LOCAȚIE
           </a>
@@ -95,7 +95,7 @@ export default function Storefront() {
 
           <button
             onClick={openCart}
-            className="relative bg-[#790D20] text-white px-4 py-2 rounded-lg font-eatvetica text-xl tracking-wide flex items-center gap-2 border-2 border-[#F5E6CC] shadow-[3px_3px_0px_0px_#121212] hover:translate-y-[-2px] active:translate-y-[0px] transition-all"
+            className="relative bg-[#790D20] text-white px-4 py-2 rounded-lg font-bebas text-xl tracking-wide flex items-center gap-2 border-2 border-[#F5E6CC] shadow-[3px_3px_0px_0px_#121212] hover:translate-y-[-2px] active:translate-y-[0px] transition-all"
           >
             <ShoppingBag className="w-5 h-5"/>
             <span>COȘ</span>
@@ -116,7 +116,7 @@ export default function Storefront() {
             <span>100% VITĂ BLACK ANGUS PRESATĂ PE PLITĂ</span>
           </div>
 
-          <h2 className="font-eatvetica text-6xl sm:text-8xl leading-[0.88] tracking-wide mb-6 text-[#332420]">
+          <h2 className="font-bebas text-6xl sm:text-8xl leading-[0.88] tracking-wide mb-6 text-[#332420]">
             FOC. PRESĂ. <br />
             <span className="text-[#790D20]">CRUSTĂ.</span> ATÂT.
           </h2>
@@ -128,13 +128,13 @@ export default function Storefront() {
           <div className="flex flex-wrap gap-4">
             <a
               href="#menu-grid"
-              className="bg-[#790D20] text-white font-eatvetica text-2xl tracking-wider px-8 py-4 rounded-lg border-2 border-[#332420] shadow-[4px_4px_0px_0px_#332420] hover:bg-[#332420] transition-all"
+              className="bg-[#790D20] text-white font-bebas text-2xl tracking-wider px-8 py-4 rounded-lg border-2 border-[#332420] shadow-[4px_4px_0px_0px_#332420] hover:bg-[#332420] transition-all"
             >
               COMANDĂ ACUM
             </a>
             <a
               href="#lightboard"
-              className="bg-[#F5E6CC] text-[#332420] font-eatvetica text-2xl tracking-wider px-8 py-4 rounded-lg border-2 border-[#332420] shadow-[4px_4px_0px_0px_#332420] hover:bg-[#332420] hover:text-[#F5E6CC] transition-all"
+              className="bg-[#F5E6CC] text-[#332420] font-bebas text-2xl tracking-wider px-8 py-4 rounded-lg border-2 border-[#332420] shadow-[4px_4px_0px_0px_#332420] hover:bg-[#332420] hover:text-[#F5E6CC] transition-all"
             >
               VEZI PANOUL DE PREȚURI
             </a>
@@ -152,7 +152,7 @@ export default function Storefront() {
             className="object-cover w-full h-full absolute inset-0 opacity-90"
           />
           <div className="relative z-10 p-6 mt-auto w-full bg-gradient-to-t from-black/80 via-black/30 to-transparent text-[#F5E6CC]">
-            <p className="font-eatvetica text-2xl tracking-wide">
+            <p className="font-bebas text-2xl tracking-wide">
               GOOD BURGERS /// GOOD PEOPLE /// ALWAYS
             </p>
           </div>
@@ -169,7 +169,7 @@ export default function Storefront() {
             <button
               key={cat.id}
               onClick={() => setActiveCategory(cat.id)}
-              className={`font-eatvetica text-xl tracking-wide px-5 py-2 rounded-lg transition-all whitespace-nowrap border-2 ${
+              className={`font-bebas text-xl tracking-wide px-5 py-2 rounded-lg transition-all whitespace-nowrap border-2 ${
                 activeCategory === cat.id
                   ? "bg-[#790D20] text-white border-[#332420] shadow-[3px_3px_0px_0px_#332420]"
                   : "bg-white text-[#332420] border-[#332420] hover:bg-[#332420]/10"
@@ -189,37 +189,17 @@ export default function Storefront() {
               key={product.id}
               className="bg-white border-2 border-[#332420] rounded-xl p-5 flex flex-col justify-between shadow-[5px_5px_0px_0px_#332420] hover:translate-y-[-3px] transition-all relative group"
             >
-              {/* Etichetă rotundă oficială (BurgerStamp) */}
-              <div className="absolute top-3 right-3 z-10 pointer-events-none">
-               <BurgerStamp
-                text={product.label_text}
-                variant={product.label_variant}
-                weightGrams={product.weight_grams}
-              />
-              </div>
-
               <div>
-                {product.image_url ? (
-                  <div className="w-full h-48 mb-4 flex items-center justify-center overflow-hidden bg-[#F5E6CC]/50 rounded-lg p-3 border border-[#332420]/15">
-                    <img
-                      src={product.image_url}
-                      alt={product.name}
-                      className="max-h-full object-contain group-hover:scale-105 transition-transform duration-300 drop-shadow-[6px_6px_0px_rgba(51,36,32,0.18)]"
-                    />
-                  </div>
-                ) : (
-                  <div className="w-full h-36 mb-4 flex flex-col items-center justify-center bg-[#F5E6CC]/60 rounded-lg border border-[#332420]/15 text-[#790D20]">
-                    <span className="font-eatvetica text-3xl tracking-wider">
-                      {product.name}
-                    </span>
-                    <span className="font-mono text-xs text-[#332420]/60">
-                      {product.weight_grams}g
-                    </span>
-                  </div>
-                )}
+                {/* Sticker instead of photo (photos kept in public/images/menu for later) */}
+                <div className="w-full h-52 mb-4 flex items-center justify-center bg-[#F5E6CC]/50 rounded-lg border border-[#332420]/15">
+                  <BurgerStamp
+                    product={product}
+                    className="h-44 w-44 rotate-[-6deg] group-hover:rotate-0 transition-transform duration-300 drop-shadow-[4px_4px_0px_rgba(51,36,32,0.25)]"
+                  />
+                </div>
 
-                <div className="pr-20 mb-2">
-                  <h3 className="font-eatvetica text-3xl tracking-wide text-[#332420]">
+                <div className="mb-2">
+                  <h3 className="font-bebas text-3xl tracking-wide text-[#332420]">
                     {product.name}
                   </h3>
                 </div>
@@ -243,7 +223,7 @@ export default function Storefront() {
                   {isCustomizable(product) && (
                     <button
                       onClick={() => handleOpenModal(product)}
-                      className="bg-[#F5E6CC] text-[#332420] border-2 border-[#332420] px-3 py-2.5 rounded-lg font-eatvetica text-base flex items-center gap-1 hover:bg-[#332420] hover:text-[#F5E6CC] transition-colors"
+                      className="bg-[#F5E6CC] text-[#332420] border-2 border-[#332420] px-3 py-2.5 rounded-lg font-bebas text-base flex items-center gap-1 hover:bg-[#332420] hover:text-[#F5E6CC] transition-colors"
                       title="Personalizează ingredientele"
                     >
                       <SlidersHorizontal className="w-4 h-4"/>
@@ -253,7 +233,7 @@ export default function Storefront() {
 
                   <button
                     onClick={() => addItem(product)}
-                    className="bg-[#790D20] text-white border-2 border-[#332420] px-4 py-2.5 rounded-lg font-eatvetica text-lg flex items-center gap-1.5 shadow-[2px_2px_0px_0px_#332420] hover:bg-[#332420] active:translate-y-[1px] transition-all"
+                    className="bg-[#790D20] text-white border-2 border-[#332420] px-4 py-2.5 rounded-lg font-bebas text-lg flex items-center gap-1.5 shadow-[2px_2px_0px_0px_#332420] hover:bg-[#332420] active:translate-y-[1px] transition-all"
                   >
                     <Plus className="w-5 h-5 stroke-[3]"/>
                     <span>ADAUGĂ</span>
@@ -290,15 +270,15 @@ export default function Storefront() {
                   {
                     title: "BURGERS",
                     items: [
-                      { name: "CLASSIC", price: 36 },
+                      { name: "CLASIC", price: 36 },
                       { name: "HOT BOY", price: 39 },
-                      { name: "DOUBLE", price: 46 },
+                      { name: "DUBLE", price: 46 },
                     ],
                   },
                   {
                     title: "CHICKEN",
                     items: [
-                      { name: "CRISPY CHICKEN", price: 38 },
+                      { name: "CHICKEN BURGER", price: 38 },
                       { name: "HOT HONEY", price: 38 },
                     ],
                   },
@@ -321,7 +301,7 @@ export default function Storefront() {
                 ].map((group) => (
                   <div key={group.title} className="relative pr-5">
                     <div className="flex items-center gap-3 mb-2">
-                      <h3 className="font-eatvetica text-2xl tracking-wider text-[#332420] shrink-0">
+                      <h3 className="font-bebas text-2xl tracking-wider text-[#332420] shrink-0">
                         {group.title}
                       </h3>
                       <div className="flex-1 h-2 border-y-2 border-[#790D20] rounded-tr-xl" />
@@ -363,7 +343,7 @@ export default function Storefront() {
               <MapPin className="w-4 h-4"/>
               <span>CARTIERUL CRUSTEI</span>
             </div>
-            <h3 className="font-eatvetica text-5xl tracking-wide mb-4 text-[#F5E6CC]">
+            <h3 className="font-bebas text-5xl tracking-wide mb-4 text-[#F5E6CC]">
               UNDE GĂSEȘTI CRUSTA
             </h3>
             <p className="font-nunito font-bold text-base text-[#F5E6CC]/80 mb-6">
@@ -378,7 +358,7 @@ export default function Storefront() {
 
           <div className="bg-[#790D20] text-[#F5E6CC] p-8 md:p-10 flex flex-col justify-between">
             <div>
-              <h3 className="font-eatvetica text-5xl tracking-wide mb-4">
+              <h3 className="font-bebas text-5xl tracking-wide mb-4">
                 LIVRARE PROPRIE & PICKUP
               </h3>
               <p className="font-nunito font-bold text-base text-[#F5E6CC]/90 mb-6">
@@ -387,7 +367,7 @@ export default function Storefront() {
             </div>
             <button
               onClick={openCart}
-              className="self-start bg-[#F5E6CC] text-[#332420] font-eatvetica text-2xl px-8 py-3.5 rounded-lg border-2 border-[#332420] shadow-[4px_4px_0px_0px_#332420] hover:bg-white transition-all"
+              className="self-start bg-[#F5E6CC] text-[#332420] font-bebas text-2xl px-8 py-3.5 rounded-lg border-2 border-[#332420] shadow-[4px_4px_0px_0px_#332420] hover:bg-white transition-all"
             >
               DESCHIDE COȘUL DE COMANDĂ
             </button>
@@ -404,7 +384,7 @@ export default function Storefront() {
                 <span className="font-mono text-xs text-[#790D20] font-bold">
                   PERSONALIZEAZĂ BURGERUL
                 </span>
-                <h3 className="font-eatvetica text-4xl text-[#332420]">
+                <h3 className="font-bebas text-4xl text-[#332420]">
                   {selectedProduct.name}
                 </h3>
               </div>
@@ -416,8 +396,12 @@ export default function Storefront() {
               </button>
             </div>
 
+            <div className="flex justify-center mb-4">
+              <BurgerStamp product={selectedProduct} className="h-36 w-36 rotate-[-6deg]" />
+            </div>
+
             <div className="space-y-4">
-              <p className="font-eatvetica text-xl text-[#332420]">
+              <p className="font-bebas text-xl text-[#332420]">
                 ADAUGĂ EXTRA SAU SCOATE INGREDIENTE:
               </p>
               <div className="grid grid-cols-1 gap-2">
@@ -455,7 +439,7 @@ export default function Storefront() {
               </div>
 
               <div>
-                <label className="block font-eatvetica text-lg mb-1">
+                <label className="block font-nunito font-extrabold tracking-wide text-sm mb-1">
                   NOTĂ PENTRU BUCĂTĂRIE (KDS):
                 </label>
                 <input
@@ -489,7 +473,7 @@ export default function Storefront() {
                 <button
                   type="button"
                   onClick={handleConfirmModal}
-                  className="bg-[#790D20] text-white font-eatvetica text-2xl px-6 py-3 rounded-lg border-2 border-[#332420] shadow-[3px_3px_0px_0px_#332420] hover:bg-[#332420] transition-all"
+                  className="bg-[#790D20] text-white font-bebas text-2xl px-6 py-3 rounded-lg border-2 border-[#332420] shadow-[3px_3px_0px_0px_#332420] hover:bg-[#332420] transition-all"
                 >
                   ADAUGĂ ÎN COȘ —{" "}
                   {(

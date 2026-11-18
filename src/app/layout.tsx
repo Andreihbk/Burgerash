@@ -1,31 +1,25 @@
 import type { Metadata } from "next";
 import { Bebas_Neue, Roboto_Mono, Nunito } from "next/font/google";
-import localFont from "next/font/local";
 import "./globals.css";
 
-// 1. Fonturile vechi (rămân la fel)
+// Display / headings
 const bebasNeue = Bebas_Neue({
   weight: "400",
-  subsets: ["latin"],
+  subsets: ["latin", "latin-ext"],
   variable: "--font-bebas-neue",
 });
 
+// Small mono accents (codes, prices meta)
 const robotoMono = Roboto_Mono({
-  subsets: ["latin"],
+  subsets: ["latin", "latin-ext"],
   variable: "--font-roboto-mono",
 });
 
-// 2. NOU: Fontul de la Google pentru descrieri (Nunito)
+// Body text and form labels
 const nunito = Nunito({
-  weight: ["400", "700", "900"],
-  subsets: ["latin"],
+  weight: ["400", "600", "700", "800", "900"],
+  subsets: ["latin", "latin-ext"],
   variable: "--font-nunito",
-});
-
-// 3. NOU: Fontul local pentru titluri (Eatvetica)
-const eatvetica = localFont({
-  src: "../fonts/eatvetica.otf", // Trebuie să ai fișierul în src/fonts/eatvetica.otf
-  variable: "--font-eatvetica",
 });
 
 export const metadata: Metadata = {
@@ -40,8 +34,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ro">
-      {/* Clasa body combină toate fonturile și adaugă antialiasing pentru o textură mai fină */}
-      <body className={`${bebasNeue.variable} ${robotoMono.variable} ${nunito.variable} ${eatvetica.variable} antialiased font-roboto`}>
+      <body className={`${bebasNeue.variable} ${robotoMono.variable} ${nunito.variable} antialiased font-nunito`}>
         {children}
       </body>
     </html>

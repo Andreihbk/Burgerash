@@ -6,7 +6,7 @@ export default function DispatchPage() {
       {/* Dispatch Header */}
       <header className="border-b-4 border-[#332420] bg-[#332420] text-[#F5E6CC] p-4 flex justify-between items-center">
         <div className="flex items-center gap-4">
-          <Link href="/" className="font-eatvetica text-2xl text-[#F5E6CC] uppercase hover:text-[#790D20]">
+          <Link href="/" className="font-bebas text-2xl text-[#F5E6CC] uppercase hover:text-[#790D20]">
             &larr; Burgerash
           </Link>
           <span className="font-mono text-sm px-2 py-0.5 bg-[#790D20] text-[#FFFFFF] font-bold">
@@ -22,7 +22,7 @@ export default function DispatchPage() {
       <main className="flex-1 p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Ready to Pack */}
         <div className="border-4 border-[#332420] bg-[#FFFFFF] p-6 shadow-[8px_8px_0px_0px_#332420]">
-          <h2 className="font-eatvetica text-3xl text-[#790D20] uppercase mb-4 border-b-2 border-[#332420] pb-2">
+          <h2 className="font-bebas text-3xl text-[#790D20] uppercase mb-4 border-b-2 border-[#332420] pb-2">
             Comenzi de Ambalat
           </h2>
           <div className="space-y-4">
@@ -48,7 +48,7 @@ export default function DispatchPage() {
 
         {/* Rider Queue */}
         <div className="border-4 border-[#332420] bg-[#FFFFFF] p-6 shadow-[8px_8px_0px_0px_#332420]">
-          <h2 className="font-eatvetica text-3xl text-[#332420] uppercase mb-4 border-b-2 border-[#332420] pb-2">
+          <h2 className="font-bebas text-3xl text-[#332420] uppercase mb-4 border-b-2 border-[#332420] pb-2">
             Curieri Disponibili
           </h2>
           <div className="space-y-3 font-mono text-sm">

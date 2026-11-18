@@ -6,7 +6,7 @@ export default function KitchenPage() {
       {/* KDS Header */}
       <header className="border-b-4 border-[#332420] bg-[#332420] text-[#F5E6CC] p-4 flex justify-between items-center">
         <div className="flex items-center gap-4">
-          <Link href="/" className="font-eatvetica text-2xl text-[#F5E6CC] uppercase hover:text-[#790D20]">
+          <Link href="/" className="font-bebas text-2xl text-[#F5E6CC] uppercase hover:text-[#790D20]">
             &larr; Burgerash
           </Link>
           <span className="font-mono text-sm px-2 py-0.5 bg-[#790D20] text-[#FFFFFF] font-bold">
@@ -40,7 +40,7 @@ export default function KitchenPage() {
                 <span>acum 3 min</span>
               </div>
               <ul className="font-mono text-sm font-bold space-y-1">
-                <li>2x Double Smash Burger</li>
+                <li>2x DUBLE</li>
                 <li>1x Cartofi Prăjiți Speciali</li>
                 <li>1x Sos usturoi</li>
               </ul>

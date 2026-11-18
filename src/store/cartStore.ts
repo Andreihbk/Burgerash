@@ -137,7 +137,7 @@ export const useCartStore = create<CartState>()(
       },
     }),
     {
-      name: "burgerash-cart-v1",
+      name: "burgerash-cart-v2", // v2: product names renamed (stickers); drops stale carts
       partialize: (state) => ({
         items: state.items,
         fulfillmentType: state.fulfillmentType,

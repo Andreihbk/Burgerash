@@ -15,8 +15,16 @@ Staff apps must keep working if Ebriza is slow or down.
 - src/store/cartStore.ts - src/types/{database,ebriza}.ts - supabase/schema.sql (repo root)
 
 ## Hard rules
-- Brand tokens are fixed: #790D20 wine, #F5E6CC sand, #332420 charcoal; Eatvetica headings;
-  fonts Bebas Neue, Roboto Mono, Nunito.
+- Brand tokens are fixed: #790D20 wine, #F5E6CC sand, #332420 charcoal.
+- Product sticker accents (globals.css `--color-sticker-*`, each used ONLY on that product's sticker):
+  classic #0B391C, double #6D050A, cheesy #EE9E23 (wine text), hot-boy #B50711,
+  hot-honey #650329, chicken #063640. These + the 3 brand tokens are the ONLY allowed colors.
+- Fonts (latin-ext subset): Bebas Neue for display/headings, Nunito for body and form labels,
+  Roboto Mono only for small accents. No other fonts.
+- Product visuals are SVG stickers (BurgerStamp.tsx), not photos.
+- Product names follow the stickers, in Romanian, everywhere (catalog, cards, cart, stickers):
+  CLASIC, DUBLE, HOT BOY, CHEESY, HOT HONEY, CHICKEN BURGER. Fries, sauces, drinks keep their
+  names. Prices follow the menu board.
 - No /events page.
 - Order numbers: BRG-XXXX. Free delivery over 120 RON.
 - Secrets only in env vars (see .env.example). NEVER commit keys. The repo is PUBLIC.
@@ -34,3 +42,10 @@ Staff apps must keep working if Ebriza is slow or down.
 - Run `npm run build` and `npm run lint` before saying a task is done.
 - Keep diffs small; one commit per task with a clear message.
 - If something in the docs or schema is unclear, ask instead of inventing.
+
+## Session hygiene (remind the user)
+- At the end of every task, after commit + push, say: "Task done. Run /clear before the next task."
+- Before starting a task, recommend a model in one line: Sonnet for normal building and fixes,
+  Opus only for architecture, Ebriza integration design, security/RLS, or a bug Sonnet failed twice.
+- If the conversation gets long or you start re-reading the same files, suggest /compact or /clear.
+- If a task touches more than ~5 files, suggest splitting it.

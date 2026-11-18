@@ -15,11 +15,26 @@
   --color-brand-charcoal: #332420;
   --color-brand-metal: #790D20;
 
-  /* Font mappings */
-  --font-bebas: var(--font-bebas-neue);
-  --font-mono: var(--font-roboto-mono);
-  --font-nunito: var(--font-nunito);
-  --font-eatvetica: var(--font-eatvetica);
+  /* Canonical brand token names (CLAUDE.md): wine, sand, charcoal */
+  --color-brand-wine: #790D20;
+  --color-brand-sand: #F5E6CC;
+
+  /* Per-product sticker accents, sampled from docs/brand/IMG_4143.jpeg (sticker sheet).
+     Use ONLY for that product's sticker. These + the 3 brand tokens are the only allowed colors. */
+  --color-sticker-classic: #0B391C;   /* CLASIC    - forest green */
+  --color-sticker-double: #6D050A;    /* DUBLE     - oxblood */
+  --color-sticker-cheesy: #EE9E23;    /* CHEESY    - cheddar (text in brand wine) */
+  --color-sticker-hot-boy: #B50711;   /* HOT BOY   - chili red */
+  --color-sticker-hot-honey: #650329; /* HOT HONEY - plum */
+  --color-sticker-chicken: #063640;   /* CHICKEN BURGER - deep teal */
+}
+
+/* Font mappings: Bebas Neue = display/headings, Nunito = body/labels, Roboto Mono = small accents.
+   `inline` is required: next/font defines --font-* on <body>, so they must resolve per element, not on :root. */
+@theme inline {
+  --font-bebas: var(--font-bebas-neue), "Arial Narrow", sans-serif;
+  --font-mono: var(--font-roboto-mono), monospace;
+  --font-nunito: var(--font-nunito), system-ui, sans-serif;
 }
 
 /* Reset and Global Styles */
@@ -29,7 +44,7 @@
 }
 
 body {
-  font-family: var(--font-roboto-mono), monospace;
+  font-family: var(--font-nunito), system-ui, sans-serif;
   background-color: #F5E6CC;
   color: #332420;
   position: relative;
