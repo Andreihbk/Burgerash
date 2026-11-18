@@ -1,6 +1,6 @@
 "use client";
 
-import { forwardRef, memo, useCallback, useEffect, useImperativeHandle, useRef, useState } from "react";
+import { forwardRef, memo, useCallback, useMemo, useEffect, useImperativeHandle, useRef, useState } from "react";
 import Link from "next/link";
 import { INITIAL_CATEGORIES, INITIAL_MODIFIERS, INITIAL_PRODUCTS } from "@/lib/catalog";
 import { useCartStore } from "@/store/cartStore";
@@ -13,6 +13,7 @@ import CartDrawer from "./CartDrawer";
 import TodayAtBurgerash from "./TodayAtBurgerash";
 import { heroStatusLine, scheduleLines, shortStatusLabel, statusLabel } from "@/lib/hours";
 import { useOpeningStatus } from "@/lib/useOpeningStatus";
+import type { OpeningStatus } from "@/lib/hours";
 import { OrderItemModifier, Product } from "@/types/database";
 import { ShoppingBag, Plus, SlidersHorizontal, X, Check, MapPin, ArrowRight } from "lucide-react";
 
@@ -97,6 +98,16 @@ function HeroStickers({
   );
 }
 
+// DEV ONLY, visual only: ?preview=open|closed forces the hero/board/status visuals. The NODE_ENV check is
+// inlined by Next, so this is dead code in production. The server-side hours check on /api/orders is untouched.
+function applyDevPreview(status: OpeningStatus | null): OpeningStatus | null {
+  if (process.env.NODE_ENV === "production" || !status) return status;
+  const preview = new URLSearchParams(window.location.search).get("preview");
+  if (preview === "open") return { open: true, todayHours: status.todayHours, closesAt: status.closesAt ?? "22:00", next: null };
+  if (preview === "closed") return { open: false, todayHours: status.todayHours, closesAt: null, next: status.next ?? { when: "mâine", time: "10:00" } };
+  return status;
+}
+
 const prefersReducedMotion = () =>
   typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -144,7 +155,8 @@ export default function Storefront() {
   const [itemQty, setItemQty] = useState<number>(1);
   const [toast, setToast] = useState<{ key: number; name: string } | null>(null);
   const [badgeBump, setBadgeBump] = useState(0);
-  const status = useOpeningStatus();
+  const realStatus = useOpeningStatus();
+  const status = useMemo(() => applyDevPreview(realStatus), [realStatus]);
   const stickersRef = useRef<StickerStackHandle>(null);
 
   const barRef = useRef<HTMLDivElement>(null);
@@ -359,18 +371,33 @@ export default function Storefront() {
             COMANDĂ
           </button>
 
-          <ul className="mt-5 flex flex-wrap gap-x-3 gap-y-1 font-mono text-[11px] sm:text-xs text-[#332420]/80">
-            {["Livrare proprie", "Ridicare în 15 min", "Plata la livrare"].map((f, i) => (
-              <li key={f} className="flex items-center gap-3">
-                {i > 0 && <span aria-hidden>·</span>}
+          <ul className="mt-5 flex flex-wrap gap-2">
+            {["Livrare proprie", "Ridicare în 15 min", "Plata la livrare"].map((f) => (
+              <li
+                key={f}
+                className="font-nunito font-bold text-xs sm:text-sm leading-none px-3 py-2 rounded-md bg-[#790D20] text-[#F5E6CC]"
+              >
                 {f}
               </li>
             ))}
           </ul>
 
-          {/* Empty until the client knows the time (no false "open" claim in SSR) */}
-          <p className="font-mono text-xs sm:text-sm text-[#332420] mt-4 min-h-5" aria-live="polite">
-            {status ? heroStatusLine(status) : ""}
+          {/* One status line with an LED dot. Empty until the client knows the time (no false "open" claim in SSR) */}
+          <p
+            className="mt-4 min-h-8 flex items-center gap-2 font-nunito font-bold text-sm sm:text-base text-[#332420]"
+            aria-live="polite"
+          >
+            {status && (
+              <>
+                <span
+                  aria-hidden
+                  className={`w-3 h-3 rounded-full shrink-0 border-2 border-[#790D20] ${
+                    status.open ? "bg-[#790D20] shadow-[0_0_8px_2px_rgba(121,13,32,0.45)]" : "bg-transparent opacity-50"
+                  }`}
+                />
+                {heroStatusLine(status)}
+              </>
+            )}
           </p>
         </div>
 
@@ -528,6 +555,11 @@ export default function Storefront() {
               <div className="flex justify-center mb-4">
                 <BurgerStamp product={selectedProduct} className="h-36 w-36 rotate-[-6deg]" />
               </div>
+              {selectedProduct.description && (
+                <p className="font-nunito text-sm text-[#332420]/80 text-center max-w-sm mx-auto mb-4">
+                  {selectedProduct.description}
+                </p>
+              )}
 
               <div className="space-y-4">
                 {(

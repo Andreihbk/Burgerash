@@ -23,8 +23,15 @@ const nunito = Nunito({
 });
 
 export const metadata: Metadata = {
-  title: "Burgerash | Foc. Presa. Crustă.",
-  description: "Cel mai bun smash burger din cartier.",
+  title: "Burgerash | Nu facem medium. Facem crustă.",
+  description: "Nu facem medium. Facem crustă. Smash burgeri din Sector 6, comandă direct, fără comisioane.",
+  openGraph: {
+    title: "Burgerash | Nu facem medium. Facem crustă.",
+    description: "Smash burgeri din Sector 6. Comandă direct, fără comisioane.",
+    locale: "ro_RO",
+    type: "website",
+  },
+  twitter: { card: "summary_large_image" },
 };
 
 export default function RootLayout({
