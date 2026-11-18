@@ -11,10 +11,10 @@ import { BrandLogo } from "./BrandLogo";
 import MenuBoard from "./MenuBoard";
 import CartDrawer from "./CartDrawer";
 import TodayAtBurgerash from "./TodayAtBurgerash";
-import { PREP_TEXT, heroStatusLine, scheduleLines, shortStatusLabel, statusLabel } from "@/lib/hours";
+import { heroStatusLine, scheduleLines, shortStatusLabel, statusLabel } from "@/lib/hours";
 import { useOpeningStatus } from "@/lib/useOpeningStatus";
 import { OrderItemModifier, Product } from "@/types/database";
-import { ShoppingBag, Plus, Clock, SlidersHorizontal, X, Check, MapPin, ArrowRight } from "lucide-react";
+import { ShoppingBag, Plus, SlidersHorizontal, X, Check, MapPin, ArrowRight } from "lucide-react";
 
 // Header has a fixed height so the category bar can stick right under it.
 const HEADER_HEIGHT = 72;
@@ -291,11 +291,6 @@ export default function Storefront() {
             </div>
           )}
 
-          <div className="hidden sm:flex items-center gap-2 text-xs font-mono bg-[#F5E6CC]/10 px-3 py-1.5 rounded-full border border-[#F5E6CC]/20">
-            <Clock className="w-3.5 h-3.5 text-[#F5E6CC]"/>
-            <span>{PREP_TEXT}</span>
-          </div>
-
           <button
             onClick={openCart}
             aria-label={`Coș, ${totalItems} produse`}
@@ -318,13 +313,16 @@ export default function Storefront() {
       </header>
 
       {/* HERO: title + stickers + COMANDĂ; the lightbox menu board sits on the right (below on mobile) */}
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 pt-6 pb-10 lg:pt-14 lg:pb-16 grid grid-cols-1 lg:grid-cols-2 lg:items-center gap-6 lg:gap-14">
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 pt-6 pb-6 lg:pt-10 lg:pb-6 grid grid-cols-1 lg:grid-cols-2 lg:items-center gap-6 lg:gap-14 lg:min-h-[calc(100svh-72px-4.5rem)]">
         <div className="flex flex-col items-start">
           <h1 className="font-bebas text-5xl sm:text-7xl lg:text-8xl leading-[0.9] tracking-wide text-[#332420]">
             NU FACEM MEDIUM.
             <br />
             FACEM <span className="text-[#790D20]">CRUSTĂ.</span>
           </h1>
+          <p className="font-nunito font-semibold text-base sm:text-lg text-[#332420] mt-4 max-w-md">
+            Smash burgeri din Sector 6. Comanzi aici, fără comisioane.
+          </p>
 
           {/* Mobile sticker stack (pure SVG, no cart state) */}
           <div className="self-center my-5 lg:hidden">
@@ -338,6 +336,15 @@ export default function Storefront() {
           >
             COMANDĂ
           </button>
+
+          <ul className="mt-5 flex flex-wrap gap-x-3 gap-y-1 font-mono text-[11px] sm:text-xs text-[#332420]/80">
+            {["Livrare proprie", "Ridicare în 15 min", "Plata la livrare"].map((f, i) => (
+              <li key={f} className="flex items-center gap-3">
+                {i > 0 && <span aria-hidden>·</span>}
+                {f}
+              </li>
+            ))}
+          </ul>
 
           {/* Empty until the client knows the time (no false "open" claim in SSR) */}
           <p className="font-mono text-xs sm:text-sm text-[#332420] mt-4 min-h-5" aria-live="polite">
@@ -353,6 +360,12 @@ export default function Storefront() {
           </div>
         </div>
       </section>
+
+      {/* Curved double red stripe (from the board) closes the hero */}
+      <div aria-hidden className="max-w-6xl mx-auto px-4 sm:px-6">
+        <div className="h-3 border-y-[3px] border-[#790D20] rounded-tr-3xl rounded-bl-3xl" />
+      </div>
+      <div className="h-4 lg:h-6" />
 
       {/* CATEGORIES STICKY BAR: scrolls to each section, highlights the current one */}
       <nav
@@ -385,13 +398,13 @@ export default function Storefront() {
       </nav>
 
       {/* FULL MENU: one section per category */}
-      <main className="max-w-6xl mx-auto px-4 py-10">
+      <main className="max-w-6xl mx-auto px-4 pt-6 pb-10">
         <TodayAtBurgerash status={status} />
 
         <div ref={menuTopRef} id="meniu" className="mb-8">
           <p className="font-mono text-xs font-bold tracking-widest text-[#790D20]">COMANDĂ ONLINE</p>
           <h2 className="font-bebas text-5xl sm:text-6xl tracking-wide text-[#332420] leading-none">
-            TOT MENIUL
+            MENIU
           </h2>
         </div>
 

@@ -161,3 +161,48 @@ body {
 .brand-scroll::-webkit-scrollbar { width: 8px; }
 .brand-scroll::-webkit-scrollbar-track { background: #F5E6CC; }
 .brand-scroll::-webkit-scrollbar-thumb { background: #790D20; border-radius: 4px; }
+
+/* Lightbox menu board: everything inside is sized in em, so the board scales with its font-size.
+   Desktop: font-size follows viewport height so the whole hero fits one screen. */
+.lightbox-board {
+  font-size: 16px;
+  max-width: 36em;
+  position: relative;
+}
+@media (min-width: 1024px) {
+  .lightbox-board {
+    font-size: min(16px, 1.55vh);
+    max-width: 31em;
+  }
+}
+/* Soft warm halo behind the board (static, wine at low alpha) */
+.lightbox-board::before {
+  content: "";
+  position: absolute;
+  inset: -1.5em;
+  z-index: -1;
+  border-radius: 2em;
+  background: radial-gradient(closest-side, rgba(121, 13, 32, 0.22), rgba(121, 13, 32, 0) 100%);
+  pointer-events: none;
+}
+.lightbox-frame {
+  box-shadow: 0.6em 0.6em 0 0 #332420, inset 0 0 1.4em rgba(245, 230, 204, 0.4);
+}
+/* Light from inside: centre brighter than the edges */
+.lightbox-panel {
+  background-image: radial-gradient(ellipse at center, rgba(245, 230, 204, 0) 45%, rgba(51, 36, 32, 0.13) 100%);
+  box-shadow: inset 0 0 2em rgba(121, 13, 32, 0.12);
+}
+/* One-time neon "power on" flicker, 600ms */
+@keyframes lightbox-on {
+  0% { filter: brightness(0.55); }
+  12% { filter: brightness(1); }
+  22% { filter: brightness(0.6); }
+  38% { filter: brightness(1.05); }
+  48% { filter: brightness(0.75); }
+  100% { filter: brightness(1); }
+}
+.lightbox-board { animation: lightbox-on 0.6s steps(1, end) 1 both; }
+@media (prefers-reduced-motion: reduce) {
+  .lightbox-board { animation: none; }
+}
