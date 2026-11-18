@@ -2,7 +2,10 @@
 
 import { useState } from "react";
 import { useCartStore } from "@/store/cartStore";
+import { normalizeRoPhone, PHONE_ERROR } from "@/lib/phone";
 import { X, Trash2, Plus, Minus, ShoppingBag, ArrowRight, CheckCircle2 } from "lucide-react";
+
+const ERROR_TEXT = "Nu am putut trimite comanda. Încearcă din nou în câteva secunde.";
 
 export default function CartDrawer() {
   const {
@@ -36,6 +39,7 @@ export default function CartDrawer() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [orderNumber, setOrderNumber] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [phoneError, setPhoneError] = useState("");
 
   if (!isOpen) return null;
 
@@ -45,6 +49,12 @@ export default function CartDrawer() {
 
   const handleCheckoutSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const phone = normalizeRoPhone(formData.phone);
+    if (!phone) {
+      setPhoneError(PHONE_ERROR);
+      return;
+    }
+    setPhoneError("");
     setIsSubmitting(true);
     setErrorMessage("");
 
@@ -53,7 +63,7 @@ export default function CartDrawer() {
         fulfillment_type: fulfillmentType,
         payment_method: formData.paymentMethod,
         customer_name: formData.name,
-        customer_phone: formData.phone,
+        customer_phone: phone,
         customer_email: formData.email || null,
         delivery_address: fulfillmentType === "delivery" ? formData.address : "Ridicare personală din restaurant",
         delivery_details: formData.details || null,
@@ -82,13 +92,13 @@ export default function CartDrawer() {
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Eroare la plasarea comenzii");
+      if (!res.ok) throw new Error(data.error);
 
       setOrderNumber(data.order_number || "BRG-999");
       clearCart();
       setStep("success");
-    } catch (err: any) {
-      setErrorMessage(err.message || "A apărut o eroare. Încearcă din nou.");
+    } catch {
+      setErrorMessage(ERROR_TEXT);
     } finally {
       setIsSubmitting(false);
     }
@@ -122,7 +132,7 @@ export default function CartDrawer() {
                   Număr bon: {orderNumber}
                 </p>
                 <p className="font-nunito text-sm text-brand-dark/80">
-                  Comanda ta a fost trimisă în bucătărie și în sistemul POS. Focul e pornit!
+                  Comanda ta a fost primită. Focul e pornit!
                 </p>
                 <button
                   onClick={() => {
@@ -276,6 +286,7 @@ export default function CartDrawer() {
                   <input
                     type="text"
                     required
+                    autoComplete="name"
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     className="w-full border-2 border-brand-dark p-2.5 rounded font-nunito font-semibold bg-white"
@@ -288,17 +299,33 @@ export default function CartDrawer() {
                   <input
                     type="tel"
                     required
+                    autoComplete="tel"
+                    inputMode="tel"
                     value={formData.phone}
-                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                    onChange={(e) => {
+                      setFormData({ ...formData, phone: e.target.value });
+                      if (phoneError) setPhoneError("");
+                    }}
+                    onBlur={() => {
+                      if (formData.phone && !normalizeRoPhone(formData.phone)) setPhoneError(PHONE_ERROR);
+                    }}
+                    aria-invalid={!!phoneError}
+                    aria-describedby={phoneError ? "phone-error" : undefined}
                     className="w-full border-2 border-brand-dark p-2.5 rounded font-nunito font-semibold bg-white"
-                    placeholder="0721123456"
+                    placeholder="0721 123 456"
                   />
+                  {phoneError && (
+                    <p id="phone-error" className="mt-1 text-xs font-nunito font-bold text-brand-red">
+                      {phoneError}
+                    </p>
+                  )}
                 </div>
 
                 <div>
                   <label className="block font-nunito font-extrabold tracking-wide text-sm mb-1">EMAIL (opțional)</label>
                   <input
                     type="email"
+                    autoComplete="email"
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     className="w-full border-2 border-brand-dark p-2.5 rounded font-nunito font-semibold bg-white"
@@ -313,6 +340,7 @@ export default function CartDrawer() {
                       <input
                         type="text"
                         required
+                        autoComplete="street-address"
                         value={formData.address}
                         onChange={(e) => setFormData({ ...formData, address: e.target.value })}
                         className="w-full border-2 border-brand-dark p-2.5 rounded font-nunito font-semibold bg-white"
@@ -348,7 +376,7 @@ export default function CartDrawer() {
                   disabled={isSubmitting}
                   className="w-full bg-brand-red text-white font-bebas text-2xl py-4 rounded-lg shadow-[4px_4px_0px_0px_#121212] hover:bg-brand-dark transition-all mt-6 disabled:opacity-50"
                 >
-                  {isSubmitting ? "SE TRIMITE..." : "PLASEAZĂ COMANDA"}
+                  {isSubmitting ? "SE TRIMITE..." : `PLASEAZĂ COMANDA · ${Math.round(grandTotal)} LEI`}
                 </button>
               </form>
             )}

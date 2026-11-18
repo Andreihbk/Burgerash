@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { isSupabaseConfigured, supabase } from "@/lib/supabase";
 import { priceOrder, PricingError, type RequestedItem } from "@/lib/pricing";
+import { normalizeRoPhone, PHONE_ERROR } from "@/lib/phone";
 import type { FulfillmentType, PaymentMethod } from "@/types/database";
 
 const FULFILLMENT_TYPES: FulfillmentType[] = ["delivery", "pickup"];
@@ -35,6 +36,8 @@ export async function POST(req: Request) {
   const customerPhone = optionalText(body.customer_phone, 40);
   const deliveryAddress = optionalText(body.delivery_address);
   if (!customerName || !customerPhone) return badRequest("Numele și telefonul sunt obligatorii.");
+  const normalizedPhone = normalizeRoPhone(customerPhone);
+  if (!normalizedPhone) return badRequest(PHONE_ERROR);
   if (fulfillmentType === "delivery" && !deliveryAddress) return badRequest("Adresa este obligatorie.");
 
   if (!Array.isArray(body.items)) return badRequest("Coșul este gol.");
@@ -74,7 +77,7 @@ export async function POST(req: Request) {
       fulfillment_type: fulfillmentType,
       payment_method: paymentMethod,
       customer_name: customerName,
-      customer_phone: customerPhone,
+      customer_phone: normalizedPhone,
       customer_email: optionalText(body.customer_email, 200),
       delivery_address: fulfillmentType === "delivery" ? deliveryAddress : null,
       delivery_details: optionalText(body.delivery_details),

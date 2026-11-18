@@ -28,6 +28,8 @@ Definition of done for every task: `npm run build` + `npm run lint` pass.
       first) scrolls to each section and highlights the current one.
 - [x] S.5 Cart: adding does not open the drawer; toast "Adăugat în coș" + "Vezi coșul", badge
       animation; mobile (<768px) sticky bottom bar "COȘ (n) · total LEI →" opens the drawer.
+- [x] C.1 Checkout polish: RO phone validation (client inline + server, normalized to 07xxxxxxxx),
+      autocomplete attrs, total on submit button, new error/confirmation copy (no POS mention).
 - [x] S.6 /font-test removed (did not exist).
 
 ## Phase 1 - Ebriza adapter (works in mock mode, no credentials needed)
