@@ -35,8 +35,10 @@ Definition of done for every task: `npm run build` + `npm run lint` pass.
 ## Phase 1 - Ebriza adapter (works in mock mode, no credentials needed)
 - [x] 1.1 Fix `src/types/ebriza.ts` against `.claude/skills/ebriza-api/reference.md`.
       Const objects instead of enums; undocumented fields removed; error codes + result types.
-- [ ] 1.2 `src/lib/ebriza.ts`: token (Basic auth, cache, refresh on 401), `EBRIZA_MOCK=true` mode,
+- [x] 1.2 `src/lib/ebriza.ts`: token (Basic auth, cache, refresh on 401), `EBRIZA_MOCK=true` mode,
       `EBRIZA_PATH` (1 = clientid only, 2 = app credentials).
+      8s timeout, never throws (returns `EbrizaResult`), phone numbers redacted in logs.
+      Tests: `npm test` (vitest, `src/lib/ebriza.test.ts`).
 - [ ] 1.3 Payload builder: Supabase order -> `/bills/openbillwithclient`
       (type 1002 delivery fee, 1003 cutlery, 1000 tip; modifiers via lock/isMod).
 - [ ] 1.4 `src/lib/ebriza-sku-map.ts` (catalog id -> POS SKU), filled in later.
