@@ -30,6 +30,8 @@ Definition of done for every task: `npm run build` + `npm run lint` pass.
       animation; mobile (<768px) sticky bottom bar "COȘ (n) · total LEI →" opens the drawer.
 - [x] C.1 Checkout polish: RO phone validation (client inline + server, normalized to 07xxxxxxxx),
       autocomplete attrs, total on submit button, new error/confirmation copy (no POS mention).
+- [x] C.2 Customize modal: sticky footer (qty + live "ADAUGĂ · n LEI"), EXTRA / FĂRĂ groups,
+      note label without KDS, thin brand scrollbar (modal + cart drawer). Checkout items already in C.1.
 - [x] S.6 /font-test removed (did not exist).
 
 ## Phase 1 - Ebriza adapter (works in mock mode, no credentials needed)

@@ -152,3 +152,12 @@ body {
     animation: none;
   }
 }
+
+/* Thin brand scrollbar: wine thumb on sand track (modal + cart drawer) */
+.brand-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #790D20 #F5E6CC;
+}
+.brand-scroll::-webkit-scrollbar { width: 8px; }
+.brand-scroll::-webkit-scrollbar-track { background: #F5E6CC; }
+.brand-scroll::-webkit-scrollbar-thumb { background: #790D20; border-radius: 4px; }

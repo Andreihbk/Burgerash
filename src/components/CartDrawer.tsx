@@ -123,7 +123,7 @@ export default function CartDrawer() {
           </div>
 
           {/* Drawer Content */}
-          <div className="flex-1 overflow-y-auto p-6">
+          <div className="brand-scroll flex-1 overflow-y-auto p-6">
             {step === "success" ? (
               <div className="text-center py-12 space-y-4">
                 <CheckCircle2 className="w-16 h-16 text-emerald-600 mx-auto" />

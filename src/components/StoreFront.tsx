@@ -459,112 +459,123 @@ export default function Storefront() {
       {/* MODAL PERSONALIZARE BURGER (MODIFIERS) */}
       {selectedProduct && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-          <div className="bg-[#F5E6CC] border-4 border-[#332420] rounded-xl max-w-lg w-full p-6 shadow-[8px_8px_0px_0px_#332420] max-h-[90vh] overflow-y-auto">
-            <div className="flex justify-between items-start border-b-2 border-[#332420] pb-3 mb-4">
-              <div>
-                <span className="font-mono text-xs text-[#790D20] font-bold">
-                  PERSONALIZEAZĂ BURGERUL
-                </span>
-                <h3 className="font-bebas text-4xl text-[#332420]">
-                  {selectedProduct.name}
-                </h3>
-              </div>
-              <button
-                onClick={() => setSelectedProduct(null)}
-                className="p-1 text-[#332420] hover:text-[#790D20]"
-              >
-                <X className="w-6 h-6"/>
-              </button>
-            </div>
-
-            <div className="flex justify-center mb-4">
-              <BurgerStamp product={selectedProduct} className="h-36 w-36 rotate-[-6deg]" />
-            </div>
-
-            <div className="space-y-4">
-              <p className="font-bebas text-xl text-[#332420]">
-                ADAUGĂ EXTRA SAU SCOATE INGREDIENTE:
-              </p>
-              <div className="grid grid-cols-1 gap-2">
-                {INITIAL_MODIFIERS.map((mod) => {
-                  const checked = selectedModifiers.some((m) => m.id === mod.id);
-                  return (
-                    <button
-                      key={mod.id}
-                      type="button"
-                      onClick={() => toggleModifier(mod)}
-                      className={`flex items-center justify-between p-3 rounded-lg border-2 border-[#332420] font-nunito font-bold text-sm transition-all ${
-                        checked
-                          ? "bg-[#790D20] text-white"
-                          : "bg-white text-[#332420] hover:bg-white/80"
-                      }`}
-                    >
-                      <span className="flex items-center gap-2">
-                        <span
-                          className={`w-5 h-5 rounded flex items-center justify-center border ${
-                            checked
-                              ? "bg-white text-[#790D20] border-white"
-                              : "border-[#332420]"
-                          }`}
-                        >
-                          {checked && <Check className="w-3.5 h-3.5 stroke-[3]"/>}
-                        </span>
-                        {mod.name}
-                      </span>
-                      <span className="font-mono text-xs">
-                        {mod.price > 0 ? `+${mod.price} RON` : "GRATIS"}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-
-              <div>
-                <label className="block font-nunito font-extrabold tracking-wide text-sm mb-1">
-                  NOTĂ PENTRU BUCĂTĂRIE (KDS):
-                </label>
-                <input
-                  type="text"
-                  value={itemNote}
-                  onChange={(e) => setItemNote(e.target.value)}
-                  placeholder="Ex: bine făcut, sosul separat..."
-                  className="w-full border-2 border-[#332420] rounded-lg p-2.5 bg-white font-nunito font-semibold text-sm"
-                />
-              </div>
-
-              <div className="flex items-center justify-between pt-4 border-t-2 border-[#332420]">
-                <div className="flex items-center gap-3 bg-white border-2 border-[#332420] rounded-lg px-3 py-1.5">
-                  <button
-                    type="button"
-                    onClick={() => setItemQty(Math.max(1, itemQty - 1))}
-                    className="font-mono font-black text-lg px-2"
-                  >
-                    -
-                  </button>
-                  <span className="font-mono font-bold text-base">{itemQty}</span>
-                  <button
-                    type="button"
-                    onClick={() => setItemQty(itemQty + 1)}
-                    className="font-mono font-black text-lg px-2"
-                  >
-                    +
-                  </button>
+          <div className="bg-[#F5E6CC] border-4 border-[#332420] rounded-xl max-w-lg w-full shadow-[8px_8px_0px_0px_#332420] max-h-[90vh] flex flex-col overflow-hidden">
+            <div className="brand-scroll flex-1 min-h-0 overflow-y-auto p-6">
+              <div className="flex justify-between items-start border-b-2 border-[#332420] pb-3 mb-4">
+                <div>
+                  <span className="font-mono text-xs text-[#790D20] font-bold">
+                    PERSONALIZEAZĂ BURGERUL
+                  </span>
+                  <h3 className="font-bebas text-4xl text-[#332420]">
+                    {selectedProduct.name}
+                  </h3>
                 </div>
-
                 <button
-                  type="button"
-                  onClick={handleConfirmModal}
-                  className="bg-[#790D20] text-white font-bebas text-2xl px-6 py-3 rounded-lg border-2 border-[#332420] shadow-[3px_3px_0px_0px_#332420] hover:bg-[#332420] transition-all"
+                  onClick={() => setSelectedProduct(null)}
+                  aria-label="Închide"
+                  className="p-1 text-[#332420] hover:text-[#790D20]"
                 >
-                  ADAUGĂ ÎN COȘ —{" "}
-                  {(
-                    (selectedProduct.price +
-                      selectedModifiers.reduce((s, m) => s + m.price, 0)) *
-                    itemQty
-                  ).toFixed(0)}{" "}
-                  RON
+                  <X className="w-6 h-6"/>
                 </button>
               </div>
+
+              <div className="flex justify-center mb-4">
+                <BurgerStamp product={selectedProduct} className="h-36 w-36 rotate-[-6deg]" />
+              </div>
+
+              <div className="space-y-4">
+                {(
+                  [
+                    { title: "EXTRA", mods: INITIAL_MODIFIERS.filter((m) => m.price > 0) },
+                    { title: "FĂRĂ", mods: INITIAL_MODIFIERS.filter((m) => m.price === 0) },
+                  ] as const
+                ).map((group) => (
+                  <div key={group.title}>
+                    <p className="font-bebas text-xl text-[#332420] mb-2">{group.title}</p>
+                    <div className="grid grid-cols-1 gap-2">
+                      {group.mods.map((mod) => {
+                        const checked = selectedModifiers.some((m) => m.id === mod.id);
+                        return (
+                          <button
+                            key={mod.id}
+                            type="button"
+                            onClick={() => toggleModifier(mod)}
+                            className={`flex items-center justify-between p-3 rounded-lg border-2 border-[#332420] font-nunito font-bold text-sm transition-all ${
+                              checked
+                                ? "bg-[#790D20] text-white"
+                                : "bg-white text-[#332420] hover:bg-white/80"
+                            }`}
+                          >
+                            <span className="flex items-center gap-2">
+                              <span
+                                className={`w-5 h-5 rounded flex items-center justify-center border ${
+                                  checked
+                                    ? "bg-white text-[#790D20] border-white"
+                                    : "border-[#332420]"
+                                }`}
+                              >
+                                {checked && <Check className="w-3.5 h-3.5 stroke-[3]"/>}
+                              </span>
+                              {mod.name}
+                            </span>
+                            {mod.price > 0 && (
+                              <span className="font-mono text-xs">+{mod.price} RON</span>
+                            )}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ))}
+
+                <div>
+                  <label className="block font-nunito font-extrabold tracking-wide text-sm mb-1">
+                    NOTĂ PENTRU BUCĂTĂRIE:
+                  </label>
+                  <input
+                    type="text"
+                    value={itemNote}
+                    onChange={(e) => setItemNote(e.target.value)}
+                    placeholder="Ex: bine făcut, sosul separat..."
+                    className="w-full border-2 border-[#332420] rounded-lg p-2.5 bg-white font-nunito font-semibold text-sm"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="shrink-0 flex items-center justify-between gap-3 p-4 border-t-4 border-[#332420] bg-[#F5E6CC]">
+              <div className="flex items-center gap-3 bg-white border-2 border-[#332420] rounded-lg px-3 py-1.5">
+                <button
+                  type="button"
+                  aria-label="Scade cantitatea"
+                  onClick={() => setItemQty(Math.max(1, itemQty - 1))}
+                  className="font-mono font-black text-lg px-2"
+                >
+                  −
+                </button>
+                <span className="font-mono font-bold text-base">{itemQty}</span>
+                <button
+                  type="button"
+                  aria-label="Crește cantitatea"
+                  onClick={() => setItemQty(itemQty + 1)}
+                  className="font-mono font-black text-lg px-2"
+                >
+                  +
+                </button>
+              </div>
+
+              <button
+                type="button"
+                onClick={handleConfirmModal}
+                className="bg-[#790D20] text-white font-bebas text-2xl px-5 py-3 rounded-lg border-2 border-[#332420] shadow-[3px_3px_0px_0px_#332420] hover:bg-[#332420] transition-all whitespace-nowrap"
+              >
+                ADAUGĂ · {(
+                  (selectedProduct.price +
+                    selectedModifiers.reduce((sum, m) => sum + m.price, 0)) *
+                  itemQty
+                ).toFixed(0)}{" "}
+                LEI
+              </button>
             </div>
           </div>
         </div>
