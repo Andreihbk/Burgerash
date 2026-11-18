@@ -24,7 +24,7 @@ export default function AdminPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           <div className="border-4 border-[#332420] bg-[#FFFFFF] p-6 shadow-[6px_6px_0px_0px_#332420]">
             <span className="font-mono text-xs font-bold text-[#790D20] uppercase">Vânzări Astăzi</span>
-            <p className="font-bebas text-4xl text-[#332420] mt-2">3.480 RON</p>
+            <p className="font-bebas text-4xl text-[#332420] mt-2">3.480 LEI</p>
             <span className="font-mono text-xs text-[#332420]/70">+12% față de ieri</span>
           </div>
 

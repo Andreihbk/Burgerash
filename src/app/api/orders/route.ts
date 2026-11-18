@@ -2,6 +2,7 @@ import { after, NextResponse } from "next/server";
 import { isSupabaseConfigured, supabase } from "@/lib/supabase";
 import { priceOrder, PricingError, type RequestedItem } from "@/lib/pricing";
 import { normalizeRoPhone, PHONE_ERROR } from "@/lib/phone";
+import { EMAIL_ERROR, isValidEmail } from "@/lib/email";
 import { CLOSED_ORDER_ERROR, getStatus } from "@/lib/hours";
 import { syncOrderToEbriza } from "@/lib/ebriza-sync";
 import type { FulfillmentType, PaymentMethod } from "@/types/database";
@@ -44,6 +45,8 @@ export async function POST(req: Request) {
   if (!customerName || !customerPhone) return badRequest("Numele și telefonul sunt obligatorii.");
   const normalizedPhone = normalizeRoPhone(customerPhone);
   if (!normalizedPhone) return badRequest(PHONE_ERROR);
+  const customerEmail = optionalText(body.customer_email, 200);
+  if (customerEmail && !isValidEmail(customerEmail)) return badRequest(EMAIL_ERROR);
   if (fulfillmentType === "delivery" && !deliveryAddress) return badRequest("Adresa este obligatorie.");
 
   if (!Array.isArray(body.items)) return badRequest("Coșul este gol.");
@@ -84,7 +87,7 @@ export async function POST(req: Request) {
       payment_method: paymentMethod,
       customer_name: customerName,
       customer_phone: normalizedPhone,
-      customer_email: optionalText(body.customer_email, 200),
+      customer_email: customerEmail,
       delivery_address: fulfillmentType === "delivery" ? deliveryAddress : null,
       delivery_details: optionalText(body.delivery_details),
       order_note: optionalText(body.order_note),
@@ -113,7 +116,7 @@ export async function POST(req: Request) {
         payment_method: paymentMethod,
         customer_name: customerName,
         customer_phone: normalizedPhone,
-        customer_email: optionalText(body.customer_email, 200),
+        customer_email: customerEmail,
         delivery_address: fulfillmentType === "delivery" ? deliveryAddress : null,
         delivery_details: optionalText(body.delivery_details),
         order_note: optionalText(body.order_note),

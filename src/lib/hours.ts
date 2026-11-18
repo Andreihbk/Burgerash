@@ -93,6 +93,11 @@ export function heroStatusLine(status: OpeningStatus): string {
   return `Plita e oprită · deschidem ${status.next?.when} la ${status.next?.time}`;
 }
 
+/** Notice at the top of the cart while closed. */
+export function closedCartNotice(status: OpeningStatus): string {
+  return `Suntem închiși acum · deschidem ${status.next?.when} la ${status.next?.time}. Poți pregăti coșul.`;
+}
+
 /** Weekly schedule grouped for display, e.g. [{ label: "Luni - Vineri", hours: "10:00 - 22:00" }, ...]. */
 export function scheduleLines(): { label: string; hours: string }[] {
   const fmt = (h: DayHours) => `${formatTime(h.open)} - ${formatTime(h.close)}`;

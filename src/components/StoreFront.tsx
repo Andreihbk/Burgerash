@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { INITIAL_CATEGORIES, INITIAL_MODIFIERS, INITIAL_PRODUCTS } from "@/lib/catalog";
 import { useCartStore } from "@/store/cartStore";
+import { useCartHydrated } from "@/store/useCartHydrated";
+import { formatLei } from "@/lib/format";
 import { BurgerStamp } from "./BurgerStamp";
 import { BrandLogo } from "./BrandLogo";
 import MenuBoard from "./MenuBoard";
@@ -47,8 +49,6 @@ function HeroStickers({ className }: { className: string }) {
   );
 }
 
-const formatLei = (value: number) => (Number.isInteger(value) ? `${value}` : value.toFixed(2));
-
 const prefersReducedMotion = () =>
   typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -72,8 +72,12 @@ export default function Storefront() {
 
   const addItem = useCartStore((state) => state.addItem);
   const openCart = useCartStore((state) => state.openCart);
-  const totalItems = useCartStore((state) => state.getTotalItemsCount());
-  const grandTotal = useCartStore((state) => state.getGrandTotal());
+  const hydrated = useCartHydrated();
+  const storedItems = useCartStore((state) => state.getTotalItemsCount());
+  const storedTotal = useCartStore((state) => state.getGrandTotal());
+  // Server and first client render must match: no cart-dependent UI before the store has hydrated.
+  const totalItems = hydrated ? storedItems : 0;
+  const grandTotal = hydrated ? storedTotal : 0;
 
   // Scroll spy: the active tab is the last section whose top has passed under the sticky bar.
   useEffect(() => {
@@ -386,7 +390,7 @@ export default function Storefront() {
                 LIVRARE PROPRIE & PICKUP
               </h3>
               <p className="font-nunito font-bold text-base text-[#F5E6CC]/90 mb-6">
-                Comandă direct de pe site fără comisioane ascunse. Livrare gratuită în cartier la comenzi de peste 120 RON sau ridicare direct de la geam în 15 minute.
+                Comandă direct de pe site fără comisioane ascunse. Livrare gratuită în cartier la comenzi de peste 120 LEI sau ridicare direct de la geam în 15 minute.
               </p>
             </div>
             <button
@@ -462,7 +466,7 @@ export default function Storefront() {
                               {mod.name}
                             </span>
                             {mod.price > 0 && (
-                              <span className="font-mono text-xs">+{mod.price} RON</span>
+                              <span className="font-mono text-xs">+{formatLei(mod.price)}</span>
                             )}
                           </button>
                         );
@@ -512,12 +516,10 @@ export default function Storefront() {
                 onClick={handleConfirmModal}
                 className="bg-[#790D20] text-white font-bebas text-2xl px-5 py-3 rounded-lg border-2 border-[#332420] shadow-[3px_3px_0px_0px_#332420] hover:bg-[#332420] transition-all whitespace-nowrap"
               >
-                ADAUGĂ · {(
-                  (selectedProduct.price +
-                    selectedModifiers.reduce((sum, m) => sum + m.price, 0)) *
-                  itemQty
-                ).toFixed(0)}{" "}
-                LEI
+                ADAUGĂ ·{" "}
+                {formatLei(
+                  (selectedProduct.price + selectedModifiers.reduce((sum, m) => sum + m.price, 0)) * itemQty,
+                )}
               </button>
             </div>
           </div>
@@ -595,7 +597,7 @@ export default function Storefront() {
               <span key={badgeBump} className={`inline-block ${badgeBump > 0 ? "animate-badge-pop" : ""}`}>
                 {totalItems}
               </span>
-              ) · {formatLei(grandTotal)} LEI
+              ) · {formatLei(grandTotal)}
             </span>
             <ArrowRight className="w-6 h-6 stroke-[3]" aria-hidden="true" />
           </button>
@@ -638,7 +640,7 @@ function ProductCard({
             {product.weight_grams ? `GRAMAJ ${product.weight_grams}G` : "PREȚ"}
           </span>
           <span className="font-nunito font-black text-2xl text-[#332420]">
-            {product.price} <span className="text-sm font-bold">RON</span>
+            {product.price} <span className="text-sm font-bold">LEI</span>
           </span>
         </div>
 

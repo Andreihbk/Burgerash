@@ -4,6 +4,10 @@ import { useState } from "react";
 import { useCartStore } from "@/store/cartStore";
 import { normalizeRoPhone, PHONE_ERROR } from "@/lib/phone";
 import { useOpeningStatus } from "@/lib/useOpeningStatus";
+import { useCartHydrated } from "@/store/useCartHydrated";
+import { formatLei } from "@/lib/format";
+import { EMAIL_ERROR, isValidEmail } from "@/lib/email";
+import { closedCartNotice } from "@/lib/hours";
 import { X, Trash2, Plus, Minus, ShoppingBag, ArrowRight, CheckCircle2 } from "lucide-react";
 
 const ERROR_TEXT = "Nu am putut trimite comanda. Încearcă din nou în câteva secunde.";
@@ -41,10 +45,12 @@ export default function CartDrawer() {
   const [orderNumber, setOrderNumber] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [phoneError, setPhoneError] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const hydrated = useCartHydrated();
   const openingStatus = useOpeningStatus();
   const isClosed = openingStatus !== null && !openingStatus.open;
 
-  if (!isOpen) return null;
+  if (!isOpen || !hydrated) return null;
 
   const subtotal = getSubtotal();
   const deliveryFee = getDeliveryFee();
@@ -59,6 +65,12 @@ export default function CartDrawer() {
       return;
     }
     setPhoneError("");
+    const email = formData.email.trim();
+    if (email && !isValidEmail(email)) {
+      setEmailError(EMAIL_ERROR);
+      return;
+    }
+    setEmailError("");
     setIsSubmitting(true);
     setErrorMessage("");
 
@@ -68,7 +80,7 @@ export default function CartDrawer() {
         payment_method: formData.paymentMethod,
         customer_name: formData.name,
         customer_phone: phone,
-        customer_email: formData.email || null,
+        customer_email: email || null,
         delivery_address: fulfillmentType === "delivery" ? formData.address : "Ridicare personală din restaurant",
         delivery_details: formData.details || null,
         order_note: formData.note || null,
@@ -113,8 +125,8 @@ export default function CartDrawer() {
       {/* Backdrop */}
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity" onClick={closeCart} />
 
-      <div className="absolute inset-y-0 right-0 max-w-full flex pl-10">
-        <div className="w-screen max-w-md bg-brand-paper border-l-4 border-brand-dark flex flex-col shadow-2xl">
+      <div className="absolute inset-y-0 right-0 flex w-full max-w-md pl-10 sm:pl-0">
+        <div className="w-full min-w-0 bg-brand-paper border-l-4 border-brand-dark flex flex-col shadow-2xl">
           {/* Drawer Header */}
           <div className="bg-brand-dark text-brand-paper px-6 py-4 flex items-center justify-between border-b-2 border-brand-dark">
             <div className="flex items-center gap-2">
@@ -127,7 +139,7 @@ export default function CartDrawer() {
           </div>
 
           {/* Drawer Content */}
-          <div className="brand-scroll flex-1 overflow-y-auto p-6">
+          <div className="brand-scroll flex-1 overflow-y-auto overflow-x-hidden p-4 sm:p-6">
             {step === "success" ? (
               <div className="text-center py-12 space-y-4">
                 <CheckCircle2 className="w-16 h-16 text-emerald-600 mx-auto" />
@@ -150,6 +162,14 @@ export default function CartDrawer() {
               </div>
             ) : step === "cart" ? (
               <div>
+                {isClosed && openingStatus && (
+                  <div
+                    role="status"
+                    className="mb-4 rounded-lg border-2 border-brand-red bg-brand-red/10 p-3 font-nunito text-sm font-bold text-brand-dark"
+                  >
+                    {closedCartNotice(openingStatus)}
+                  </div>
+                )}
                 {/* Fulfillment Type Toggle */}
                 <div className="grid grid-cols-2 gap-2 bg-brand-dark/10 p-1.5 rounded-lg mb-6 border-2 border-brand-dark">
                   <button
@@ -190,7 +210,7 @@ export default function CartDrawer() {
                           <div>
                             <h4 className="font-bebas text-xl text-brand-dark">{item.product.name}</h4>
                             <p className="font-nunito font-bold text-xs text-brand-dark/60">
-                              {item.unitPriceWithModifiers} RON / buc
+                              {formatLei(item.unitPriceWithModifiers)} / buc
                             </p>
                           </div>
                           <button
@@ -203,7 +223,7 @@ export default function CartDrawer() {
 
                         {item.modifiers.length > 0 && (
                           <div className="text-[11px] font-mono bg-brand-paper p-1.5 rounded text-brand-dark/80">
-                            {item.modifiers.map((m) => `+ ${m.name}`).join(", ")}
+                            {item.modifiers.map((m) => (m.price > 0 ? `+ ${m.name}` : m.name)).join(", ")}
                           </div>
                         )}
 
@@ -225,7 +245,7 @@ export default function CartDrawer() {
                           </div>
 
                           <span className="font-nunito font-black text-lg text-brand-dark">
-                            {item.unitPriceWithModifiers * item.quantity} RON
+                            {formatLei(item.unitPriceWithModifiers * item.quantity)}
                           </span>
                         </div>
                       </div>
@@ -246,8 +266,8 @@ export default function CartDrawer() {
                         </div>
                       </div>
 
-                      <div className="flex justify-between items-center pt-3 border-t border-brand-dark/10">
-                        <span className="font-bebas text-lg">BACȘIȘ ECHIPĂ (TIP)</span>
+                      <div className="flex flex-wrap justify-between items-center gap-2 pt-3 border-t border-brand-dark/10">
+                        <span className="font-bebas text-lg">BACȘIȘ ECHIPĂ</span>
                         <div className="flex gap-1.5">
                           {[0, 3, 5, 10].map((val) => (
                             <button
@@ -257,7 +277,7 @@ export default function CartDrawer() {
                                 tipAmount === val ? "bg-brand-red text-white" : "bg-brand-paper text-brand-dark"
                               }`}
                             >
-                              {val} RON
+                              {formatLei(val)}
                             </button>
                           ))}
                         </div>
@@ -331,10 +351,23 @@ export default function CartDrawer() {
                     type="email"
                     autoComplete="email"
                     value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    onChange={(e) => {
+                      setFormData({ ...formData, email: e.target.value });
+                      if (emailError) setEmailError("");
+                    }}
+                    onBlur={() => {
+                      if (formData.email.trim() && !isValidEmail(formData.email)) setEmailError(EMAIL_ERROR);
+                    }}
+                    aria-invalid={!!emailError}
+                    aria-describedby={emailError ? "email-error" : undefined}
                     className="w-full border-2 border-brand-dark p-2.5 rounded font-nunito font-semibold bg-white"
                     placeholder="andrei@example.com"
                   />
+                  {emailError && (
+                    <p id="email-error" className="mt-1 text-xs font-nunito font-bold text-brand-red">
+                      {emailError}
+                    </p>
+                  )}
                 </div>
 
                 {fulfillmentType === "delivery" && (
@@ -380,7 +413,7 @@ export default function CartDrawer() {
                   disabled={isSubmitting || isClosed}
                   className="w-full bg-brand-red text-white font-bebas text-2xl py-4 rounded-lg shadow-[4px_4px_0px_0px_#121212] hover:bg-brand-dark transition-all mt-6 disabled:opacity-50"
                 >
-                  {isClosed ? "Suntem închiși acum" : isSubmitting ? "SE TRIMITE..." : `PLASEAZĂ COMANDA · ${Math.round(grandTotal)} LEI`}
+                  {isClosed ? "Suntem închiși acum" : isSubmitting ? "SE TRIMITE..." : `PLASEAZĂ COMANDA · ${formatLei(grandTotal)}`}
                 </button>
               </form>
             )}
@@ -388,24 +421,24 @@ export default function CartDrawer() {
 
           {/* Drawer Footer / Summary */}
           {items.length > 0 && step === "cart" && (
-            <div className="bg-white border-t-2 border-brand-dark p-6 space-y-2">
-              <div className="flex justify-between font-nunito font-semibold text-sm">
+            <div className="bg-white border-t-2 border-brand-dark p-4 sm:p-6 space-y-2">
+              <div className="flex justify-between gap-3 font-nunito font-semibold text-sm">
                 <span>Subtotal produse:</span>
-                <span>{subtotal.toFixed(2)} RON</span>
+                <span>{formatLei(subtotal)}</span>
               </div>
-              <div className="flex justify-between font-nunito font-semibold text-sm">
+              <div className="flex justify-between gap-3 font-nunito font-semibold text-sm">
                 <span>Taxă livrare:</span>
-                <span>{deliveryFee === 0 ? "GRATUIT (peste 120 RON)" : `${deliveryFee.toFixed(2)} RON`}</span>
+                <span>{deliveryFee === 0 ? "GRATUIT (peste 120 LEI)" : formatLei(deliveryFee)}</span>
               </div>
               {tipAmount > 0 && (
-                <div className="flex justify-between font-nunito font-semibold text-sm text-brand-red">
+                <div className="flex justify-between gap-3 font-nunito font-semibold text-sm text-brand-red">
                   <span>Bacșiș echipă:</span>
-                  <span>+{tipAmount.toFixed(2)} RON</span>
+                  <span>+{formatLei(tipAmount)}</span>
                 </div>
               )}
-              <div className="flex justify-between font-bebas text-2xl pt-2 border-t border-brand-dark/10">
+              <div className="flex justify-between gap-3 font-bebas text-2xl pt-2 border-t border-brand-dark/10">
                 <span>TOTAL DE PLATĂ:</span>
-                <span className="text-brand-red">{grandTotal.toFixed(2)} RON</span>
+                <span className="text-brand-red">{formatLei(grandTotal)}</span>
               </div>
 
               <button

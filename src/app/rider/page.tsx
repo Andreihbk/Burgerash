@@ -54,7 +54,7 @@ export default function RiderPage() {
           </div>
           <div className="flex justify-between py-1">
             <span>Castig Estimat:</span>
-            <span className="font-bold">160 RON</span>
+            <span className="font-bold">160 LEI</span>
           </div>
         </div>
       </main>
