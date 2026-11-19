@@ -103,7 +103,9 @@ Definition of done for every task: `npm run build` + `npm run lint` pass.
       Behind the staff Supabase Auth proxy. Delivery orders need a rider picked before "Plecat la client";
       no schema change. Rider names are placeholders in `src/lib/riders.ts`.
 - [x] 2.3 `/rider` mobile view (pick name from riders.ts, saved in localStorage; out_for_delivery for that rider, Realtime, SUNĂ/HARTĂ/LIVRAT + 6s undo, shows total + cash/card to collect)
-- [ ] 2.4 `/admin` stock, menu, hours
+- [x] 2.4 `/admin` day one: "stoc epuizat" per product (`product_stock` table, staff-only RLS, shown on the
+      storefront, rejected by /api/orders with 409) + today's orders count and total (Bucharest day, canceled excluded)
+- [ ] 2.5 `/admin` menu/price edits and opening hours (hours stay in `src/lib/hours.ts` until then)
 
 ## Phase 3 - Ebriza webhooks (needs approved Marketplace app)
 - [ ] 3.1 `/api/webhooks/ebriza/[secret]`: on callback, re-fetch the bill, map status to Supabase.

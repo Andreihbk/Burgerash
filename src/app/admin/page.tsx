@@ -1,72 +1,92 @@
-import Link from 'next/link';
-import SignOutButton from '@/components/SignOutButton';
+"use client";
+
+// /admin: staff only (proxy.ts requires a Supabase Auth session). Real data only:
+//  - today's orders count + total from Supabase (midnight to midnight Europe/Bucharest, canceled excluded)
+//  - "stoc epuizat" per product (StockToggles)
+// Opening hours stay in src/lib/hours.ts for now.
+
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import SignOutButton from "@/components/SignOutButton";
+import StockToggles from "@/components/admin/StockToggles";
+import { bucharestDayStart } from "@/lib/bucharest-day";
+import { isSupabaseConfigured, supabase } from "@/lib/supabase";
+
+type Today = { count: number; total: number };
+
+// Exact amount with bani (formatLei rounds to whole lei, too coarse for a daily total).
+const money = (n: number) => `${n.toFixed(2).replace(".", ",")} LEI`;
 
 export default function AdminPage() {
+  const [today, setToday] = useState<Today | null>(null);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    if (!isSupabaseConfigured) return;
+
+    async function loadToday() {
+      const { data, error: err } = await supabase
+        .from("orders")
+        .select("total_amount")
+        .gte("created_at", bucharestDayStart().toISOString())
+        .neq("status", "canceled");
+      if (err || !data) {
+        setError(true);
+        return;
+      }
+      setError(false);
+      const cents = data.reduce((sum, o) => sum + Math.round(Number(o.total_amount) * 100), 0);
+      setToday({ count: data.length, total: cents / 100 });
+    }
+
+    const channel = supabase
+      .channel("admin-orders")
+      .on("postgres_changes", { event: "*", schema: "public", table: "orders" }, () => void loadToday())
+      .subscribe((status) => {
+        if (status === "SUBSCRIBED") void loadToday();
+      });
+    void loadToday();
+    return () => void supabase.removeChannel(channel);
+  }, []);
+
   return (
     <div className="min-h-screen bg-[#F5E6CC] text-[#332420] flex flex-col">
-      {/* Admin Header */}
-      <header className="border-b-4 border-[#332420] bg-[#332420] text-[#F5E6CC] p-6 flex justify-between items-center">
+      <header className="border-b-4 border-[#332420] bg-[#332420] text-[#F5E6CC] p-6 flex justify-between items-center gap-4">
         <div className="flex items-center gap-4">
           <Link href="/" className="font-bebas text-3xl text-[#F5E6CC] uppercase hover:text-[#790D20]">
             &larr; Burgerash Admin
           </Link>
-          <span className="font-mono text-xs px-2 py-1 bg-[#790D20] text-[#FFFFFF] font-bold">
-            PANOU DE CONTROL
-          </span>
+          <span className="font-mono text-xs px-2 py-1 bg-[#790D20] text-[#F5E6CC] font-bold">PANOU DE CONTROL</span>
         </div>
-        <div className="flex items-center gap-3">
-          <span className="font-mono text-xs">LOGGED IN AS: MANAGER</span>
-          <SignOutButton />
-        </div>
+        <SignOutButton />
       </header>
 
-      {/* Main Admin Content */}
-      <main className="flex-1 max-w-7xl w-full mx-auto p-6 space-y-8">
-        {/* Metric Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div className="border-4 border-[#332420] bg-[#FFFFFF] p-6 shadow-[6px_6px_0px_0px_#332420]">
-            <span className="font-mono text-xs font-bold text-[#790D20] uppercase">Vânzări Astăzi</span>
-            <p className="font-bebas text-4xl text-[#332420] mt-2">3.480 LEI</p>
-            <span className="font-mono text-xs text-[#332420]/70">+12% față de ieri</span>
+      <main className="flex-1 max-w-4xl w-full mx-auto p-6 space-y-8">
+        <section aria-label="Comenzi astăzi" className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div className="border-4 border-[#332420] bg-white p-6 shadow-[6px_6px_0px_0px_#332420]">
+            <span className="font-mono text-xs font-bold text-[#790D20] uppercase">Comenzi astăzi</span>
+            <p className="font-bebas text-5xl text-[#332420] mt-2">{today ? today.count : "–"}</p>
+            <span className="font-mono text-xs text-[#332420]/70">fără cele anulate</span>
           </div>
 
-          <div className="border-4 border-[#332420] bg-[#FFFFFF] p-6 shadow-[6px_6px_0px_0px_#332420]">
-            <span className="font-mono text-xs font-bold text-[#790D20] uppercase">Comenzi Totale</span>
-            <p className="font-bebas text-4xl text-[#332420] mt-2">84</p>
-            <span className="font-mono text-xs text-[#332420]/70">Medie prep: 14 min</span>
+          <div className="border-4 border-[#332420] bg-white p-6 shadow-[6px_6px_0px_0px_#332420]">
+            <span className="font-mono text-xs font-bold text-[#790D20] uppercase">Total comenzi</span>
+            <p className="font-bebas text-5xl text-[#332420] mt-2">{today ? money(today.total) : "–"}</p>
+            <span className="font-mono text-xs text-[#332420]/70">cu livrare și bacșiș</span>
           </div>
 
-          <div className="border-4 border-[#332420] bg-[#FFFFFF] p-6 shadow-[6px_6px_0px_0px_#332420]">
-            <span className="font-mono text-xs font-bold text-[#790D20] uppercase">Curieri Activi</span>
-            <p className="font-bebas text-4xl text-[#332420] mt-2">4</p>
-            <span className="font-mono text-xs text-[#332420]/70">Timp livrare: ~22 min</span>
-          </div>
+          {error && (
+            <p role="alert" className="sm:col-span-2 font-nunito font-bold text-sm text-[#790D20]">
+              Nu am putut încărca comenzile de azi.
+            </p>
+          )}
+        </section>
 
-          <div className="border-4 border-[#332420] bg-[#FFFFFF] p-6 shadow-[6px_6px_0px_0px_#332420]">
-            <span className="font-mono text-xs font-bold text-[#790D20] uppercase">Stoc Carne Smash</span>
-            <p className="font-bebas text-4xl text-[#790D20] mt-2">18.5 KG</p>
-            <span className="font-mono text-xs text-[#332420]/70">Reaprovizionare la 5 KG</span>
-          </div>
-        </div>
+        <StockToggles />
 
-        {/* Management Quick Actions */}
-        <div className="border-4 border-[#332420] bg-[#FFFFFF] p-6 shadow-[8px_8px_0px_0px_#332420]">
-          <h2 className="font-bebas text-3xl uppercase text-[#332420] border-b-2 border-[#332420] pb-2 mb-6">
-            Management Operativ
-          </h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <button className="border-2 border-[#332420] bg-[#F5E6CC] p-4 font-mono font-bold text-left hover:bg-[#790D20] hover:text-[#FFFFFF] transition-all">
-              [01] Editare Meniu & Prețuri
-            </button>
-            <button className="border-2 border-[#332420] bg-[#F5E6CC] p-4 font-mono font-bold text-left hover:bg-[#790D20] hover:text-[#FFFFFF] transition-all">
-              [02] Setări Bucătărie & Orar
-            </button>
-            <button className="border-2 border-[#332420] bg-[#F5E6CC] p-4 font-mono font-bold text-left hover:bg-[#790D20] hover:text-[#FFFFFF] transition-all">
-              [03] Istoric & Rapoarte
-            </button>
-          </div>
-        </div>
+        <p className="font-mono text-xs text-[#332420]/70">
+          Programul de funcționare se schimbă deocamdată în src/lib/hours.ts.
+        </p>
       </main>
     </div>
   );
