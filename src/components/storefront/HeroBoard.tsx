@@ -137,31 +137,35 @@ export default function HeroBoard() {
 
   return (
     <>
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 pt-6 pb-6 md:pt-16 lg:pt-20 grid grid-cols-1 md:grid-cols-2 md:items-center gap-6 md:gap-8 lg:gap-14 md:min-h-[min(calc(100svh-9rem),52rem)]">
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 pt-6 pb-8 md:pt-14 lg:pt-16 grid grid-cols-1 md:grid-cols-2 md:items-center gap-6 md:gap-8 lg:gap-12 md:min-h-[min(calc(100svh-9rem),52rem)]">
         <div className="flex flex-col items-start">
-          <h1 className="font-bebas text-4xl sm:text-6xl md:text-4xl lg:text-6xl xl:text-7xl leading-[0.95] text-[#332420]">
-            <Display>NU FACEM MEDIUM.</Display>
-            <br />
-            <Display>FACEM</Display> <span className="text-[#790D20]"><Display>CRUSTĂ.</Display></span>
+          <span className="font-bebas inline-block -skew-x-6 bg-[#790D20] text-[#F5E6CC] text-sm sm:text-base tracking-wider px-4 py-2 rounded-full border-2 border-[#332420] shadow-[3px_3px_0px_0px_#332420]">
+            <Display>YOUR LOCAL BURGER SPOT</Display>
+          </span>
+          <h1 className="font-bebas mt-5 text-[clamp(3.5rem,8.5vw,6.5rem)] leading-[0.88] -skew-x-6 origin-left text-[#332420]">
+            <span className="block"><Display>NU FACEM</Display></span>
+            <span className="block text-[#790D20]"><Display>MEDIUM.</Display></span>
+            <span className="block"><Display>FACEM</Display></span>
+            <span className="block text-[#790D20]"><Display>CRUSTĂ.</Display></span>
           </h1>
-          <p className="font-nunito font-semibold text-base sm:text-lg text-[#332420] mt-4 max-w-md">
+          <p className="font-nunito font-semibold text-xl sm:text-2xl text-[#332420] mt-6 max-w-lg">
             Carne. Foc. Chiflă. Atât. Comanzi direct de aici, fără aplicații și fără comisioane.
           </p>
 
-          {/* Mobile sticker stack (pure SVG, no cart state) */}
-          <div className="self-center my-5 md:hidden">
+          {/* Mobile: sticker stack goes under the headline (pure SVG, no cart state) */}
+          <div className="self-center my-6 md:hidden">
             <StickerStack size={112} modalOpen={!!customizing} onPick={openCustomize} />
           </div>
 
           <button
             type="button"
             onClick={() => scrollToTab(ALL_TAB)}
-            className="mt-2 md:mt-6 lg:mt-8 min-h-[52px] bg-[#790D20] text-[#F5E6CC] font-bebas text-2xl tracking-wider px-10 py-3 rounded-lg border-2 border-[#332420] shadow-[4px_4px_0px_0px_#332420] hover:bg-[#332420] active:translate-y-px transition-colors duration-200"
+            className="mt-2 md:mt-8 min-h-[60px] bg-[#790D20] text-[#F5E6CC] font-bebas text-3xl tracking-wider px-12 py-4 rounded-lg border-2 border-[#332420] shadow-[6px_6px_0px_0px_#332420] hover:bg-[#332420] active:translate-x-px active:translate-y-px active:shadow-[3px_3px_0px_0px_#332420] transition-colors duration-200"
           >
             <Display>COMANDĂ</Display>
           </button>
 
-          <ul className="mt-5 flex flex-wrap gap-2">
+          <ul className="mt-6 flex flex-wrap gap-2">
             {["Livrare proprie", "Ridicare în 15 min", "Plata online cu cardul"].map((f) => (
               <li
                 key={f}
@@ -191,16 +195,23 @@ export default function HeroBoard() {
           </p>
         </div>
 
-        <div className="relative">
-          <MenuBoard lit={status ? status.open : false} linkedNames={BOARD_LINKED_NAMES} onLineActive={handleBoardLine} onSelect={handleBoardSelect} />
-          {/* md+: stickers slapped over the board's top corner (scaled down at md) */}
-          <div className="hidden md:block absolute -top-14 -right-4 lg:-top-16 lg:-right-4 xl:-right-10 z-10 origin-top-right md:scale-[0.65] lg:scale-100">
-            <StickerStack ref={stickersRef} size={104} modalOpen={!!customizing} onPick={openCustomize} />
+        {/* md+: big sticker fan fills the right column */}
+        <div className="hidden md:flex items-center justify-center">
+          <div className="origin-center md:scale-[0.62] lg:scale-[0.9] xl:scale-100">
+            <StickerStack ref={stickersRef} size={190} modalOpen={!!customizing} onPick={openCustomize} />
           </div>
         </div>
       </section>
 
-      {/* Curved double red stripe (from the board) closes the hero */}
+      {/* Curved double red stripe (from the board) separates hero and menu board */}
+      <div aria-hidden className="max-w-6xl mx-auto px-4 sm:px-6">
+        <div className="h-3 border-y-[3px] border-[#790D20] rounded-tr-3xl rounded-bl-3xl" />
+      </div>
+
+      {/* Menu board: its own section below the hero */}
+      <section aria-label="Meniu" className="max-w-3xl mx-auto px-4 sm:px-6 py-10 lg:py-14">
+        <MenuBoard lit={status ? status.open : false} linkedNames={BOARD_LINKED_NAMES} onLineActive={handleBoardLine} onSelect={handleBoardSelect} />
+      </section>
       <div aria-hidden className="max-w-6xl mx-auto px-4 sm:px-6">
         <div className="h-3 border-y-[3px] border-[#790D20] rounded-tr-3xl rounded-bl-3xl" />
       </div>
