@@ -1,5 +1,5 @@
 import { after, NextResponse } from "next/server";
-import { isSupabaseConfigured, supabase } from "@/lib/supabase";
+import { isSupabaseAdminConfigured, supabaseAdmin } from "@/lib/supabase-admin";
 import { priceOrder, PricingError, type RequestedItem } from "@/lib/pricing";
 import { normalizeRoPhone, PHONE_ERROR } from "@/lib/phone";
 import { EMAIL_ERROR, isValidEmail } from "@/lib/email";
@@ -19,7 +19,7 @@ function badRequest(message: string) {
 }
 
 export async function POST(req: Request) {
-  if (!isSupabaseConfigured) {
+  if (!isSupabaseAdminConfigured) {
     return NextResponse.json({ error: "Comenzile nu sunt disponibile momentan." }, { status: 503 });
   }
 
@@ -81,7 +81,8 @@ export async function POST(req: Request) {
   const { items, ...totals } = priced;
 
   // Order + items are inserted in one Postgres transaction (supabase/schema.sql: create_order).
-  const { data, error } = await supabase.rpc("create_order", {
+  // Server-only service_role client: anon cannot call create_order directly (PLAN L.0, Option B).
+  const { data, error } = await supabaseAdmin.rpc("create_order", {
     p_order: {
       fulfillment_type: fulfillmentType,
       payment_method: paymentMethod,

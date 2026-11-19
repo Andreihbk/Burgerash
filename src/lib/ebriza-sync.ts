@@ -1,6 +1,6 @@
 import "server-only";
 
-import { supabase } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/supabase-admin";
 import { isEbrizaMockMode, openBillWithClient } from "@/lib/ebriza";
 import { buildOpenBillPayload, EbrizaPayloadError, type EbrizaPayloadItem, type EbrizaPayloadOrder } from "@/lib/ebriza-payload";
 import { resolveEbrizaSku } from "@/lib/ebriza-sku-map";
@@ -14,7 +14,7 @@ interface SyncOutcome {
 }
 
 async function save(orderId: string, orderNo: string, outcome: SyncOutcome): Promise<void> {
-  const { error } = await supabase
+  const { error } = await supabaseAdmin
     .from("orders")
     .update({
       ebriza_sync_status: outcome.status,

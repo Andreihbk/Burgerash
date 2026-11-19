@@ -98,6 +98,13 @@ Definition of done for every task: `npm run build` + `npm run lint` pass.
       page: the anon key can still read/update `orders` directly until RLS is real. Gate covers /kitchen only;
       extend the `proxy.ts` matcher to /dispatch /rider /admin when they are built. Set STAFF_PASSWORD in
       Vercel (no password = nobody gets in).
+  - Plan (decided 2026-11-19): Option B. `/api/orders` and the Ebriza sync use a server-only service_role
+    client (`src/lib/supabase-admin.ts`, `SUPABASE_SERVICE_ROLE_KEY`); anon gets NO execute on `create_order`
+    and no table access to orders/order_items. Staff (`authenticated`) can SELECT orders/items and UPDATE
+    only `status` and `rider_name`. No delete for anyone. Steps: 1 admin client (done) / 2 Supabase Auth
+    login / 3 RLS migration + remove old gate / 4 sign-out button.
+  - NOTE: "authenticated = staff" only holds while sign-ups AND anonymous sign-ins are OFF in Supabase Auth.
+    If we add customer accounts later (loyalty), policies must check a staff table instead of the role.
 - [x] L.1 Opening hours + open/closed badge (block or warn on orders when closed)
   - Hours live in src/lib/hours.ts only; server rejects closed orders (403). TODO: set real CONTACT.phone / CONTACT.address there (hidden on the site until set).
 - [ ] L.2 Allergens per product (shown on cards / product detail)

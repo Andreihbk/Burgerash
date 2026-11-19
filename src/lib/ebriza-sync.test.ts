@@ -4,8 +4,8 @@ const updateSpy = vi.fn();
 const eqSpy = vi.fn();
 let dbError: { message: string } | null = null;
 
-vi.mock("@/lib/supabase", () => ({
-  supabase: {
+vi.mock("@/lib/supabase-admin", () => ({
+  supabaseAdmin: {
     from: (table: string) => ({
       update: (values: Record<string, unknown>) => {
         updateSpy(table, values);
