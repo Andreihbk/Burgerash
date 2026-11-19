@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Roboto_Mono, Nunito } from "next/font/google";
 import "./globals.css";
+import FontPreview from "@/components/FontPreview";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_TAGLINE, SITE_URL } from "@/lib/site";
 
 // Small mono accents (codes, prices meta)
@@ -45,6 +46,7 @@ export default function RootLayout({
   return (
     <html lang="ro">
       <body className={`${robotoMono.variable} ${nunito.variable} antialiased font-nunito`}>
+        <FontPreview />
         {children}
       </body>
     </html>

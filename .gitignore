@@ -46,3 +46,6 @@ next-env.d.ts
 
 # Vendor docs (not for the public repo)
 docs/vendor/
+
+# Local-only font preview (Eatvetica is unlicensed: never commit or deploy)
+public/local-fonts/
