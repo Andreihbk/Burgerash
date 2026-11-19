@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { Circle, Map as LeafletMap } from "leaflet";
-import "leaflet/dist/leaflet.css";
 import { DELIVERY_RADIUS_KM, SITE_COORDS } from "@/lib/site";
 
 // TEMPORARY: radius slider is only for tuning the circle locally (NEXT_PUBLIC_FONT_PREVIEW=true).
@@ -21,11 +20,12 @@ export default function LocationMap() {
   useEffect(() => {
     let cancelled = false;
     let map: LeafletMap | null = null;
+    let observer: ResizeObserver | null = null;
     (async () => {
       const L = (await import("leaflet")).default;
       if (cancelled || !containerRef.current) return;
       const center: [number, number] = [SITE_COORDS.lat, SITE_COORDS.lng];
-      map = L.map(containerRef.current, { scrollWheelZoom: false, dragging: !L.Browser.mobile, zoomControl: true });
+      map = L.map(containerRef.current, { scrollWheelZoom: false, dragging: !L.Browser.mobile, zoomControl: true }).setView(center, 15);
       L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
         maxZoom: 19,
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
@@ -45,9 +45,15 @@ export default function LocationMap() {
       circleRef.current = circle;
       map.fitBounds(circle.getBounds(), { padding: [16, 16] });
       mapRef.current = map;
+      // Leaflet measures the container once; re-measure whenever it changes size (late CSS, grid reflow),
+      // otherwise the map can stay grey with no tiles requested.
+      const m = map;
+      observer = new ResizeObserver(() => m.invalidateSize());
+      observer.observe(containerRef.current);
     })();
     return () => {
       cancelled = true;
+      observer?.disconnect();
       map?.remove();
       mapRef.current = null;
       circleRef.current = null;
@@ -64,7 +70,7 @@ export default function LocationMap() {
   };
 
   return (
-    <div className="relative h-full min-h-[320px]">
+    <div className="relative h-[320px] md:h-full md:min-h-[320px]">
       <div ref={containerRef} className="absolute inset-0" role="img" aria-label="Hartă: locația Burgerash și zona de livrare" />
       {SHOW_SLIDER && (
         <label className="absolute bottom-6 left-3 right-3 sm:right-auto sm:w-64 z-[1000] bg-[#F5E6CC] border-2 border-[#332420] rounded-lg px-3 py-2 font-mono text-xs font-bold text-[#332420]">

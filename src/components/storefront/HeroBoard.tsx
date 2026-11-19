@@ -117,6 +117,63 @@ const StickerStack = forwardRef<StickerStackHandle, { size: number; modalOpen: b
   },
 );
 
+/** "YOUR LOCAL BURGER SPOT" pill: wobbles with scroll speed and springs back to rest. Static under reduced motion. */
+function WobbleBadge() {
+  const ref = useRef<HTMLSpanElement>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || prefersReducedMotion()) return;
+    let lastY = window.scrollY;
+    let angle = 0; // degrees
+    let velocity = 0;
+    let raf = 0;
+
+    const tick = () => {
+      // Damped spring toward 0.
+      velocity += -0.12 * angle;
+      velocity *= 0.86;
+      angle += velocity;
+      if (Math.abs(angle) < 0.01 && Math.abs(velocity) < 0.01) {
+        angle = 0;
+        velocity = 0;
+        el.style.transform = "";
+        raf = 0;
+        return;
+      }
+      const clamped = Math.max(-3, Math.min(3, angle));
+      el.style.transform = `rotate(${clamped}deg) scale(${1 + Math.abs(clamped) * 0.01})`;
+      raf = requestAnimationFrame(tick);
+    };
+
+    const onScroll = () => {
+      const y = window.scrollY;
+      const delta = y - lastY;
+      lastY = y;
+      // Scroll speed kicks the spring; the cap keeps a fast flick at a small wobble.
+      velocity += Math.max(-1.5, Math.min(1.5, delta * 0.05));
+      if (!raf) raf = requestAnimationFrame(tick);
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, []);
+
+  return (
+    <span className="inline-block -skew-x-6">
+      <span
+        ref={ref}
+        className="font-bebas inline-block will-change-transform bg-[#790D20] text-[#F5E6CC] text-sm sm:text-base tracking-wider px-4 py-2 rounded-full border-2 border-[#332420] shadow-[3px_3px_0px_0px_#332420]"
+      >
+        <Display>YOUR LOCAL BURGER SPOT</Display>
+      </span>
+    </span>
+  );
+}
+
 /** Hero: title + stickers + COMANDĂ; the lightbox menu board sits on the right (below on mobile), then the stripe. */
 export default function HeroBoard() {
   const status = useStorefrontStatus();
@@ -140,17 +197,16 @@ export default function HeroBoard() {
     <>
       <section className="max-w-6xl mx-auto px-4 sm:px-6 pt-6 pb-8 md:pt-14 lg:pt-16 grid grid-cols-1 md:grid-cols-2 md:items-center gap-6 md:gap-8 lg:gap-12 md:min-h-[min(calc(100svh-9rem),52rem)]">
         <div className="flex flex-col items-start">
-          <span className="font-bebas inline-block -skew-x-6 bg-[#790D20] text-[#F5E6CC] text-sm sm:text-base tracking-wider px-4 py-2 rounded-full border-2 border-[#332420] shadow-[3px_3px_0px_0px_#332420]">
-            <Display>YOUR LOCAL BURGER SPOT</Display>
-          </span>
-          <h1 className="font-bebas mt-5 text-[clamp(3.5rem,8.5vw,6.5rem)] leading-[0.88] -skew-x-6 origin-left text-[#332420]">
-            <span className="block"><Display>NU FACEM</Display></span>
-            <span className="block text-[#790D20]"><Display>MEDIUM.</Display></span>
-            <span className="block"><Display>FACEM</Display></span>
-            <span className="block text-[#790D20]"><Display>CRUSTĂ.</Display></span>
+          <WobbleBadge />
+          {/* Each line is skewed on its own from its bottom-left corner, so all lines start on the same left edge. */}
+          <h1 className="font-bebas mt-5 text-[clamp(3.5rem,8.5vw,6.5rem)] leading-[0.88] text-[#332420]">
+            {["CARNE.", "FOC.", "CHIFLĂ."].map((line) => (
+              <span key={line} className="block w-fit -skew-x-6 origin-bottom-left"><Display>{line}</Display></span>
+            ))}
+            <span className="block w-fit -skew-x-6 origin-bottom-left text-[#790D20]"><Display>ATÂT.</Display></span>
           </h1>
           <p className="font-nunito font-semibold text-xl sm:text-2xl text-[#332420] mt-6 max-w-lg">
-            Carne. Foc. Chiflă. Atât. Comanzi direct de aici, fără aplicații și fără comisioane.
+            Burgeri făcuți pe loc, în Sector 6. Comanzi direct de aici, fără aplicații și fără comisioane.
           </p>
 
           {/* Mobile: sticker stack goes under the headline (pure SVG, no cart state) */}
