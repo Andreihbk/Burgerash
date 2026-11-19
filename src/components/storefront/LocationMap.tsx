@@ -26,10 +26,19 @@ export default function LocationMap() {
       if (cancelled || !containerRef.current) return;
       const center: [number, number] = [SITE_COORDS.lat, SITE_COORDS.lng];
       map = L.map(containerRef.current, { scrollWheelZoom: false, dragging: !L.Browser.mobile, zoomControl: true }).setView(center, 15);
-      L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        maxZoom: 19,
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      // CARTO Voyager raster tiles (no key). OSM's own tile servers 403 under their usage policy.
+      L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
+        subdomains: "abcd",
+        maxZoom: 20,
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
       }).addTo(map);
+      // Warm/cream brand tint on the tiles only; pin (markerPane) and radius (overlayPane) stay unfiltered.
+      map.getPane("tilePane")!.style.filter = "sepia(0.35) saturate(0.8) hue-rotate(-10deg)";
+      // No scroll hijack: wheel zoom turns on after a click on the map, off again when the pointer leaves.
+      const wheelMap = map;
+      map.on("click", () => wheelMap.scrollWheelZoom.enable());
+      map.on("mouseout", () => wheelMap.scrollWheelZoom.disable());
       L.marker(center, {
         icon: L.divIcon({ html: PIN_HTML, className: "", iconSize: [32, 42], iconAnchor: [16, 40] }),
         title: "Burgerash",
