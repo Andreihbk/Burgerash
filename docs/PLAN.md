@@ -42,9 +42,12 @@ Definition of done for every task: `npm run build` + `npm run lint` pass.
       metadataBase + canonical + title template + themeColor in layout, `robots.ts` (staff paths + /api disallowed),
       `sitemap.ts`, Restaurant JSON-LD (`src/lib/structured-data.ts`, built from catalog + hours; address/phone only
       when CONTACT is set). `MENU_SECTIONS` moved to catalog.ts. TODO: set `NEXT_PUBLIC_SITE_URL` in Vercel + .env.example.
-- [ ] P.2 Cleanup + staff hiding + fonts: delete unused public/images PNGs (keep menu/), default SVGs, src/_archive;
-      /admin in proxy matcher; X-Robots-Tag noindex for staff paths (next.config headers); remove staff links from
-      footer; Nunito as single variable font; drop unused keyframes. Record baseline First Load JS for `/`.
+- [x] P.2 Cleanup + staff hiding + fonts: deleted unused public/images PNGs (menu/ kept), default SVGs, src/_archive;
+      /admin added to the proxy matcher; `X-Robots-Tag: noindex, nofollow` on all staff paths (next.config headers, from
+      `PRIVATE_PATHS` in site.ts); staff links removed from the footer; Nunito declared as one variable font; unused CSS
+      (ticker, scanlines, glitch, marquee, flash, custom-cursor) removed.
+      BASELINE for P.3/P.4 (`/`, production build): 10 scripts, 607 KB raw / 185 KB gzip JS, 6 preloaded fonts
+      (the font change did not reduce the file count: Google already served one file for all Nunito weights).
 - [ ] P.3 Refactor 1: `src/store/uiStore.ts` (customizing, lastAdded, addedSeq); server ProductCard / MenuSections /
       LocationSection / SiteFooter in `src/components/storefront/`, client ProductActions; StoreFront takes them as slots.
 - [ ] P.4 Refactor 2: client islands SiteHeader, HeroBoard, CategoryBar (IntersectionObserver), CustomizeModal (dialog a11y:

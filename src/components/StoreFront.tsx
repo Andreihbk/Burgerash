@@ -1,7 +1,6 @@
 "use client";
 
 import { forwardRef, memo, useCallback, useMemo, useEffect, useImperativeHandle, useRef, useState } from "react";
-import Link from "next/link";
 import { INITIAL_MODIFIERS, INITIAL_PRODUCTS, MENU_SECTIONS } from "@/lib/catalog";
 import { useCartStore } from "@/store/cartStore";
 import { useCartHydrated } from "@/store/useCartHydrated";
@@ -646,31 +645,13 @@ export default function Storefront() {
         </div>
       )}
 
-      {/* FOOTER + ACCES RAPID PANOURI OPERAȚIONALE */}
+      {/* FOOTER */}
       <footer className="max-w-6xl mx-auto px-4 mt-20 pt-8 border-t-2 border-[#332420]/20 flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-xs text-[#332420]/70">
         <div>
           <p className="font-bold text-[#332420]">
             GOOD BURGERS /// GOOD PEOPLE /// ALWAYS
           </p>
           <p className="mt-1">© 2026 Burgerash. Toate drepturile rezervate.</p>
-        </div>
-
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="text-[10px] uppercase tracking-wider opacity-60 mr-1">
-            Staff Apps:
-          </span>
-          <Link className="px-2.5 py-1 rounded border border-[#332420]/40 hover:bg-[#332420] hover:text-[#F5E6CC] transition-colors" href="/kitchen">
-            /kitchen
-          </Link>
-          <Link className="px-2.5 py-1 rounded border border-[#332420]/40 hover:bg-[#332420] hover:text-[#F5E6CC] transition-colors" href="/dispatch">
-            /dispatch
-          </Link>
-          <Link className="px-2.5 py-1 rounded border border-[#332420]/40 hover:bg-[#332420] hover:text-[#F5E6CC] transition-colors" href="/rider">
-            /rider
-          </Link>
-          <Link className="px-2.5 py-1 rounded border border-[#332420]/40 hover:bg-[#332420] hover:text-[#F5E6CC] transition-colors" href="/admin">
-            /admin
-          </Link>
         </div>
       </footer>
 

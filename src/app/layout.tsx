@@ -18,7 +18,6 @@ const robotoMono = Roboto_Mono({
 
 // Body text and form labels
 const nunito = Nunito({
-  weight: ["400", "600", "700", "800", "900"],
   subsets: ["latin", "latin-ext"],
   variable: "--font-nunito",
 });
