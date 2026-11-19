@@ -1,7 +1,7 @@
 import React from "react";
 
 // Single source of truth for the Burgerash logo (reference: docs/brand/logo-reference.png).
-// Line-art burger icon + lowercase "burgerash" wordmark + "HAND CRAFTED BURGERS" tagline.
+// Line-art burger icon + lowercase "burgerash" wordmark + "HANDCRAFTED BURGERS" tagline.
 // The tagline is part of the wordmark lockup and is never rendered alone.
 // Colors: wine on sand (default) or sand on wine/charcoal. Nothing else.
 
@@ -45,6 +45,15 @@ function BurgerIcon({ x = 0, y = 0 }: { x?: number; y?: number }) {
   );
 }
 
+/** Standalone line-art burger glyph (ticker separators etc). Inherits currentColor. */
+export function BurgerGlyph({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 44 49" aria-hidden className={className}>
+      <BurgerIcon />
+    </svg>
+  );
+}
+
 const TEXT_FONT = { fontFamily: "var(--font-nunito), system-ui, sans-serif" } as const;
 
 function Lockup({ cx, wordY, tagY, wordSize, tagSize, wordWidth, tagWidth }: {
@@ -63,7 +72,7 @@ function Lockup({ cx, wordY, tagY, wordSize, tagSize, wordWidth, tagWidth }: {
       </text>
       {/* Even letter-spacing: textLength distributes the extra space between glyphs equally */}
       <text x={cx} y={tagY} fontSize={tagSize} fontWeight={700} textLength={tagWidth} lengthAdjust="spacing">
-        HAND CRAFTED BURGERS
+        HANDCRAFTED BURGERS
       </text>
     </g>
   );
@@ -82,7 +91,7 @@ export function BrandLogo({ variant = "full", tone = "wine", className = "" }: B
 
   if (variant === "horizontal") {
     return (
-      <svg viewBox="0 0 224 50" role="img" aria-label="burgerash, hand crafted burgers" className={cls}>
+      <svg viewBox="0 0 224 50" role="img" aria-label="burgerash, handcrafted burgers" className={cls}>
         <BurgerIcon y={0.5} />
         <Lockup cx={140} wordY={32} tagY={47} wordSize={36} tagSize={10} wordWidth={160} tagWidth={150} />
       </svg>
@@ -90,7 +99,7 @@ export function BrandLogo({ variant = "full", tone = "wine", className = "" }: B
   }
 
   return (
-    <svg viewBox="0 0 200 124" role="img" aria-label="burgerash, hand crafted burgers" className={cls}>
+    <svg viewBox="0 0 200 124" role="img" aria-label="burgerash, handcrafted burgers" className={cls}>
       <BurgerIcon x={78} />
       <Lockup cx={100} wordY={90} tagY={114} wordSize={42} tagSize={13} wordWidth={190} tagWidth={184} />
     </svg>

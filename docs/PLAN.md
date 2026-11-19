@@ -64,7 +64,7 @@ High priority, not a launch gate by itself: **Ebriza integration** (E.1-E.5, L.2
 - [x] S.7 Catalog follows the physical menu board: CLASIC, HOT BOY, DOUBLE, CRISPY, HOT HONEY, CRISPY BACON + Fries,
       Chips, Nuggets, Sauces + drinks, with weights (`weight_label`). CHEESY and CHICKEN BURGER removed (priceOrder rejects them).
       Saved carts drop removed products quietly (`cart-reconcile.ts`). New products have no Ebriza SKU yet (orders still save;
-      sync ends `failed` / 0104). BrandLogo tagline "HAND CRAFTED BURGERS". Brand photos with GPS removed from the tree.
+      sync ends `failed` / 0104). BrandLogo tagline "HANDCRAFTED BURGERS". Brand photos with GPS removed from the tree.
 
 ## Performance & SEO
 - [x] P.1 SEO foundations: `src/lib/site.ts` (SITE_URL from `NEXT_PUBLIC_SITE_URL`, else Vercel production URL),

@@ -57,7 +57,7 @@ export default async function Image() {
         </svg>
         <div style={{ display: "flex", fontSize: 190, fontWeight: 900, lineHeight: 1, marginTop: 8 }}>burgerash</div>
         <div style={{ display: "flex", fontSize: 40, fontWeight: 700, letterSpacing: 14, marginTop: 14 }}>
-          HAND CRAFTED BURGERS
+          HANDCRAFTED BURGERS
         </div>
         <div style={{ display: "flex", fontSize: 28, fontWeight: 700, letterSpacing: 2, marginTop: 44 }}>burgerash.ro</div>
       </div>

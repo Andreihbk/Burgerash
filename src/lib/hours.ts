@@ -1,6 +1,8 @@
 // Single source of truth for opening hours, contact info and prep-time text.
 // Pure module: safe to import from client components and API routes.
 
+import { SITE_ADDRESS } from "./site";
+
 export const TIMEZONE = "Europe/Bucharest";
 
 /** Shown as a fixed text until a live queue time exists. */
@@ -8,11 +10,10 @@ export const PREP_TEXT = "Gata în ~15 min";
 
 /**
  * Contact details. While a value is null the site hides that line (no tel: link / no address).
- * TODO: set the real phone and street address.
  */
 export const CONTACT: { phone: string | null; address: string | null } = {
   phone: null,
-  address: null,
+  address: SITE_ADDRESS.line,
 };
 
 type DayHours = { open: number; close: number }; // minutes from midnight; close 1440 = midnight

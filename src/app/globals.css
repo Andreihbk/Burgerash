@@ -93,6 +93,28 @@ body {
   }
 }
 
+/* Ticker marquee: track holds two identical loops, so -50% is a seamless wrap */
+@keyframes ticker-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.ticker-track { animation: ticker-scroll 40s linear infinite; }
+.ticker-reverse { animation-direction: reverse; }
+.ticker:hover .ticker-track { animation-play-state: paused; }
+@media (prefers-reduced-motion: reduce) {
+  .ticker { overflow-x: auto; }
+  .ticker-track { animation: none; }
+}
+
+/* Global brand scrollbars: thin, wine thumb on sand track, rounded */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #790D20 #F5E6CC;
+}
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: #F5E6CC; border-radius: 999px; }
+::-webkit-scrollbar-thumb { background: #790D20; border-radius: 999px; border: 2px solid #F5E6CC; }
+
 /* Thin brand scrollbar: wine thumb on sand track (modal + cart drawer) */
 .brand-scroll {
   scrollbar-width: thin;

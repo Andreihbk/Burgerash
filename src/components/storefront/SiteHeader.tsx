@@ -34,7 +34,7 @@ export default function SiteHeader() {
           <Display>PANOU MENIU</Display>
         </a>
         <a
-          href="#location"
+          href="#locatie"
           className="hidden md:inline-block font-bebas text-lg tracking-wider text-[#F5E6CC]/80 hover:text-[#F5E6CC] transition-colors"
         >
           <Display>LOCAȚIE</Display>

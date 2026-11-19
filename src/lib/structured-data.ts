@@ -1,7 +1,7 @@
 // schema.org Restaurant JSON-LD for the storefront, built from catalog.ts and hours.ts (no hand-kept copy).
 import { MENU_SECTIONS } from "./catalog";
 import { CONTACT, HOURS, formatTime } from "./hours";
-import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "./site";
+import { SITE_ADDRESS, SITE_COORDS, SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "./site";
 
 const MAIN_CATEGORIES = ["cat-burgers", "cat-chicken"];
 const DAY_NAMES = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -51,11 +51,12 @@ export function restaurantJsonLd() {
     ...(CONTACT.phone && { telephone: CONTACT.phone }),
     address: {
       "@type": "PostalAddress",
-      ...(CONTACT.address && { streetAddress: CONTACT.address }),
-      addressLocality: "București",
-      addressRegion: "Sector 6",
+      streetAddress: SITE_ADDRESS.street,
+      addressLocality: SITE_ADDRESS.city,
+      addressRegion: SITE_ADDRESS.sector,
       addressCountry: "RO",
     },
+    geo: { "@type": "GeoCoordinates", latitude: SITE_COORDS.lat, longitude: SITE_COORDS.lng },
     openingHoursSpecification: openingHours(),
     hasMenu: {
       "@type": "Menu",

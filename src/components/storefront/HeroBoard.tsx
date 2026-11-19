@@ -10,6 +10,7 @@ import MenuBoardBase from "../MenuBoard";
 import { ALL_TAB, prefersReducedMotion, scrollToTab } from "./layout";
 import { useStorefrontStatus } from "./useStorefrontStatus";
 import { Display } from "@/components/Display";
+import Ticker from "./Ticker";
 
 // Hero fan: 5 stickers (CRISPY BACON is on the board and cards, not in the fan).
 const HERO_PRODUCTS = ["prod-classic", "prod-double", "prod-hot-boy", "prod-hot-honey", "prod-crispy"]
@@ -154,7 +155,7 @@ export default function HeroBoard() {
 
           {/* Mobile: sticker stack goes under the headline (pure SVG, no cart state) */}
           <div className="self-center my-6 md:hidden">
-            <StickerStack size={112} modalOpen={!!customizing} onPick={openCustomize} />
+            <StickerStack size={100}modalOpen={!!customizing} onPick={openCustomize} />
           </div>
 
           <button
@@ -203,10 +204,7 @@ export default function HeroBoard() {
         </div>
       </section>
 
-      {/* Curved double red stripe (from the board) separates hero and menu board */}
-      <div aria-hidden className="max-w-6xl mx-auto px-4 sm:px-6">
-        <div className="h-3 border-y-[3px] border-[#790D20] rounded-tr-3xl rounded-bl-3xl" />
-      </div>
+      <Ticker />
 
       {/* Menu board: its own section below the hero */}
       <section aria-label="Meniu" className="max-w-3xl mx-auto px-4 sm:px-6 py-10 lg:py-14">

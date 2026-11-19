@@ -103,7 +103,7 @@ function Wordmark({ ink, y, size, tagline }: { ink: string; y: number; size: num
       </text>
       {tagline && (
         <text x="100" y={y + 10} fontSize="6.5" fontWeight="600">
-          hand crafted burgers
+          handcrafted burgers
         </text>
       )}
     </g>

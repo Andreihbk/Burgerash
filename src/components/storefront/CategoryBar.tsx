@@ -47,7 +47,7 @@ export default function CategoryBar() {
       id={CATEGORY_BAR_ID}
       aria-label="Categorii meniu"
       style={{ top: HEADER_HEIGHT }}
-      className="sticky z-30 bg-[#F5E6CC] border-b-2 border-[#332420] px-4 py-3 shadow-sm overflow-x-auto"
+      className="sticky z-30 bg-[#F5E6CC] border-b-2 border-[#332420] px-4 py-3 shadow-sm overflow-x-auto overscroll-x-contain snap-x snap-proximity"
     >
       <div className="w-max mx-auto flex gap-3">
         {TABS.map((tab) => {
@@ -62,7 +62,7 @@ export default function CategoryBar() {
                 scrollToTab(tab.id);
                 setActiveTab(tab.id);
               }}
-              className={`font-bebas text-xl tracking-wide px-5 py-2 rounded-lg transition-all whitespace-nowrap border-2 border-[#332420] ${
+              className={`font-bebas text-xl tracking-wide px-5 py-2 rounded-lg transition-all whitespace-nowrap shrink-0 snap-center border-2 border-[#332420] ${
                 active
                   ? "bg-[#790D20] text-[#F5E6CC] shadow-[3px_3px_0px_0px_#332420]"
                   : "bg-[#F5E6CC] text-[#332420] hover:bg-[#332420]/10"

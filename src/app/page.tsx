@@ -21,7 +21,7 @@ export default function Home() {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd }} />
-      <div className="min-h-screen bg-[#F5E6CC] text-[#332420] font-nunito pb-24">
+      <div className="min-h-screen bg-[#F5E6CC] text-[#332420] font-nunito pb-24 overflow-x-clip">
         <SiteHeader />
         <HeroBoard />
         <CategoryBar />
