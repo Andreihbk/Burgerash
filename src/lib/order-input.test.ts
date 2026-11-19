@@ -1,9 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { ORDER_LIMITS, OrderInputError, parseOrderInput, QUANTITY_ERROR, readText } from "./order-input";
+import { ORDER_LIMITS, OrderInputError, parseOrderInput, QUANTITY_ERROR, readText, TERMS_ERROR } from "./order-input";
 
 const base = {
   fulfillment_type: "delivery",
   payment_method: "cash_on_delivery",
+  terms_accepted: true,
   customer_name: "Ana Pop",
   customer_phone: "0721 123 456",
   delivery_address: "Str. Crângași nr. 14",
@@ -23,6 +24,14 @@ function errorOf(overrides: Record<string, unknown>): string {
   }
   throw new Error("expected OrderInputError");
 }
+
+describe("terms acceptance", () => {
+  it("is required and must be exactly true", () => {
+    expect(errorOf({ terms_accepted: undefined })).toBe(TERMS_ERROR);
+    expect(errorOf({ terms_accepted: false })).toBe(TERMS_ERROR);
+    expect(errorOf({ terms_accepted: "true" })).toBe(TERMS_ERROR);
+  });
+});
 
 describe("readText", () => {
   it("trims, maps empty to null and rejects non-strings", () => {

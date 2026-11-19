@@ -29,6 +29,7 @@ const validBody = {
   customer_name: "Test",
   customer_phone: "0721123456",
   form_elapsed_ms: 15_000,
+  terms_accepted: true,
   items: [{ product_id: "prod-classic", quantity: 1 }],
 };
 
@@ -129,6 +130,14 @@ describe("POST /api/orders bot protection, validation and rate limit (B.1)", () 
       { ...validBody, items: Array.from({ length: 31 }, () => ({ product_id: "prod-classic", quantity: 1 })) },
     ]) {
       const res = await POST(request(body));
+      expect(res.status).toBe(400);
+    }
+    expect(rpc).not.toHaveBeenCalled();
+  });
+
+  it("rejects an order without accepted terms, before the rate limiter", async () => {
+    for (const terms_accepted of [undefined, false, "true", 1]) {
+      const res = await POST(request({ ...validBody, terms_accepted }));
       expect(res.status).toBe(400);
     }
     expect(rpc).not.toHaveBeenCalled();

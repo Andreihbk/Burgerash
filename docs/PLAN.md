@@ -9,10 +9,13 @@ Nothing here is built yet. Do not set `NEXT_PUBLIC_ORDERING_ENABLED=true` in Pro
    - Done 2026-11-19: Supabase rate limit 5/10 min + 20/day per hashed IP (fail open), honeypot (fake success),
      3 s minimum form time (normal 400), server-side input caps. No captcha (no new accounts).
    - Go-live needs: run `supabase/migrations/20261122000000_order_rate_limit.sql`, set `RATE_LIMIT_SALT` in Vercel.
-2. [ ] **B.2 Legal pages** (see L.5): Terms, GDPR privacy, delivery & returns, ANPC/SOL links, company details.
+2. [x] **B.2 Legal pages** (see L.5): Terms, GDPR privacy, delivery & returns, ANPC/SOL links, company details.
    - Company data is pending from the owner: use clear placeholders (e.g. `[DENUMIRE SRL]`, `[CUI]`), never invent data.
    - Privacy must mention map tiles from OpenStreetMap and Netopia as payment processor.
    - Comes before Netopia: Netopia reviews the site before activation.
+   - Done 2026-11-19: /termeni, /confidentialitate, /livrare-retur, /anpc; company data in `src/lib/legal.ts` (all
+     `[DE COMPLETAT]`, owner must fill before launch); footer links + SAL/SOL; required terms checkbox at checkout,
+     validated server-side (`terms_accepted`). Texts are a draft: have a lawyer review before launch.
 3. [ ] **B.3 Delivery radius** (see L.4): 1 km from the shop. Shop coordinates pending from the owner.
    - Public map section above the footer showing the radius (OpenStreetMap tiles).
    - Radius preview slider in /admin (preview only).
@@ -186,7 +189,7 @@ High priority, not a launch gate by itself: **Ebriza integration** (E.1-E.5, L.2
 - [x] L.8 Order status page via secret link
   - Part A done (code): migration `20261119000000_order_public_token.sql` (YOU must run it in Supabase before deploying), `/comanda/[token]` server page (service_role lookup, no phone/address/rider shown, noindex, auto-refresh 20s), `public_token` returned by `/api/orders`. Part B done: "URMĂREȘTE COMANDA" button on the cart success screen, last order saved in localStorage (`src/lib/last-order.ts`), small "COMANDA TA" link in SiteHeader until the order is delivered/canceled (status page clears it).
 - [ ] L.4 Delivery zone (check address before accepting delivery orders). Decided: 1 km radius, see B.3
-- [ ] L.5 Legal pages: terms, GDPR privacy, ANPC links, company details. Pre-launch blocker, see B.2
+- [x] L.5 Legal pages: terms, GDPR privacy, ANPC links, company details. Pre-launch blocker, see B.2
 - [ ] L.6 Cart upsell (fries, sauces, drinks)
 
 ## Parallel track - Ebriza (no code)

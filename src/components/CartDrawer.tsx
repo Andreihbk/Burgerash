@@ -14,7 +14,8 @@ import { saveLastOrder } from "@/lib/last-order";
 import { X, Trash2, Plus, Minus, ShoppingBag, ArrowRight, CheckCircle2 } from "lucide-react";
 import { Display } from "@/components/Display";
 import { HONEYPOT_FIELD } from "@/lib/bot-check";
-import { ORDER_LIMITS, RATE_LIMITED_MESSAGE } from "@/lib/order-input";
+import { PRIVACY_PATH, TERMS_PATH } from "@/lib/legal";
+import { ORDER_LIMITS, RATE_LIMITED_MESSAGE, TERMS_ERROR } from "@/lib/order-input";
 
 const ERROR_TEXT = "Nu am putut trimite comanda. Încearcă din nou în câteva secunde.";
 
@@ -53,6 +54,7 @@ export default function CartDrawer() {
     note: "",
     paymentMethod: "card_on_delivery" as "cash_on_delivery" | "card_on_delivery" | "online_card",
   });
+  const [termsAccepted, setTermsAccepted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [orderNumber, setOrderNumber] = useState("");
   const [publicToken, setPublicToken] = useState("");
@@ -77,6 +79,10 @@ export default function CartDrawer() {
   const handleCheckoutSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (orderingOff || isClosed || hasSoldOut) return;
+    if (!termsAccepted) {
+      setErrorMessage(TERMS_ERROR);
+      return;
+    }
     const honeypot = new FormData(e.currentTarget as HTMLFormElement).get(HONEYPOT_FIELD);
     const phone = normalizeRoPhone(formData.phone);
     if (!phone) {
@@ -108,6 +114,7 @@ export default function CartDrawer() {
         tip_amount: tipAmount,
         total_amount: grandTotal,
         cutlery_sets: cutlerySets,
+        terms_accepted: termsAccepted,
         form_elapsed_ms: checkoutOpenedAt === null ? 0 : Date.now() - checkoutOpenedAt,
         [HONEYPOT_FIELD]: typeof honeypot === "string" ? honeypot : "",
         items: items.map((i) => ({
@@ -470,6 +477,22 @@ export default function CartDrawer() {
                     placeholder="Fără ceapă la clasic, sos extra..."
                   />
                 </div>
+
+                <label className="flex items-start gap-2 font-nunito font-semibold text-sm cursor-pointer">
+                  <input
+                    type="checkbox"
+                    required
+                    checked={termsAccepted}
+                    onChange={(e) => setTermsAccepted(e.target.checked)}
+                    className="mt-1 h-4 w-4 shrink-0 accent-[#790D20]"
+                  />
+                  <span>
+                    Am citit și accept{" "}
+                    <a href={TERMS_PATH} target="_blank" rel="noopener noreferrer" className="underline font-bold">Termenii</a>{" "}
+                    și{" "}
+                    <a href={PRIVACY_PATH} target="_blank" rel="noopener noreferrer" className="underline font-bold">Politica de confidențialitate</a>
+                  </span>
+                </label>
 
                 <button
                   type="submit"

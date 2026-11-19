@@ -26,6 +26,8 @@ export const RATE_LIMITED_MESSAGE =
 const FULFILLMENT_TYPES: FulfillmentType[] = ["delivery", "pickup"];
 const PAYMENT_METHODS: PaymentMethod[] = ["cash_on_delivery", "card_on_delivery", "online_card"];
 
+export const TERMS_ERROR = "Trebuie să accepți Termenii și Politica de confidențialitate.";
+
 export class OrderInputError extends Error {}
 
 /** Empty -> null. Not a string or longer than max -> OrderInputError. */
@@ -85,6 +87,9 @@ function readItems(raw: unknown): RequestedItem[] {
 
 /** Validates and normalizes the order body. Throws OrderInputError with a Romanian message. */
 export function parseOrderInput(body: Record<string, unknown>): OrderInput {
+  // Consent to Terms + Privacy (PLAN B.2): must be literally true, the client checkbox is not trusted.
+  if (body.terms_accepted !== true) throw new OrderInputError(TERMS_ERROR);
+
   const fulfillmentType = body.fulfillment_type as FulfillmentType;
   const paymentMethod = body.payment_method as PaymentMethod;
   if (!FULFILLMENT_TYPES.includes(fulfillmentType)) throw new OrderInputError("Tip de livrare invalid.");
