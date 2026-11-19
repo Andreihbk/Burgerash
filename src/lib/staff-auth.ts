@@ -19,5 +19,5 @@ export function safeEqual(a: string, b: string): boolean {
 
 /** Only allow same-site relative redirects. */
 export function safeNext(value: string | null | undefined): string {
-  return value && value.startsWith("/") && !value.startsWith("//") ? value : "/kitchen";
+  return value && value.startsWith("/") && !value.startsWith("//") && !value.includes("\\") ? value : "/kitchen";
 }
