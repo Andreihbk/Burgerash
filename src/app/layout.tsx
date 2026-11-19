@@ -1,6 +1,7 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Bebas_Neue, Roboto_Mono, Nunito } from "next/font/google";
 import "./globals.css";
+import { SITE_DESCRIPTION, SITE_NAME, SITE_TAGLINE, SITE_URL } from "@/lib/site";
 
 // Display / headings
 const bebasNeue = Bebas_Neue({
@@ -23,15 +24,25 @@ const nunito = Nunito({
 });
 
 export const metadata: Metadata = {
-  title: "Burgerash | Nu facem medium. Facem crustă.",
-  description: "Nu facem medium. Facem crustă. Smash burgeri din Sector 6, comandă direct, fără comisioane.",
+  metadataBase: new URL(SITE_URL),
+  title: { default: `${SITE_NAME} | ${SITE_TAGLINE}`, template: `%s | ${SITE_NAME}` },
+  description: SITE_DESCRIPTION,
+  applicationName: SITE_NAME,
+  alternates: { canonical: "/" },
+  robots: { index: true, follow: true },
   openGraph: {
-    title: "Burgerash | Nu facem medium. Facem crustă.",
+    title: `${SITE_NAME} | ${SITE_TAGLINE}`,
     description: "Smash burgeri din Sector 6. Comandă direct, fără comisioane.",
+    url: "/",
+    siteName: SITE_NAME,
     locale: "ro_RO",
     type: "website",
   },
   twitter: { card: "summary_large_image" },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#332420",
 };
 
 export default function RootLayout({

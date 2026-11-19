@@ -37,6 +37,20 @@ Definition of done for every task: `npm run build` + `npm run lint` pass.
       stack over its corner (desktop), board right below on mobile; old board section removed; hero status
       line from hours.ts (never "open" while closed); short status in mobile header.
 
+## Performance & SEO
+- [x] P.1 SEO foundations: `src/lib/site.ts` (SITE_URL from `NEXT_PUBLIC_SITE_URL`, else Vercel production URL),
+      metadataBase + canonical + title template + themeColor in layout, `robots.ts` (staff paths + /api disallowed),
+      `sitemap.ts`, Restaurant JSON-LD (`src/lib/structured-data.ts`, built from catalog + hours; address/phone only
+      when CONTACT is set). `MENU_SECTIONS` moved to catalog.ts. TODO: set `NEXT_PUBLIC_SITE_URL` in Vercel + .env.example.
+- [ ] P.2 Cleanup + staff hiding + fonts: delete unused public/images PNGs (keep menu/), default SVGs, src/_archive;
+      /admin in proxy matcher; X-Robots-Tag noindex for staff paths (next.config headers); remove staff links from
+      footer; Nunito as single variable font; drop unused keyframes. Record baseline First Load JS for `/`.
+- [ ] P.3 Refactor 1: `src/store/uiStore.ts` (customizing, lastAdded, addedSeq); server ProductCard / MenuSections /
+      LocationSection / SiteFooter in `src/components/storefront/`, client ProductActions; StoreFront takes them as slots.
+- [ ] P.4 Refactor 2: client islands SiteHeader, HeroBoard, CategoryBar (IntersectionObserver), CustomizeModal (dialog a11y:
+      Escape, focus, aria-modal), AddedToast, MobileCartBar; CartDrawer via next/dynamic on first open; delete StoreFront.tsx.
+      Compare First Load JS + Lighthouse with P.2 baseline.
+
 ## Phase 1 - Ebriza adapter (works in mock mode, no credentials needed)
 - [x] 1.1 Fix `src/types/ebriza.ts` against `.claude/skills/ebriza-api/reference.md`.
       Const objects instead of enums; undocumented fields removed; error codes + result types.

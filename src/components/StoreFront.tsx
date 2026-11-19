@@ -2,7 +2,7 @@
 
 import { forwardRef, memo, useCallback, useMemo, useEffect, useImperativeHandle, useRef, useState } from "react";
 import Link from "next/link";
-import { INITIAL_CATEGORIES, INITIAL_MODIFIERS, INITIAL_PRODUCTS } from "@/lib/catalog";
+import { INITIAL_MODIFIERS, INITIAL_PRODUCTS, MENU_SECTIONS } from "@/lib/catalog";
 import { useCartStore } from "@/store/cartStore";
 import { useCartHydrated } from "@/store/useCartHydrated";
 import { formatLei } from "@/lib/format";
@@ -20,17 +20,6 @@ import { ShoppingBag, Plus, SlidersHorizontal, X, Check, MapPin, ArrowRight } fr
 // Header has a fixed height so the category bar can stick right under it.
 const HEADER_HEIGHT = 72;
 const ALL_TAB = "all";
-
-// Static catalog: every active category with its available products, in menu order.
-const MENU_SECTIONS = INITIAL_CATEGORIES.filter((c) => c.is_active)
-  .sort((a, b) => a.position - b.position)
-  .map((category) => ({
-    category,
-    products: INITIAL_PRODUCTS.filter((p) => p.category_id === category.id && p.is_available).sort(
-      (a, b) => a.position - b.position
-    ),
-  }))
-  .filter((s) => s.products.length > 0);
 
 const sectionDomId = (categoryId: string) => `meniu-${categoryId}`;
 

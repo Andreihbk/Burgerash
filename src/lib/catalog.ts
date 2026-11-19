@@ -235,3 +235,14 @@ export const INITIAL_MODIFIERS: Modifier[] = [
 { id: "mod-no-onion", name: "Fără Ceapă", group_name: "remove", price: 0, ebriza_sku: "mod-fara-ceapa", is_available: true, position: 5 },
 { id: "mod-no-pickles", name: "Fără Castraveți Murați", group_name: "remove", price: 0, ebriza_sku: "mod-fara-muraturi", is_available: true, position: 6 },
 ];
+
+/** Storefront menu: every active category with its available products, in menu order. */
+export const MENU_SECTIONS: { category: Category; products: Product[] }[] = INITIAL_CATEGORIES.filter((c) => c.is_active)
+  .sort((a, b) => a.position - b.position)
+  .map((category) => ({
+    category,
+    products: INITIAL_PRODUCTS.filter((p) => p.category_id === category.id && p.is_available).sort(
+      (a, b) => a.position - b.position
+    ),
+  }))
+  .filter((s) => s.products.length > 0);
