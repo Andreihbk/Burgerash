@@ -32,4 +32,4 @@ export const SITE_COORDS = { lat: 44.4563518, lng: 26.0509441 } as const;
 /** Free-delivery radius drawn on the map. */
 export const DELIVERY_RADIUS_KM = 1;
 
-export const GOOGLE_MAPS_URL = `https://www.google.com/maps/search/?api=1&query=${SITE_COORDS.lat},${SITE_COORDS.lng}`;
+export const GOOGLE_MAPS_URL = "https://maps.app.goo.gl/oqvQu7YiSKh3umCD6";
