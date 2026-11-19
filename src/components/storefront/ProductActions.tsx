@@ -3,6 +3,7 @@
 import { Plus, SlidersHorizontal } from "lucide-react";
 import { useCartStore } from "@/store/cartStore";
 import { useUiStore } from "@/store/uiStore";
+import { useIsSoldOut } from "@/lib/useSoldOut";
 import type { Product } from "@/types/database";
 
 // The only client part of a product card: add to cart / open the customize modal.
@@ -10,6 +11,16 @@ export default function ProductActions({ product, customizable }: { product: Pro
   const addItem = useCartStore((s) => s.addItem);
   const notifyAdded = useUiStore((s) => s.notifyAdded);
   const openCustomize = useUiStore((s) => s.openCustomize);
+
+  const soldOut = useIsSoldOut(product.id);
+
+  if (soldOut) {
+    return (
+      <span className="inline-flex min-h-11 items-center border-2 border-dashed border-[#790D20] px-4 py-2.5 rounded-lg font-bebas text-lg tracking-wide text-[#790D20]">
+        EPUIZAT
+      </span>
+    );
+  }
 
   return (
     <div className="flex items-center gap-2">

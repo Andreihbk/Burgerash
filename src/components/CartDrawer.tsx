@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useCartStore } from "@/store/cartStore";
 import { normalizeRoPhone, PHONE_ERROR } from "@/lib/phone";
 import { useOpeningStatus } from "@/lib/useOpeningStatus";
+import { useSoldOutIds } from "@/lib/useSoldOut";
 import { useCartHydrated } from "@/store/useCartHydrated";
 import { formatLei } from "@/lib/format";
 import { EMAIL_ERROR, isValidEmail } from "@/lib/email";
@@ -51,6 +52,8 @@ export default function CartDrawer() {
   const hydrated = useCartHydrated();
   const openingStatus = useOpeningStatus();
   const isClosed = openingStatus !== null && !openingStatus.open;
+  const soldOutIds = useSoldOutIds();
+  const hasSoldOut = items.some((i) => soldOutIds.has(i.product.id));
 
   if (!isOpen || !hydrated) return null;
 
@@ -60,7 +63,7 @@ export default function CartDrawer() {
 
   const handleCheckoutSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (isClosed) return;
+    if (isClosed || hasSoldOut) return;
     const phone = normalizeRoPhone(formData.phone);
     if (!phone) {
       setPhoneError(PHONE_ERROR);
@@ -225,6 +228,11 @@ export default function CartDrawer() {
                         <div className="flex justify-between items-start">
                           <div>
                             <h4 className="font-bebas text-xl text-brand-dark">{item.product.name}</h4>
+                            {soldOutIds.has(item.product.id) && (
+                              <p className="font-mono text-xs font-bold text-brand-red">
+                                EPUIZAT - scoate-l din coș ca să continui
+                              </p>
+                            )}
                             <p className="font-nunito font-bold text-xs text-brand-dark/60">
                               {formatLei(item.unitPriceWithModifiers)} / buc
                             </p>
@@ -426,10 +434,10 @@ export default function CartDrawer() {
 
                 <button
                   type="submit"
-                  disabled={isSubmitting || isClosed}
+                  disabled={isSubmitting || isClosed || hasSoldOut}
                   className="w-full bg-brand-red text-white font-bebas text-2xl py-4 rounded-lg shadow-[4px_4px_0px_0px_#121212] hover:bg-brand-dark transition-all mt-6 disabled:opacity-50"
                 >
-                  {isClosed ? "Suntem închiși acum" : isSubmitting ? "SE TRIMITE..." : `PLASEAZĂ COMANDA · ${formatLei(grandTotal)}`}
+                  {isClosed ? "Suntem închiși acum" : hasSoldOut ? "Produs epuizat în coș" : isSubmitting ? "SE TRIMITE..." : `PLASEAZĂ COMANDA · ${formatLei(grandTotal)}`}
                 </button>
               </form>
             )}
@@ -466,7 +474,8 @@ export default function CartDrawer() {
 
               <button
                 onClick={() => setStep("checkout")}
-                className="w-full bg-brand-dark text-brand-paper font-bebas text-2xl py-4 rounded-lg shadow-[4px_4px_0px_0px_#C5081F] hover:bg-brand-red transition-all flex items-center justify-center gap-2 mt-4"
+                disabled={hasSoldOut}
+                className="w-full disabled:opacity-50 bg-brand-dark text-brand-paper font-bebas text-2xl py-4 rounded-lg shadow-[4px_4px_0px_0px_#C5081F] hover:bg-brand-red transition-all flex items-center justify-center gap-2 mt-4"
               >
                 <span>CONTINUĂ LA CHECKOUT</span>
                 <ArrowRight className="w-5 h-5" />

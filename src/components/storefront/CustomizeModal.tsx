@@ -5,6 +5,7 @@ import { INITIAL_MODIFIERS } from "@/lib/catalog";
 import { useCartStore } from "@/store/cartStore";
 import { useUiStore } from "@/store/uiStore";
 import { formatLei } from "@/lib/format";
+import { useIsSoldOut } from "@/lib/useSoldOut";
 import { BurgerStamp } from "../BurgerStamp";
 import type { OrderItemModifier, Product } from "@/types/database";
 import { X, Check } from "lucide-react";
@@ -25,7 +26,10 @@ export default function CustomizeModal({ product }: { product: Product }) {
     });
   };
 
+  const soldOut = useIsSoldOut(product.id);
+
   const handleConfirm = () => {
+    if (soldOut) return;
     addItem(product, selectedModifiers, itemNote, itemQty);
     notifyAdded(product.name);
     closeCustomize();
@@ -199,11 +203,18 @@ export default function CustomizeModal({ product }: { product: Product }) {
             <button
               type="button"
               onClick={handleConfirm}
-              className="bg-[#790D20] text-white font-bebas text-2xl px-5 py-3 rounded-lg border-2 border-[#332420] shadow-[3px_3px_0px_0px_#332420] hover:bg-[#332420] transition-all whitespace-nowrap"
+              disabled={soldOut}
+              className="bg-[#790D20] text-white font-bebas text-2xl px-5 py-3 rounded-lg border-2 border-[#332420] shadow-[3px_3px_0px_0px_#332420] hover:bg-[#332420] transition-all whitespace-nowrap disabled:bg-[#F5E6CC] disabled:text-[#790D20] disabled:border-dashed disabled:border-[#790D20] disabled:shadow-none"
             >
-              ADAUGĂ ·{" "}
-              {formatLei(
-                (product.price + selectedModifiers.reduce((sum, m) => sum + m.price, 0)) * itemQty,
+              {soldOut ? (
+                "EPUIZAT"
+              ) : (
+                <>
+                  ADAUGĂ ·{" "}
+                  {formatLei(
+                    (product.price + selectedModifiers.reduce((sum, m) => sum + m.price, 0)) * itemQty,
+                  )}
+                </>
               )}
             </button>
           </div>
