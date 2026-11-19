@@ -5,6 +5,7 @@ import { normalizeRoPhone, PHONE_ERROR } from "@/lib/phone";
 import { EMAIL_ERROR, isValidEmail } from "@/lib/email";
 import { CLOSED_ORDER_ERROR, getStatus } from "@/lib/hours";
 import { syncOrderToEbriza } from "@/lib/ebriza-sync";
+import { getSoldOutIds, soldOutMessage, soldOutNames, STOCK_UNAVAILABLE_ERROR } from "@/lib/stock";
 import type { FulfillmentType, PaymentMethod } from "@/types/database";
 
 const FULFILLMENT_TYPES: FulfillmentType[] = ["delivery", "pickup"];
@@ -64,6 +65,19 @@ export async function POST(req: Request) {
         .filter((id): id is string => typeof id === "string"),
     };
   });
+
+  // Sold-out products (product_stock) are rejected before pricing. If the stock cannot be read we
+  // fail closed: create_order needs Supabase anyway, so this adds no new failure mode.
+  let soldOut: string[];
+  try {
+    soldOut = soldOutNames(requestedItems.map((i) => i.product_id), await getSoldOutIds());
+  } catch (err) {
+    console.error("Stock check error:", err);
+    return NextResponse.json({ error: STOCK_UNAVAILABLE_ERROR }, { status: 503 });
+  }
+  if (soldOut.length > 0) {
+    return NextResponse.json({ error: soldOutMessage(soldOut), code: "sold_out" }, { status: 409 });
+  }
 
   let priced;
   try {
