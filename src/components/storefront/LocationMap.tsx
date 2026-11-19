@@ -87,6 +87,7 @@ export default function LocationMap() {
         .addTo(m);
 
       m.on("load", () => {
+        m.resize();
         m.addSource("delivery", { type: "geojson", data: circlePolygon(radiusRef.current) });
         m.addLayer({ id: "delivery-fill", type: "fill", source: "delivery", paint: { "fill-color": BRAND, "fill-opacity": 0.15 } });
         m.addLayer({ id: "delivery-line", type: "line", source: "delivery", paint: { "line-color": BRAND, "line-width": 2 } });
@@ -116,8 +117,8 @@ export default function LocationMap() {
   };
 
   return (
-    <div className="relative h-[320px] md:h-full md:min-h-[320px]">
-      <div ref={containerRef} className="absolute inset-0" role="img" aria-label="Hartă: locația Burgerash și zona de livrare" />
+    <div className="relative h-[320px] md:h-full md:min-h-[420px]">
+      <div ref={containerRef} className="h-full w-full" role="img" aria-label="Hartă: locația Burgerash și zona de livrare" />
       {SHOW_SLIDER && (
         <label className="absolute bottom-6 left-3 right-3 sm:right-auto sm:w-64 z-10 bg-[#F5E6CC] border-2 border-[#332420] rounded-lg px-3 py-2 font-mono text-xs font-bold text-[#332420]">
           Rază livrare: {radiusKm.toFixed(1)} km

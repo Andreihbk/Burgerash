@@ -41,7 +41,7 @@ export default function LocationSection() {
           </div>
         </div>
 
-        <div className="border-t-4 md:border-t-0 md:border-l-4 border-[#332420] h-[320px] md:h-auto md:min-h-[320px] relative">
+        <div className="border-t-4 md:border-t-0 md:border-l-4 border-[#332420] h-[320px] md:h-auto md:min-h-[420px] relative">
           <LocationMapLoader />
         </div>
       </div>
