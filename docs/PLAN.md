@@ -17,7 +17,7 @@ Definition of done for every task: `npm run build` + `npm run lint` pass.
       DONE WHEN: a test order from the storefront appears in the `orders` table.
 - [ ] 0.2 Vercel env vars set (Supabase keys; later Ebriza vars). No secrets in git history.
       DONE WHEN: the live site places an order into Supabase.
-- [ ] 0.3 Add `.env.example` names only; confirm `.env*` is gitignored.
+- [x] 0.3 Add `.env.example` names only; confirm `.env*` is gitignored.
 
 ## Storefront
 - [x] S.1 Rename DUBLE to DOUBLE (catalog, sticker, menu board); other names unchanged.
