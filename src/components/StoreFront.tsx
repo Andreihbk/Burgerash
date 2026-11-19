@@ -303,7 +303,7 @@ export default function Storefront() {
           </a>
 
           {status && (
-            <div className="flex lg:hidden items-center gap-1.5 text-xs font-mono" aria-label="Program">
+            <div className="flex lg:hidden items-center gap-1.5 text-xs font-nunito font-bold" aria-label="Program">
               <span
                 aria-hidden
                 className={`w-2 h-2 rounded-full ${status.open ? "bg-[#F5E6CC]" : "border border-[#F5E6CC]"}`}
@@ -314,7 +314,7 @@ export default function Storefront() {
 
           {status && (
             <div
-              className="hidden lg:flex items-center gap-2 text-xs font-mono"
+              className="hidden lg:flex items-center gap-2 text-xs font-nunito font-bold"
               aria-label="Program"
             >
               <span
@@ -392,7 +392,7 @@ export default function Storefront() {
                 <span
                   aria-hidden
                   className={`w-3 h-3 rounded-full shrink-0 border-2 border-[#790D20] ${
-                    status.open ? "bg-[#790D20] shadow-[0_0_8px_2px_rgba(121,13,32,0.45)]" : "bg-transparent opacity-50"
+                    status.open ? "bg-[#790D20] status-led-on" : "bg-transparent opacity-50"
                   }`}
                 />
                 {heroStatusLine(status)}
@@ -404,7 +404,7 @@ export default function Storefront() {
         <div className="relative">
           <MenuBoard lit={status ? status.open : false} linkedNames={BOARD_LINKED_NAMES} onLineActive={handleBoardLine} />
           {/* md+: stickers slapped over the board's top corner (scaled down at md) */}
-          <div className="hidden md:block absolute -top-14 -right-4 lg:-top-16 lg:-right-10 z-10 origin-top-right md:scale-[0.65] lg:scale-100">
+          <div className="hidden md:block absolute -top-14 -right-4 lg:-top-16 lg:-right-4 xl:-right-10 z-10 origin-top-right md:scale-[0.65] lg:scale-100">
             <StickerStack ref={stickersRef} size={104} modalOpen={!!selectedProduct} onPick={handleOpenModal} />
           </div>
         </div>
