@@ -15,7 +15,7 @@ Definition of done for every task: `npm run build` + `npm run lint` pass.
       - `updated_at` trigger on `orders`. Removed `files.txt`, `setup-claude-config.sh`.
 - [x] 0.1 Supabase cloud project exists, `supabase/schema.sql` applied, `.env.local` set
       DONE WHEN: a test order from the storefront appears in the `orders` table.
-- [ ] 0.2 Vercel env vars set (Supabase keys; later Ebriza vars). No secrets in git history.
+- [x] 0.2 Vercel env vars set (Supabase keys; later Ebriza vars). No secrets in git history.
       DONE WHEN: the live site places an order into Supabase.
 - [x] 0.3 Add `.env.example` names only; confirm `.env*` is gitignored.
 
@@ -128,6 +128,14 @@ Definition of done for every task: `npm run build` + `npm run lint` pass.
     and no table access to orders/order_items. Staff (`authenticated`) can SELECT orders/items and UPDATE
     only `status` and `rider_name`. No delete for anyone. Steps: 1 admin client (done) / 2 Supabase Auth
     login / 3 RLS migration + remove old gate / 4 sign-out button.
+  - Step 2 DONE (code): `@supabase/ssr` added; `/staff/login` (email + password) posts to `/api/staff-auth/login`
+    (`signInWithPassword`, session cookies set on the redirect). `safeNext` moved to `src/lib/safe-next.ts`. The old
+    gate (`proxy.ts`, `/staff-login`) is still active and untouched. Create staff users in Supabase Dashboard >
+    Authentication > Users (sign-ups OFF). Nothing reads the new session yet.
+  - Step 3 must: swap `proxy.ts` to verify the Supabase session (`createServerClient` + `getUser()`, refresh cookies);
+    switch the /kitchen /dispatch /rider browser queries + Realtime to `createBrowserClient` from `@supabase/ssr`
+    (the plain anon client has no session, so it would lose access once RLS closes); write the RLS migration;
+    delete `staff-auth.ts`, `/staff-login`, `/api/staff-login`, `STAFF_PASSWORD`.
   - NOTE: "authenticated = staff" only holds while sign-ups AND anonymous sign-ins are OFF in Supabase Auth.
     If we add customer accounts later (loyalty), policies must check a staff table instead of the role.
 - [x] L.1 Opening hours + open/closed badge (block or warn on orders when closed)
