@@ -69,7 +69,9 @@ Definition of done for every task: `npm run build` + `npm run lint` pass.
       call `getBillByExternal` first (skill rule 7).
 
 ## Phase 2 - Staff apps (Supabase Realtime)
-- [ ] 2.1 `/kitchen` KDS, 3 columns
+- [x] 2.1 `/kitchen` KDS, 3 columns (Nou = pending, În preparare = preparing, Gata = ready_for_packing)
+      Supabase only (no Ebriza), Realtime on `orders`, optimistic one-tap advance + undo, sound toggle.
+      Phone = tabs, md+ = 3 columns. No auth yet (see "Before launch").
 - [ ] 2.2 `/dispatch` packing + rider assignment
 - [ ] 2.3 `/rider` mobile view
 - [ ] 2.4 `/admin` stock, menu, hours
@@ -84,6 +86,9 @@ Definition of done for every task: `npm run build` + `npm run lint` pass.
 - [ ] 4.3 End-to-end test: cart -> order -> POS -> status back
 
 ## Before launch
+- [ ] L.0 TODO staff auth + RLS: /kitchen (and later /dispatch /rider /admin) are open to anyone with the URL,
+      and RLS is `using (true)` on orders (anyone with the anon key can read/update orders). Add Supabase Auth
+      + staff-only policies (tasks 4.1, 4.2). Do not launch without it.
 - [x] L.1 Opening hours + open/closed badge (block or warn on orders when closed)
   - Hours live in src/lib/hours.ts only; server rejects closed orders (403). TODO: set real CONTACT.phone / CONTACT.address there (hidden on the site until set).
 - [ ] L.2 Allergens per product (shown on cards / product detail)
