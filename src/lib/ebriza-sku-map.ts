@@ -9,10 +9,12 @@ export const EBRIZA_SKU_MAP: Record<string, string | null> = {
   "prod-classic": null, // CLASIC
   "prod-hot-boy": null, // HOT BOY
   "prod-double": null, // DOUBLE
-  "prod-cheesy": null, // CHEESY
-  "prod-crispy-chicken": null, // CHICKEN BURGER
+  "prod-crispy": null, // CRISPY
   "prod-hot-honey": null, // HOT HONEY
+  "prod-crispy-bacon": null, // CRISPY BACON
   "prod-fries": null,
+  "prod-chips": null,
+  "prod-nuggets": null,
   "prod-sauces": null,
   "prod-cola": null,
   "prod-fanta": null,

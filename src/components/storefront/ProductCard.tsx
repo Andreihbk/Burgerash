@@ -17,13 +17,16 @@ export default function ProductCard({ product }: { product: Product }) {
 
         <h4 className="font-bebas text-3xl tracking-wide text-[#332420] mb-2">{product.name}</h4>
 
-        <p className="font-nunito font-bold text-sm text-[#332420]/75 mb-6">{product.description}</p>
+        <p className="font-nunito font-bold text-sm text-[#332420]/75 mb-3">{product.description}</p>
+        {product.allergens === null && (
+          <p className="font-nunito text-xs text-[#332420]/60 mb-3">Alergeni: întreabă-ne</p>
+        )}
       </div>
 
       <div className="flex items-center justify-between pt-4 border-t-2 border-[#332420]/10 mt-auto gap-2">
         <div>
           <span className="text-[10px] font-mono text-[#332420]/60 block">
-            {product.weight_grams ? `GRAMAJ ${product.weight_grams}G` : "PREȚ"}
+            {product.weight_label ? `GRAMAJ ${product.weight_label}` : "PREȚ"}
           </span>
           <span className="font-nunito font-black text-2xl text-[#332420]">
             {product.price} <span className="text-sm font-bold">LEI</span>

@@ -43,7 +43,7 @@ describe("soldOutNames", () => {
   it("returns catalog names of sold-out products, deduplicated", () => {
     expect(soldOutNames(["prod-classic", "prod-double", "prod-classic", "prod-cola"], soldOut)).toEqual([
       "CLASIC",
-      "COLA",
+      "Coca-Cola",
     ]);
   });
 

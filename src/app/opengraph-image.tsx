@@ -23,7 +23,7 @@ const MENU: [string, string][] = [
   ["CLASIC", "36"],
   ["HOT BOY", "39"],
   ["DOUBLE", "46"],
-  ["CHICKEN BURGER", "38"],
+  ["CRISPY", "38"],
   ["HOT HONEY", "38"],
 ];
 

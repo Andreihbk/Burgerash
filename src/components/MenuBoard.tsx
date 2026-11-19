@@ -1,5 +1,6 @@
 "use client";
 
+import { MENU_SECTIONS } from "@/lib/catalog";
 import { BrandLogo } from "./BrandLogo";
 
 const LINE_CLASS =
@@ -8,17 +9,22 @@ const LINE_CLASS =
 function Line({
   name,
   price,
+  weight,
   onSelect,
   onLineActive,
 }: {
   name: string;
   price: number;
+  weight?: string | null;
   onSelect?: (name: string) => void;
   onLineActive?: (name: string | null) => void;
 }) {
   const content = (
     <>
-      <span>{name}</span>
+      <span>
+        {name}
+        {weight && <span className="ml-[0.5em] text-[0.7em] font-bold text-[#332420]/70">{weight}</span>}
+      </span>
       <span>{price}</span>
     </>
   );
@@ -69,39 +75,10 @@ export default function MenuBoard({
 
           {/* Secțiunile Panoului Luminos */}
           <div className="space-y-[1.1em]">
-            {[
-              {
-                title: "BURGERS",
-                items: [
-                  { name: "CLASIC", price: 36 },
-                  { name: "HOT BOY", price: 39 },
-                  { name: "DOUBLE", price: 46 },
-                ],
-              },
-              {
-                title: "CHICKEN",
-                items: [
-                  { name: "CHICKEN BURGER", price: 38 },
-                  { name: "HOT HONEY", price: 38 },
-                ],
-              },
-              {
-                title: "SIDES & SAUCES",
-                items: [
-                  { name: "FRIES", price: 13 },
-                  { name: "SAUCES", price: 5 },
-                ],
-              },
-              {
-                title: "DRINKS",
-                items: [
-                  { name: "COLA", price: 9 },
-                  { name: "FANTA", price: 9 },
-                  { name: "SPRITE", price: 9 },
-                  { name: "WATER", price: 8 },
-                ],
-              },
-            ].map((group) => (
+            {MENU_SECTIONS.map(({ category, products }) => ({
+              title: category.name,
+              items: products.map((p) => ({ name: p.name, price: p.price, weight: p.weight_label })),
+            })).map((group) => (
               <div key={group.title} className="relative pr-[1.25em]">
                 <div className="flex items-center gap-3 mb-[0.4em]">
                   <h3 className="font-bebas text-[1.4em] leading-none text-[#332420] shrink-0">
@@ -115,6 +92,7 @@ export default function MenuBoard({
                       key={it.name}
                       name={it.name}
                       price={it.price}
+                      weight={it.weight}
                       onSelect={onSelect}
                       onLineActive={linkedNames.includes(it.name) ? onLineActive : undefined}
                     />

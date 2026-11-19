@@ -1,7 +1,7 @@
 import React from "react";
 import type { Product } from "@/types/database";
 
-// Round product stickers, rebuilt in SVG from docs/brand/IMG_4143.jpeg (sticker sheet).
+// Round product stickers, rebuilt in SVG from the printed sticker sheet.
 // Product names come from catalog.ts; `lines` only controls line breaks on the sticker.
 // Colors are tokens from globals.css only: 3 brand tokens + per-product --color-sticker-* accents.
 
@@ -20,10 +20,10 @@ interface StickerStyle {
 const PRODUCT_STICKERS: Record<string, StickerStyle> = {
   "prod-classic": { lines: ["CLASIC"], accent: "var(--color-sticker-classic)" },
   "prod-double": { lines: ["DOUBLE"], accent: "var(--color-sticker-double)" },
-  "prod-cheesy": { lines: ["CHEESY"], accent: "var(--color-sticker-cheesy)", ink: WINE },
   "prod-hot-boy": { lines: ["HOT BOY"], accent: "var(--color-sticker-hot-boy)" },
   "prod-hot-honey": { lines: ["HOT HONEY"], accent: "var(--color-sticker-hot-honey)" },
-  "prod-crispy-chicken": { lines: ["CHICKEN", "BURGER"], accent: "var(--color-sticker-chicken)" },
+  "prod-crispy": { lines: ["CRISPY"], accent: "var(--color-sticker-crispy)" },
+  "prod-crispy-bacon": { lines: ["CRISPY", "BACON"], accent: "var(--color-sticker-crispy-bacon)", ink: WINE },
 };
 
 // Simple stickers (no artwork): sides use wine; each drink has its own accent.
@@ -45,7 +45,7 @@ function fitFontSize(lines: string[], max: number): number {
 }
 
 interface BurgerStampProps {
-  product?: Pick<Product, "id" | "name" | "category_id" | "weight_grams"> | null;
+  product?: Pick<Product, "id" | "name" | "category_id" | "weight_grams" | "weight_label"> | null;
   className?: string;
 }
 
@@ -60,7 +60,7 @@ export function BurgerStamp({ product, className = "" }: BurgerStampProps) {
     style?.accent ?? simple?.accent ?? SIMPLE_ACCENT_BY_CATEGORY[product.category_id] ?? WINE;
   const ink = style?.ink ?? simple?.ink ?? SAND;
   const lines = style?.lines ?? [product.name.toUpperCase()];
-  const label = isSimple ? product.name : `${product.name}, ${product.weight_grams ?? ""} g`;
+  const label = isSimple ? product.name : `${product.name}${product.weight_label ? `, ${product.weight_label}` : ""}`;
 
   return (
     <svg

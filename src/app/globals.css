@@ -19,15 +19,15 @@
   --color-brand-wine: #790D20;
   --color-brand-sand: #F5E6CC;
 
-  /* Per-product sticker accents, sampled from docs/brand/IMG_4143.jpeg (sticker sheet).
+  /* Per-product sticker accents, sampled from the printed sticker sheet.
      Use ONLY for that product's sticker. These + the 3 brand tokens are the only allowed colors. */
   --color-sticker-classic: #0B391C;   /* CLASIC    - forest green */
   --color-sticker-double: #6D050A;    /* DOUBLE    - oxblood */
-  --color-sticker-cheesy: #EE9E23;    /* CHEESY    - cheddar (text in brand wine) */
+  --color-sticker-crispy-bacon: #EE9E23; /* CRISPY BACON - cheddar (text in brand wine) */
   --color-sticker-hot-boy: #B50711;   /* HOT BOY   - chili red */
   --color-sticker-hot-honey: #650329; /* HOT HONEY - plum */
-  --color-sticker-chicken: #063640;   /* CHICKEN BURGER - deep teal */
-  --color-sticker-cola: #E61A27;      /* COLA   - cola red */
+  --color-sticker-crispy: #063640;    /* CRISPY - deep teal */
+  --color-sticker-cola: #E61A27;      /* Coca-Cola - cola red */
   --color-sticker-fanta: #F58220;     /* FANTA  - orange */
   --color-sticker-sprite: #008B47;    /* SPRITE - green */
   --color-sticker-water: #2E7DBA;     /* WATER  - blue */

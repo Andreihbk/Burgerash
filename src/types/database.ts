@@ -28,12 +28,13 @@ export interface Product {
   description: string | null;
   price: number;
   weight_grams: number | null;
+  weight_label: string | null;     // Display text from the menu board: "280g", "330ml", "6 buc (aprox. 180g)"
   image_url: string | null;
   label_text: string | null;       // Ex: "BESTSELLER", "DOUBLE SMASH", "SPICY"
   label_variant: "burgundy" | "charcoal" | "cream" | null;
   ebriza_sku: string | null;
   ebriza_id: string | null;
-  allergens: string[];
+  allergens: string[] | null;      // null = not confirmed yet (UI: "Alergeni: întreabă-ne")
   is_available: boolean;
   is_featured: boolean;
   position: number;

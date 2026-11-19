@@ -10,8 +10,8 @@ import MenuBoardBase from "../MenuBoard";
 import { ALL_TAB, prefersReducedMotion, scrollToTab } from "./layout";
 import { useStorefrontStatus } from "./useStorefrontStatus";
 
-// All visible burgers (CHEESY stays out while it has no price / is unavailable).
-const HERO_PRODUCTS = ["prod-classic", "prod-double", "prod-hot-boy", "prod-hot-honey", "prod-crispy-chicken"]
+// Hero fan: 5 stickers (CRISPY BACON is on the board and cards, not in the fan).
+const HERO_PRODUCTS = ["prod-classic", "prod-double", "prod-hot-boy", "prod-hot-honey", "prod-crispy"]
   .map((id) => INITIAL_PRODUCTS.find((p) => p.id === id))
   .filter((p): p is Product => !!p && p.is_available && p.price > 0);
 
@@ -23,7 +23,7 @@ const BOARD_LINE_TO_ID: Record<string, string> = {
   "HOT BOY": "prod-hot-boy",
   DOUBLE: "prod-double",
   "HOT HONEY": "prod-hot-honey",
-  "CHICKEN BURGER": "prod-crispy-chicken",
+  CRISPY: "prod-crispy",
 };
 
 // Fan layout per stack position (0 = top). Offsets are % of the sticker's own size,

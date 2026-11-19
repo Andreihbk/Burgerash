@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { FulfillmentType, OrderItemModifier, Product } from "@/types/database";
 import { getDeliveryFee } from "@/lib/pricing";
+import { reconcileCartItems } from "@/lib/cart-reconcile";
 
 export interface CartLineItem {
   cartItemId: string; // Hash unic produs + modificatori + notă
@@ -137,6 +138,11 @@ export const useCartStore = create<CartState>()(
     }),
     {
       name: "burgerash-cart-v3", // v3: DUBLE renamed to DOUBLE; drops stale carts
+      // Runs on every load: quietly drops products removed from the menu and refreshes prices.
+      merge: (persisted, current) => {
+        const saved = (persisted ?? {}) as Partial<CartState>;
+        return { ...current, ...saved, items: reconcileCartItems<CartLineItem>(saved.items) };
+      },
       partialize: (state) => ({
         items: state.items,
         fulfillmentType: state.fulfillmentType,

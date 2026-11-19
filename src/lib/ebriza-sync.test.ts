@@ -99,6 +99,23 @@ describe("syncOrderToEbriza", () => {
     expect(console.error).toHaveBeenCalledWith(expect.stringContaining("0104 no POS SKU mapped for prod-classic"));
   });
 
+  it("CRISPY BACON (null SKU everywhere): sync resolves, order is kept with status 'failed' / 0104", async () => {
+    vi.stubEnv("EBRIZA_MOCK", "false");
+    vi.stubEnv("EBRIZA_PATH", "1");
+    vi.stubEnv("EBRIZA_CLIENT_ID", "client-x");
+    const bacon: EbrizaPayloadItem[] = [
+      { product_id: "prod-crispy-bacon", product_name: "CRISPY BACON", ebriza_sku: null, quantity: 1, note: null, modifiers: [] },
+    ];
+
+    await expect(syncOrderToEbriza(order, bacon)).resolves.toBeUndefined();
+
+    expect(fetchMock).not.toHaveBeenCalled();
+    const [table, values] = updateSpy.mock.calls[0];
+    expect(table).toBe("orders");
+    expect(values).toMatchObject({ ebriza_sync_status: "failed", ebriza_error_code: "0104", ebriza_bill_id: null });
+    expect(values.ebriza_error).toContain("prod-crispy-bacon");
+  });
+
   it("Ebriza failure: order kept, 'failed' with the Ebriza error code", async () => {
     vi.stubEnv("EBRIZA_MOCK", "false");
     vi.stubEnv("EBRIZA_PATH", "1");

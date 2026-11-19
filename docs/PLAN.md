@@ -37,6 +37,11 @@ Definition of done for every task: `npm run build` + `npm run lint` pass.
       stack over its corner (desktop), board right below on mobile; old board section removed; hero status
       line from hours.ts (never "open" while closed); short status in mobile header.
 
+- [x] S.7 Catalog follows the physical menu board: CLASIC, HOT BOY, DOUBLE, CRISPY, HOT HONEY, CRISPY BACON + Fries,
+      Chips, Nuggets, Sauces + drinks, with weights (`weight_label`). CHEESY and CHICKEN BURGER removed (priceOrder rejects them).
+      Saved carts drop removed products quietly (`cart-reconcile.ts`). New products have no Ebriza SKU yet (orders still save;
+      sync ends `failed` / 0104). BrandLogo tagline "HAND CRAFTED BURGERS". Brand photos with GPS removed from the tree.
+
 ## Performance & SEO
 - [x] P.1 SEO foundations: `src/lib/site.ts` (SITE_URL from `NEXT_PUBLIC_SITE_URL`, else Vercel production URL),
       metadataBase + canonical + title template + themeColor in layout, `robots.ts` (staff paths + /api disallowed),
@@ -117,6 +122,12 @@ Definition of done for every task: `npm run build` + `npm run lint` pass.
 - [ ] 4.3 End-to-end test: cart -> order -> POS -> status back
 
 ## Before launch
+- [ ] L.1 Get real allergens for new products from the owner (CRISPY, CRISPY BACON, Chips, Nuggets). Until then the
+      cards show "Alergeni: întreabă-ne" (`allergens: null` in catalog.ts). Also re-check allergens of CLASIC/HOT BOY/DOUBLE/HOT HONEY
+      against the new menu board ingredients (Gouda, bacon, sos spicy, hot honey).
+- [ ] L.2 Fill `ebriza-sku-map.ts` for prod-crispy, prod-crispy-bacon, prod-chips, prod-nuggets (null = order saves, sync fails 0104).
+- [ ] L.3 docs/brand history: IMG_4143.jpeg and image.png (phone photos, possible GPS) were removed from the tree only; they stay in
+      git history of this public repo. Decide later if a history rewrite is worth it.
 - [x] L.0 TODO staff auth + RLS: /kitchen (and later /dispatch /rider /admin) are open to anyone with the URL,
       and RLS is `using (true)` on orders (anyone with the anon key can read/update orders). Add Supabase Auth
       + staff-only policies (tasks 4.1, 4.2). Do not launch without it.
