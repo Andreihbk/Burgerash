@@ -3,6 +3,27 @@
 Rule: one task per Claude Code session. Tick the box and commit when done.
 Definition of done for every task: `npm run build` + `npm run lint` pass.
 
+## PRE-LAUNCH BLOCKERS (owner decisions, 2026-11-19; order = priority)
+Nothing here is built yet. Do not set `NEXT_PUBLIC_ORDERING_ENABLED=true` in Production until all are done.
+1. [ ] **B.1 Rate limit + bot protection on `/api/orders`** (basic limit per IP + captcha/bot check). Model: Sonnet.
+2. [ ] **B.2 Legal pages** (see L.5): Terms, GDPR privacy, delivery & returns, ANPC/SOL links, company details.
+   - Company data is pending from the owner: use clear placeholders (e.g. `[DENUMIRE SRL]`, `[CUI]`), never invent data.
+   - Privacy must mention map tiles from OpenStreetMap and Netopia as payment processor.
+   - Comes before Netopia: Netopia reviews the site before activation.
+3. [ ] **B.3 Delivery radius** (see L.4): 1 km from the shop. Shop coordinates pending from the owner.
+   - Public map section above the footer showing the radius (OpenStreetMap tiles).
+   - Radius preview slider in /admin (preview only).
+   - Address check at checkout (and server-side in `/api/orders`) against the radius.
+4. [ ] **B.4 Netopia payment: card only, paid online via NETOPIA Payments.** Replaces the `card_on_delivery` default; no cash option.
+   - Owner has no Netopia account yet: build and test against the Netopia sandbox first.
+   - Depends on B.2 (site review). Design task: use Opus (security, payment flow, order state before/after payment).
+5. [ ] **B.5 Allergens for ALL products.** The owner gets them from supplier labels (not just the 4 new products). See L.1.
+6. [ ] **B.6 Contact + riders (owner data pending):**
+   - Real `CONTACT.phone` and `CONTACT.address` in `src/lib/hours.ts`.
+   - Real rider names in `src/lib/riders.ts`, set before opening.
+
+High priority, not a launch gate by itself: **Ebriza integration** (E.1-E.5, L.2). Waiting on the Ebriza support reply.
+
 ## Phase 0 - Foundations
 - [x] 0.0 Fix order pipeline
       - Build fix (BurgerStamp null text).
@@ -122,7 +143,7 @@ Definition of done for every task: `npm run build` + `npm run lint` pass.
 - [ ] 4.3 End-to-end test: cart -> order -> POS -> status back
 
 ## Before launch
-- [ ] L.1 Get real allergens for new products from the owner (CRISPY, CRISPY BACON, Chips, Nuggets). Until then the
+- [ ] L.1 (see B.5: all products, from supplier labels) Get real allergens for new products from the owner (CRISPY, CRISPY BACON, Chips, Nuggets). Until then the
       cards show "Alergeni: întreabă-ne" (`allergens: null` in catalog.ts). Also re-check allergens of CLASIC/HOT BOY/DOUBLE/HOT HONEY
       against the new menu board ingredients (Gouda, bacon, sos spicy, hot honey).
 - [ ] L.2 Fill `ebriza-sku-map.ts` for prod-crispy, prod-crispy-bacon, prod-chips, prod-nuggets (null = order saves, sync fails 0104).
@@ -161,8 +182,8 @@ Definition of done for every task: `npm run build` + `npm run lint` pass.
   - Hours live in src/lib/hours.ts only; server rejects closed orders (403). TODO: set real CONTACT.phone / CONTACT.address there (hidden on the site until set).
 - [x] L.8 Order status page via secret link
   - Part A done (code): migration `20261119000000_order_public_token.sql` (YOU must run it in Supabase before deploying), `/comanda/[token]` server page (service_role lookup, no phone/address/rider shown, noindex, auto-refresh 20s), `public_token` returned by `/api/orders`. Part B done: "URMĂREȘTE COMANDA" button on the cart success screen, last order saved in localStorage (`src/lib/last-order.ts`), small "COMANDA TA" link in SiteHeader until the order is delivered/canceled (status page clears it).
-- [ ] L.4 Delivery zone (check address before accepting delivery orders)
-- [ ] L.5 Legal pages: terms, GDPR privacy, ANPC links, company details
+- [ ] L.4 Delivery zone (check address before accepting delivery orders). Decided: 1 km radius, see B.3
+- [ ] L.5 Legal pages: terms, GDPR privacy, ANPC links, company details. Pre-launch blocker, see B.2
 - [ ] L.6 Cart upsell (fries, sauces, drinks)
 
 ## Parallel track - Ebriza (no code)
