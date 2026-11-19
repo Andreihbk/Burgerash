@@ -10,26 +10,33 @@ import MenuBoardBase from "../MenuBoard";
 import { ALL_TAB, prefersReducedMotion, scrollToTab } from "./layout";
 import { useStorefrontStatus } from "./useStorefrontStatus";
 
-const HERO_PRODUCTS = ["prod-classic", "prod-hot-boy", "prod-double"]
+// All visible burgers (CHEESY stays out while it has no price / is unavailable).
+const HERO_PRODUCTS = ["prod-classic", "prod-double", "prod-hot-boy", "prod-hot-honey", "prod-crispy-chicken"]
   .map((id) => INITIAL_PRODUCTS.find((p) => p.id === id))
-  .filter((p): p is Product => !!p);
+  .filter((p): p is Product => !!p && p.is_available && p.price > 0);
+
+const PRODUCT_BY_NAME = new Map(INITIAL_PRODUCTS.map((p) => [p.name, p]));
 
 // Menu board line name -> hero sticker product id.
 const BOARD_LINE_TO_ID: Record<string, string> = {
   CLASIC: "prod-classic",
   "HOT BOY": "prod-hot-boy",
   DOUBLE: "prod-double",
+  "HOT HONEY": "prod-hot-honey",
+  "CHICKEN BURGER": "prod-crispy-chicken",
 };
 
 // Fan layout per stack position (0 = top). Offsets are % of the sticker's own size,
 // so the same layout works at any sticker size.
 const STICKER_SLOTS = [
-  { x: 84, y: 22, r: -3, z: 30, s: 1 },
-  { x: 0, y: 0, r: -10, z: 20, s: 0.95 },
-  { x: 168, y: 12, r: 9, z: 10, s: 0.9 },
+  { x: 84, y: 30, r: -3, z: 50, s: 1 },
+  { x: 0, y: 8, r: -10, z: 40, s: 0.95 },
+  { x: 168, y: 20, r: 9, z: 30, s: 0.9 },
+  { x: 42, y: 0, r: 6, z: 20, s: 0.88 },
+  { x: 126, y: 2, r: -7, z: 10, s: 0.86 },
 ];
 
-// Three fanned round stickers (tap = customize). `order` lists product ids, top first.
+// Fanned round stickers (tap = customize). `order` lists product ids, top first.
 function HeroStickers({
   order,
   size,
@@ -44,7 +51,7 @@ function HeroStickers({
   return (
     <div
       className="relative"
-      style={{ width: size * 2.68, height: size * 1.22 }}
+      style={{ width: size * 2.68, height: size * 1.3 }}
       onMouseEnter={() => onPause(true)}
       onMouseLeave={() => onPause(false)}
       onFocus={() => onPause(true)}
@@ -115,6 +122,14 @@ export default function HeroBoard() {
   const openCustomize = useUiStore((s) => s.openCustomize);
   const stickersRef = useRef<StickerStackHandle>(null);
 
+  const handleBoardSelect = useCallback(
+    (name: string) => {
+      const product = PRODUCT_BY_NAME.get(name);
+      if (product) openCustomize(product);
+    },
+    [openCustomize],
+  );
+
   const handleBoardLine = useCallback((name: string | null) => {
     stickersRef.current?.hover(name ? BOARD_LINE_TO_ID[name] ?? null : null, name !== null);
   }, []);
@@ -176,7 +191,7 @@ export default function HeroBoard() {
         </div>
 
         <div className="relative">
-          <MenuBoard lit={status ? status.open : false} linkedNames={BOARD_LINKED_NAMES} onLineActive={handleBoardLine} />
+          <MenuBoard lit={status ? status.open : false} linkedNames={BOARD_LINKED_NAMES} onLineActive={handleBoardLine} onSelect={handleBoardSelect} />
           {/* md+: stickers slapped over the board's top corner (scaled down at md) */}
           <div className="hidden md:block absolute -top-14 -right-4 lg:-top-16 lg:-right-4 xl:-right-10 z-10 origin-top-right md:scale-[0.65] lg:scale-100">
             <StickerStack ref={stickersRef} size={104} modalOpen={!!customizing} onPick={openCustomize} />

@@ -2,10 +2,50 @@
 
 import { BrandLogo } from "./BrandLogo";
 
+const LINE_CLASS =
+  "flex w-full justify-between items-center font-nunito font-black text-[1em] text-[#332420] rounded";
+
+function Line({
+  name,
+  price,
+  onSelect,
+  onLineActive,
+}: {
+  name: string;
+  price: number;
+  onSelect?: (name: string) => void;
+  onLineActive?: (name: string | null) => void;
+}) {
+  const content = (
+    <>
+      <span>{name}</span>
+      <span>{price}</span>
+    </>
+  );
+  if (!onSelect) {
+    return <div className={LINE_CLASS}>{content}</div>;
+  }
+  return (
+    <button
+      type="button"
+      onClick={() => onSelect(name)}
+      onMouseEnter={onLineActive && (() => onLineActive(name))}
+      onMouseLeave={onLineActive && (() => onLineActive(null))}
+      onFocus={onLineActive && (() => onLineActive(name))}
+      onBlur={onLineActive && (() => onLineActive(null))}
+      aria-label={`Personalizează ${name}, ${price} RON`}
+      className={`${LINE_CLASS} min-h-[44px] text-left hover:text-[#790D20] transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#790D20]`}
+    >
+      {content}
+    </button>
+  );
+}
+
 // Lightbox menu board, as on the physical sign. Prices follow the menu board.
 export default function MenuBoard({
   linkedNames = [],
   onLineActive,
+  onSelect,
   lit = true,
 }: {
   /** Sign switched on (open) or off (closed). */
@@ -13,6 +53,8 @@ export default function MenuBoard({
   /** Lines that react to hover/focus (they bring their sticker to the top of the stack). */
   linkedNames?: string[];
   onLineActive?: (name: string | null) => void;
+  /** Tap/click/Enter on a product line (opens that product). */
+  onSelect?: (name: string) => void;
 }) {
   return (
     <section id="lightboard" data-lit={lit ? "on" : "off"} aria-label="Panou meniu" className="lightbox-board w-full mx-auto scroll-mt-24">
@@ -70,24 +112,15 @@ export default function MenuBoard({
                   </h3>
                   <div className="flex-1 h-2 border-y-2 border-[#790D20] rounded-tr-xl" />
                 </div>
-                <div className="space-y-[0.3em] pl-1 border-r-4 border-double border-[#790D20] pr-[1em]">
+                <div className="space-y-0 pl-1 border-r-4 border-double border-[#790D20] pr-[1em]">
                   {group.items.map((it) => (
-                    <div
+                    <Line
                       key={it.name}
-                      {...(onLineActive && linkedNames.includes(it.name)
-                        ? {
-                            tabIndex: 0,
-                            onMouseEnter: () => onLineActive(it.name),
-                            onMouseLeave: () => onLineActive(null),
-                            onFocus: () => onLineActive(it.name),
-                            onBlur: () => onLineActive(null),
-                          }
-                        : {})}
-                      className="flex justify-between items-center font-nunito font-black text-[1em] text-[#332420] rounded focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#790D20]"
-                    >
-                      <span>{it.name}</span>
-                      <span>{it.price}</span>
-                    </div>
+                      name={it.name}
+                      price={it.price}
+                      onSelect={onSelect}
+                      onLineActive={linkedNames.includes(it.name) ? onLineActive : undefined}
+                    />
                   ))}
                 </div>
               </div>
