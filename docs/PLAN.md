@@ -52,9 +52,13 @@ Definition of done for every task: `npm run build` + `npm run lint` pass.
       LocationSection / SiteFooter in `src/components/storefront/`, client ProductActions; StoreFront takes them as slots.
       Also: OpenCartButton (client, used by LocationSection), `ids.ts` (sectionDomId, isCustomizable); CustomizeModal split out
       inside StoreFront.tsx (keyed by product, local state) ready to move in P.4.
-- [ ] P.4 Refactor 2: client islands SiteHeader, HeroBoard, CategoryBar (IntersectionObserver), CustomizeModal (dialog a11y:
-      Escape, focus, aria-modal), AddedToast, MobileCartBar; CartDrawer via next/dynamic on first open; delete StoreFront.tsx.
-      Compare First Load JS + Lighthouse with P.2 baseline.
+- [x] P.4a Refactor 2 (part 1): client islands in `src/components/storefront/`: SiteHeader, HeroBoard (stickers + board +
+      status line), CategoryBar (scroll spy), AddedToast, MobileCartBar. Shared: `layout.ts` (HEADER_HEIGHT, scrollToTab,
+      sticky offset read from the DOM), `useStorefrontStatus`, `useCartSummary`. StoreFront.tsx now only composes them +
+      CustomizeModal + CartDrawer. Build + lint pass. (Lighthouse/JS comparison is left for P.4b.)
+- [ ] P.4b Refactor 2 (part 2): CustomizeModal island (dialog a11y: Escape, focus trap/restore, aria-modal, role=dialog);
+      CartDrawer via next/dynamic on first open; delete StoreFront.tsx (page.tsx composes the islands directly).
+      Compare First Load JS + Lighthouse with the P.2 baseline (10 scripts, 607 KB raw / 185 KB gzip).
 
 ## Phase 1 - Ebriza adapter (works in mock mode, no credentials needed)
 - [x] 1.1 Fix `src/types/ebriza.ts` against `.claude/skills/ebriza-api/reference.md`.
