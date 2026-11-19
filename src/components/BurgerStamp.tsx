@@ -38,10 +38,10 @@ const SIMPLE_STICKERS: Record<string, { accent: string; ink?: string }> = {
   "prod-water": { accent: "var(--color-sticker-water)" },
 };
 
-// Bebas Neue caps are roughly 0.36em wide; keep names inside a ~150-unit band.
+// Nunito Black caps are roughly 0.65em wide; keep names inside a ~150-unit band.
 function fitFontSize(lines: string[], max: number): number {
   const longest = Math.max(...lines.map((l) => l.length));
-  return Math.min(max, Math.floor(150 / (longest * 0.36)));
+  return Math.min(max, Math.floor(150 / (longest * 0.65)));
 }
 
 interface BurgerStampProps {

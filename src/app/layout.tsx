@@ -1,14 +1,7 @@
 import type { Metadata, Viewport } from "next";
-import { Bebas_Neue, Roboto_Mono, Nunito } from "next/font/google";
+import { Roboto_Mono, Nunito } from "next/font/google";
 import "./globals.css";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_TAGLINE, SITE_URL } from "@/lib/site";
-
-// Display / headings
-const bebasNeue = Bebas_Neue({
-  weight: "400",
-  subsets: ["latin", "latin-ext"],
-  variable: "--font-bebas-neue",
-});
 
 // Small mono accents (codes, prices meta)
 const robotoMono = Roboto_Mono({
@@ -16,7 +9,7 @@ const robotoMono = Roboto_Mono({
   variable: "--font-roboto-mono",
 });
 
-// Body text and form labels
+// Body text and form labels; also display/headings at weight 900 (temporary, until Eatvetica is licensed)
 const nunito = Nunito({
   subsets: ["latin", "latin-ext"],
   variable: "--font-nunito",
@@ -51,7 +44,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ro">
-      <body className={`${bebasNeue.variable} ${robotoMono.variable} ${nunito.variable} antialiased font-nunito`}>
+      <body className={`${robotoMono.variable} ${nunito.variable} antialiased font-nunito`}>
         {children}
       </body>
     </html>

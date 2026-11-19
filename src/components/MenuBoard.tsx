@@ -107,7 +107,7 @@ export default function MenuBoard({
             ].map((group) => (
               <div key={group.title} className="relative pr-[1.25em]">
                 <div className="flex items-center gap-3 mb-[0.4em]">
-                  <h3 className="font-bebas text-[1.5em] leading-none tracking-wider text-[#332420] shrink-0">
+                  <h3 className="font-bebas text-[1.4em] leading-none text-[#332420] shrink-0">
                     {group.title}
                   </h3>
                   <div className="flex-1 h-2 border-y-2 border-[#790D20] rounded-tr-xl" />

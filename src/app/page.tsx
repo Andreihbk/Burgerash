@@ -29,7 +29,7 @@ export default function Home() {
 
           <div id={MENU_TOP_ID} className="mb-8">
             <p className="font-mono text-xs font-bold tracking-widest text-[#790D20]">COMANDĂ ONLINE</p>
-            <h2 className="font-bebas text-5xl sm:text-6xl tracking-wide text-[#332420] leading-none">
+            <h2 className="font-bebas text-4xl sm:text-5xl text-[#332420] leading-none">
               MENIU
             </h2>
           </div>

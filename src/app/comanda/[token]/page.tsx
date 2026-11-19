@@ -70,7 +70,7 @@ export default async function OrderStatusPage({ params }: { params: Promise<{ to
       <div className="max-w-xl mx-auto px-4 py-8 space-y-6">
         <div>
           <p className="font-mono text-xs font-bold">STAREA COMENZII</p>
-          <h1 className="font-bebas text-5xl tracking-wide leading-none mt-1">
+          <h1 className="font-bebas text-4xl leading-none mt-1">
             {canceled ? "COMANDĂ ANULATĂ" : done ? (order.fulfillment_type === "pickup" ? "COMANDĂ RIDICATĂ" : "COMANDĂ LIVRATĂ") : steps[Math.max(currentIndex, 0)].label.toUpperCase()}
           </h1>
           {canceled && (

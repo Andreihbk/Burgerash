@@ -138,7 +138,7 @@ export default function HeroBoard() {
     <>
       <section className="max-w-6xl mx-auto px-4 sm:px-6 pt-6 pb-6 md:pt-16 lg:pt-20 grid grid-cols-1 md:grid-cols-2 md:items-center gap-6 md:gap-8 lg:gap-14 md:min-h-[min(calc(100svh-9rem),52rem)]">
         <div className="flex flex-col items-start">
-          <h1 className="font-bebas text-5xl sm:text-7xl md:text-5xl lg:text-7xl xl:text-8xl leading-[0.9] tracking-wide text-[#332420]">
+          <h1 className="font-bebas text-4xl sm:text-6xl md:text-4xl lg:text-6xl xl:text-7xl leading-[0.95] text-[#332420]">
             NU FACEM MEDIUM.
             <br />
             FACEM <span className="text-[#790D20]">CRUSTĂ.</span>

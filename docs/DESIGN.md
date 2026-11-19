@@ -18,6 +18,11 @@ Clean, retro, confident. Not loud. The ordering site comes first: ordering is al
 Short, local, confident Romanian. Example: "Nu facem medium. Facem crustă."
 No generic marketing lines.
 
+## Typography
+- Nunito weight 900 for display/headings (temporary, until Eatvetica is licensed). Nunito regular for body and form labels. Roboto Mono only for small accents.
+- Chosen because it has full Romanian coverage (Ă Â Î Ș Ț); Titan One and Lilita One lack Ș/Ț.
+- Nunito Black is wider than Bebas Neue: keep heading sizes/tracking modest at 375px.
+
 ## Usability
 - Tap targets >= 44px.
 - Readable contrast on sand.

@@ -22,7 +22,7 @@ export default function MobileCartBar() {
       <button
         type="button"
         onClick={openCart}
-        className="w-full flex items-center justify-between gap-3 bg-[#790D20] text-[#F5E6CC] font-bebas text-2xl tracking-wide px-5 py-3 rounded-lg border-2 border-[#332420] shadow-[3px_3px_0px_0px_#332420] active:translate-y-[1px] transition-all"
+        className="w-full flex items-center justify-between gap-3 bg-[#790D20] text-[#F5E6CC] font-bebas text-xl px-4 py-3 rounded-lg border-2 border-[#332420] shadow-[3px_3px_0px_0px_#332420] active:translate-y-[1px] transition-all"
       >
         <span>
           COȘ (
