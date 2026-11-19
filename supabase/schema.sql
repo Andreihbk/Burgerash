@@ -191,3 +191,11 @@ create policy "Public access order_items" on public.order_items for all using (t
 alter publication supabase_realtime add table public.orders;
 alter publication supabase_realtime add table public.order_items;
 alter publication supabase_realtime add table public.products;
+
+-- 6. STOC (PLAN 2.4): sold-out flag per catalog product. No row = available.
+-- RLS, grants and Realtime: migrations/20261121000000_product_stock.sql (run it after this file).
+create table if not exists public.product_stock (
+  product_id text primary key,
+  sold_out boolean not null default false,
+  updated_at timestamptz not null default now()
+);
