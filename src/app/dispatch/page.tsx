@@ -7,6 +7,7 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { RIDERS } from "@/lib/riders";
 import { isSupabaseConfigured, supabase } from "@/lib/supabase";
 import type { Order, OrderStatus } from "@/types/database";
 
@@ -220,6 +221,18 @@ export default function DispatchPage() {
     }
   }
 
+  async function assignRider(order: Order, rider: string) {
+    const previous = order.rider_name;
+    setOrders((prev) => prev.map((o) => (o.id === order.id ? { ...o, rider_name: rider } : o)));
+    const { error: err } = await supabase.from("orders").update({ rider_name: rider }).eq("id", order.id);
+    if (err) {
+      setOrders((prev) => prev.map((o) => (o.id === order.id ? { ...o, rider_name: previous } : o)));
+      setError(`Nu am putut alege curierul pentru ${order.order_number}. Încearcă din nou.`);
+    } else {
+      setError(null);
+    }
+  }
+
   return (
     <div className="min-h-screen bg-[#F5E6CC] text-[#332420] flex flex-col">
       <header className="bg-[#332420] text-[#F5E6CC] px-4 py-3 flex flex-wrap items-center justify-between gap-3">
@@ -298,6 +311,7 @@ export default function DispatchPage() {
                     now={now}
                     isFresh={fresh.has(order.id)}
                     onMove={moveTo}
+                    onAssign={assignRider}
                     onSeen={() => clearFresh(order.id)}
                   />
                 ))}
@@ -315,12 +329,14 @@ function Ticket({
   now,
   isFresh,
   onMove,
+  onAssign,
   onSeen,
 }: {
   order: Order;
   now: number;
   isFresh: boolean;
   onMove: (order: Order, status: OrderStatus) => void;
+  onAssign: (order: Order, rider: string) => void;
   onSeen: () => void;
 }) {
   const age = formatAge(order.created_at, now);
@@ -328,6 +344,8 @@ function Ticket({
   const items = order.items ?? [];
   const isDelivery = order.fulfillment_type === "delivery";
   const outForDelivery = order.status === "out_for_delivery";
+  const needsRider = isDelivery && !outForDelivery;
+  const blocked = needsRider && !order.rider_name;
 
   // Delivery: ready -> out_for_delivery -> delivered. Pickup: ready -> delivered.
   const next: { status: OrderStatus; label: string } = outForDelivery
@@ -397,6 +415,34 @@ function Ticket({
         </div>
       )}
 
+      {isDelivery && outForDelivery && order.rider_name && (
+        <p className="px-4 pb-3 font-mono text-base font-bold">CURIER: {order.rider_name}</p>
+      )}
+
+      {needsRider && (
+        <div className="px-4 pb-3 flex flex-col gap-2" role="group" aria-label="Curier">
+          <p className="font-mono text-sm font-bold">CURIER</p>
+          <div className="flex flex-wrap gap-2">
+            {RIDERS.map((rider) => {
+              const picked = order.rider_name === rider;
+              return (
+                <button
+                  key={rider}
+                  type="button"
+                  onClick={() => onAssign(order, rider)}
+                  aria-pressed={picked}
+                  className={`min-h-14 px-5 border-2 border-[#332420] font-nunito font-bold text-lg ${
+                    picked ? "bg-[#332420] text-[#F5E6CC]" : "bg-transparent text-[#332420]"
+                  }`}
+                >
+                  {rider}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
       <footer className="flex gap-2 p-3 border-t-2 border-[#332420]">
         {outForDelivery && (
           <button
@@ -411,7 +457,8 @@ function Ticket({
         <button
           type="button"
           onClick={() => onMove(order, next.status)}
-          className="flex-1 min-h-14 bg-[#790D20] text-[#F5E6CC] font-bebas text-2xl tracking-wide"
+          disabled={blocked}
+          className="flex-1 min-h-14 bg-[#790D20] text-[#F5E6CC] font-bebas text-2xl tracking-wide disabled:opacity-40 disabled:cursor-not-allowed"
         >
           {next.label} →
         </button>
