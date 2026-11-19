@@ -147,8 +147,8 @@ Definition of done for every task: `npm run build` + `npm run lint` pass.
 - [x] L.1 Opening hours + open/closed badge (block or warn on orders when closed)
   - Hours live in src/lib/hours.ts only; server rejects closed orders (403). TODO: set real CONTACT.phone / CONTACT.address there (hidden on the site until set).
 - [ ] L.2 Allergens per product (shown on cards / product detail)
-- [ ] L.3 Order status page via secret link
-  - Part A done (code): migration `20261119000000_order_public_token.sql` (YOU must run it in Supabase before deploying), `/comanda/[token]` server page (service_role lookup, no phone/address/rider shown, noindex, auto-refresh 20s), `public_token` returned by `/api/orders`. Part B TODO: link on the CartDrawer success screen + save in localStorage; then tick this box.
+- [x] L.3 Order status page via secret link
+  - Part A done (code): migration `20261119000000_order_public_token.sql` (YOU must run it in Supabase before deploying), `/comanda/[token]` server page (service_role lookup, no phone/address/rider shown, noindex, auto-refresh 20s), `public_token` returned by `/api/orders`. Part B done: "URMĂREȘTE COMANDA" button on the cart success screen, last order saved in localStorage (`src/lib/last-order.ts`), small "COMANDA TA" link in SiteHeader until the order is delivered/canceled (status page clears it).
 - [ ] L.4 Delivery zone (check address before accepting delivery orders)
 - [ ] L.5 Legal pages: terms, GDPR privacy, ANPC links, company details
 - [ ] L.6 Cart upsell (fries, sauces, drinks)

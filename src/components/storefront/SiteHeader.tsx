@@ -8,6 +8,7 @@ import { useUiStore } from "@/store/uiStore";
 import { HEADER_HEIGHT } from "./layout";
 import { useCartSummary } from "./useCartSummary";
 import { useStorefrontStatus } from "./useStorefrontStatus";
+import LastOrderLink from "./LastOrderLink";
 
 export default function SiteHeader() {
   const status = useStorefrontStatus();
@@ -40,6 +41,8 @@ export default function SiteHeader() {
         >
           LOCAȚIE
         </a>
+
+        <LastOrderLink />
 
         {status && (
           <div className="flex lg:hidden items-center gap-1.5 text-xs font-nunito font-bold" aria-label="Program">

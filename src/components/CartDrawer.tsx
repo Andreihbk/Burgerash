@@ -8,6 +8,7 @@ import { useCartHydrated } from "@/store/useCartHydrated";
 import { formatLei } from "@/lib/format";
 import { EMAIL_ERROR, isValidEmail } from "@/lib/email";
 import { closedCartNotice } from "@/lib/hours";
+import { saveLastOrder } from "@/lib/last-order";
 import { X, Trash2, Plus, Minus, ShoppingBag, ArrowRight, CheckCircle2 } from "lucide-react";
 
 const ERROR_TEXT = "Nu am putut trimite comanda. Încearcă din nou în câteva secunde.";
@@ -43,6 +44,7 @@ export default function CartDrawer() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [orderNumber, setOrderNumber] = useState("");
+  const [publicToken, setPublicToken] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [phoneError, setPhoneError] = useState("");
   const [emailError, setEmailError] = useState("");
@@ -110,7 +112,11 @@ export default function CartDrawer() {
       const data = await res.json();
       if (!res.ok) throw new Error(res.status < 500 && data.error ? data.error : ERROR_TEXT);
 
-      setOrderNumber(data.order_number || "BRG-999");
+      const number = data.order_number || "BRG-999";
+      setOrderNumber(number);
+      const token = typeof data.public_token === "string" ? data.public_token : "";
+      setPublicToken(token);
+      if (token) saveLastOrder({ token, orderNumber: number });
       clearCart();
       setStep("success");
     } catch (err) {
@@ -150,12 +156,22 @@ export default function CartDrawer() {
                 <p className="font-nunito text-sm text-brand-dark/80">
                   Comanda ta a fost primită. Focul e pornit!
                 </p>
+                {publicToken && (
+                  <div>
+                    <a
+                      href={`/comanda/${publicToken}`}
+                      className="mt-2 inline-flex min-h-11 items-center bg-brand-dark text-brand-paper font-bebas text-xl px-6 py-3 rounded shadow-[3px_3px_0px_0px_#790D20]"
+                    >
+                      URMĂREȘTE COMANDA
+                    </a>
+                  </div>
+                )}
                 <button
                   onClick={() => {
                     setStep("cart");
                     closeCart();
                   }}
-                  className="mt-6 bg-brand-red text-white font-bebas text-xl px-6 py-3 rounded shadow-[3px_3px_0px_0px_#121212]"
+                  className="mt-4 bg-brand-red text-white font-bebas text-xl px-6 py-3 rounded shadow-[3px_3px_0px_0px_#121212]"
                 >
                   ÎNAPOI LA MENIU
                 </button>

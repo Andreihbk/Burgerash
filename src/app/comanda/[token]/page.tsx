@@ -7,6 +7,7 @@ import { isFinalStatus, statusSteps, TOKEN_PATTERN } from "@/lib/order-status";
 import { formatLei } from "@/lib/format";
 import type { OrderItemModifier, OrderStatus, FulfillmentType } from "@/types/database";
 import AutoRefresh from "./AutoRefresh";
+import ClearLastOrder from "./ClearLastOrder";
 
 export const dynamic = "force-dynamic";
 
@@ -55,7 +56,7 @@ export default async function OrderStatusPage({ params }: { params: Promise<{ to
 
   return (
     <main className="min-h-screen bg-[#F5E6CC] text-[#332420]">
-      {!isFinalStatus(order.status) && <AutoRefresh />}
+      {isFinalStatus(order.status) ? <ClearLastOrder token={token} /> : <AutoRefresh />}
 
       <header className="bg-[#790D20] text-[#F5E6CC] border-b-2 border-[#332420] px-4 py-3">
         <div className="max-w-xl mx-auto flex items-center justify-between">
