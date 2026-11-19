@@ -80,7 +80,31 @@ delivery address needs street, city, county, country.
 0673 resource locked, retry in a few seconds - 0674 too many requests (limits in response headers) -
 0675 invalid request object - 0676 missing externalOrderNo - 0101 no bill found with this id
 
-## Open questions (confirm with Ebriza / real test)
-- Does an API order appear automatically on the POS tablet; who accepts it?
-- With useProviderIntegration, who updates statuses 100-130 for our own riders?
-- Is there a staging/test location?
+## Environments (Help article: help.ebriza.com/ro/articles/5658844)
+- Stage `https://stageapi.ebriza.com`, live `https://api.ebriza.com`; DIFFERENT credentials and Client IDs.
+- Ebriza creates the app on stage first, then live. Webhook URL pairs (stage + live) are sent by email to dev@ebriza.com.
+- Our code must pick the base URL from `EBRIZA_ENV` (planned, see docs/EBRIZA_PLAN.md C1); never default to live.
+
+## Paid orders: which call (API ref, verified 2026-11-19)
+- `POST /bills/openbillwithclient` (no token): open bill, goes through the POS kitchen/delivery flow. USE THIS, with `payments: [{type: 2, value}]` for Netopia orders.
+- `POST /bills/openpaid` (token): "paid bill", same body as open bill; what "paid" changes is NOT documented. Not used.
+- `POST /orders/push` (token): creates an already COMPLETED order (online shop paid outside Ebriza); skips kitchen/delivery; stock is deducted only on `/orders/invoice`. Not used.
+
+## SKU matching details (API ref)
+- No `id`: item looked up by `sku` (unique). Not found + `name` sent: matched by name and OUR sku is added to that product (multi-provider). Nothing found: created only if the app may save items (needs name, price, vat), else 0104. We send SKU only, never name.
+- Prices come from the POS. `usePreferentialPrice` (default true) uses the preferential price configured for this app, if any.
+- Item `note` shows on the KDS. Modifier quantity semantics with product quantity > 1: NOT documented (test).
+- SGR deposit: `{type: 1001, lock: <same lock as the bottle line>, quantity: n}`; amount resolved from system products.
+
+## Webhooks, as far as documented
+- API subscription (above): entity 0/1/2/100, callback body `{id, ebrizaClientID, entity}`, no signature documented.
+- URL hooks registered by email (Help article): ChangeStatusUrl (statuses 10, 11, 20, 21, 29, 30, 90, 120, 130; only our orders), SyncProductsUrl (menu push: name, price, VAT, image, description, modifiers, items, categories), StartAcceptingOrdersUrl (pause/resume), SetItemUnavailableUrl (product snoozed until next day at schedule start).
+- Payload formats, auth and retries for the 4 URL hooks: NOT documented (questions in docs/EBRIZA_PLAN.md section 6).
+
+## Stock
+- `GET /stocks/{key?}` and `GET /stocks/get/{id}/{locationID}` read INVENTORY stocks (sku, quantity, mu, recipe stockItems). No documented sellable/snooze flag; `/items/update` has `inactive`. Use the SetItemUnavailableUrl webhook for sold-out, not stock polling.
+
+## Open questions (full list with numbers: docs/EBRIZA_PLAN.md section 6)
+- Does a CreditCard payment on an open bill pre-fill payment at the POS; must `value` equal the bill total?
+- With useProviderIntegration and our own riders (no fleet app), who updates statuses 100-130?
+- Stage test location / acceptance testing schedule?
