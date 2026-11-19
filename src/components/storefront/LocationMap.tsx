@@ -54,6 +54,7 @@ export default function LocationMap() {
     let observer: ResizeObserver | null = null;
     (async () => {
       const maplibregl = await import("maplibre-gl");
+      maplibregl.setWorkerUrl("/maplibre-gl-worker.mjs");
       if (cancelled || !containerRef.current) return;
       const m = new maplibregl.Map({
         container: containerRef.current,

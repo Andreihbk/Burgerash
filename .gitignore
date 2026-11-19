@@ -46,3 +46,6 @@ next-env.d.ts
 
 # Vendor docs (not for the public repo)
 docs/vendor/
+
+# Copied MapLibre worker (scripts/copy-maplibre-worker.mjs)
+/public/maplibre-gl-worker.mjs
