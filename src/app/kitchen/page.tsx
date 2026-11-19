@@ -4,6 +4,7 @@
 // Staff only: proxy.ts requires a Supabase Auth session; RLS lets `authenticated` read orders and update status/rider_name.
 
 import Link from "next/link";
+import SignOutButton from "@/components/SignOutButton";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { isSupabaseConfigured, supabase } from "@/lib/supabase";
 import type { Order, OrderStatus } from "@/types/database";
@@ -223,6 +224,7 @@ export default function KitchenPage() {
           >
             SUNET {soundOn ? "PORNIT" : "OPRIT"}
           </button>
+          <SignOutButton />
         </div>
       </header>
 

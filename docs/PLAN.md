@@ -111,11 +111,11 @@ Definition of done for every task: `npm run build` + `npm run lint` pass.
 
 ## Phase 4 - Hardening before launch
 - [x] 4.1 Staff login (Supabase Auth) on /kitchen /dispatch /rider /admin
-- [ ] 4.2 Replace permissive RLS with real policies
+- [x] 4.2 Replace permissive RLS with real policies
 - [ ] 4.3 End-to-end test: cart -> order -> POS -> status back
 
 ## Before launch
-- [ ] L.0 TODO staff auth + RLS: /kitchen (and later /dispatch /rider /admin) are open to anyone with the URL,
+- [x] L.0 TODO staff auth + RLS: /kitchen (and later /dispatch /rider /admin) are open to anyone with the URL,
       and RLS is `using (true)` on orders (anyone with the anon key can read/update orders). Add Supabase Auth
       + staff-only policies (tasks 4.1, 4.2). Do not launch without it.
 - [ ] L.0b Replace the TEMPORARY password gate (`STAFF_PASSWORD` env var, `src/proxy.ts`, `/staff-login`,
@@ -139,7 +139,9 @@ Definition of done for every task: `npm run build` + `npm run lint` pass.
   - Step 3 DONE (code): `proxy.ts` checks `getUser()` and redirects to `/staff/login`; `src/lib/supabase.ts` is now
     `createBrowserClient` (session cookies -> queries + Realtime as `authenticated`); old gate deleted.
     Migration `20261120000000_staff_rls.sql` (YOU run it in Supabase AFTER this deploy is live, then the anon curl
-    tests). Once run + tested, tick L.0 and 4.2. Remove `STAFF_PASSWORD` from Vercel. Step 4 (sign-out) still TODO.
+    tests). Once run + tested, tick L.0 and 4.2. Remove `STAFF_PASSWORD` from Vercel. Run + tested 2026-11-19 (anon denied, orders and staff login OK).
+  - Step 4 DONE: `SignOutButton` (IEȘI) in the /kitchen /dispatch /rider /admin headers; `supabase.auth.signOut()` then
+    full navigation to /staff/login.
   - NOTE: "authenticated = staff" only holds while sign-ups AND anonymous sign-ins are OFF in Supabase Auth.
     If we add customer accounts later (loyalty), policies must check a staff table instead of the role.
 - [x] L.1 Opening hours + open/closed badge (block or warn on orders when closed)

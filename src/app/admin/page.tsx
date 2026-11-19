@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import SignOutButton from '@/components/SignOutButton';
 
 export default function AdminPage() {
   return (
@@ -13,8 +14,9 @@ export default function AdminPage() {
             PANOU DE CONTROL
           </span>
         </div>
-        <div className="font-mono text-xs">
-          LOGGED IN AS: MANAGER
+        <div className="flex items-center gap-3">
+          <span className="font-mono text-xs">LOGGED IN AS: MANAGER</span>
+          <SignOutButton />
         </div>
       </header>
 

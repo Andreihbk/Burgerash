@@ -6,6 +6,7 @@
 // TODO(rider assignment): waiting for the migration decision (see docs/PLAN.md 2.2).
 
 import Link from "next/link";
+import SignOutButton from "@/components/SignOutButton";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { RIDERS } from "@/lib/riders";
 import { isSupabaseConfigured, supabase } from "@/lib/supabase";
@@ -256,6 +257,7 @@ export default function DispatchPage() {
           >
             SUNET {soundOn ? "PORNIT" : "OPRIT"}
           </button>
+          <SignOutButton />
         </div>
       </header>
 

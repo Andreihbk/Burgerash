@@ -5,6 +5,7 @@
 // Staff only: proxy.ts requires a Supabase Auth session; RLS lets `authenticated` read orders and update status/rider_name.
 
 import Link from "next/link";
+import SignOutButton from "@/components/SignOutButton";
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { RIDERS } from "@/lib/riders";
 import { isSupabaseConfigured, supabase } from "@/lib/supabase";
@@ -161,11 +162,14 @@ export default function RiderPage() {
         <Link href="/" className="font-bebas text-2xl tracking-wide min-h-11 inline-flex items-center">
           &larr; BURGERASH
         </Link>
-        {rider && (
-          <span className="font-mono text-xs" role="status">
-            {connected ? "● LIVE" : "○ OFFLINE"}
-          </span>
-        )}
+        <div className="flex items-center gap-3">
+          {rider && (
+            <span className="font-mono text-xs" role="status">
+              {connected ? "● LIVE" : "○ OFFLINE"}
+            </span>
+          )}
+          <SignOutButton />
+        </div>
       </header>
 
       {(error || !isSupabaseConfigured) && (
