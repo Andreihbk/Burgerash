@@ -5,6 +5,7 @@
 // Staff only: proxy.ts requires a Supabase Auth session; RLS lets `authenticated` read orders and update status/rider_name.
 
 import Link from "next/link";
+import { BrandLogo } from "@/components/BrandLogo";
 import SignOutButton from "@/components/SignOutButton";
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { RIDERS } from "@/lib/riders";
@@ -159,8 +160,9 @@ export default function RiderPage() {
   return (
     <div className="min-h-screen bg-[#F5E6CC] text-[#332420] flex flex-col">
       <header className="bg-[#332420] text-[#F5E6CC] px-4 py-3 flex items-center justify-between gap-3">
-        <Link href="/" className="font-bebas text-2xl tracking-wide min-h-11 inline-flex items-center">
-          &larr; BURGERASH
+        <Link href="/" className="font-bebas text-2xl tracking-wide min-h-11 inline-flex items-center gap-2">
+          <span aria-hidden>&larr;</span>
+          <BrandLogo variant="icon" tone="sand" className="h-8 w-auto" />
         </Link>
         <div className="flex items-center gap-3">
           {rider && (

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Check } from "lucide-react";
+import { BrandLogo } from "@/components/BrandLogo";
 import { isSupabaseAdminConfigured, supabaseAdmin } from "@/lib/supabase-admin";
 import { isFinalStatus, statusSteps, TOKEN_PATTERN } from "@/lib/order-status";
 import { formatLei } from "@/lib/format";
@@ -60,8 +61,8 @@ export default async function OrderStatusPage({ params }: { params: Promise<{ to
 
       <header className="bg-[#790D20] text-[#F5E6CC] border-b-2 border-[#332420] px-4 py-3">
         <div className="max-w-xl mx-auto flex items-center justify-between">
-          <Link href="/" className="font-bebas text-2xl tracking-wide">
-            burgerash
+          <Link href="/" className="inline-flex items-center">
+            <BrandLogo variant="horizontal" tone="sand" className="h-9 w-auto" />
           </Link>
           <span className="font-mono text-sm font-bold">{order.order_number}</span>
         </div>

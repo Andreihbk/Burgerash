@@ -7,6 +7,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { BrandLogo } from "@/components/BrandLogo";
 import SignOutButton from "@/components/SignOutButton";
 import StockToggles from "@/components/admin/StockToggles";
 import { bucharestDayStart } from "@/lib/bucharest-day";
@@ -53,8 +54,11 @@ export default function AdminPage() {
     <div className="min-h-screen bg-[#F5E6CC] text-[#332420] flex flex-col">
       <header className="border-b-4 border-[#332420] bg-[#332420] text-[#F5E6CC] p-6 flex justify-between items-center gap-4">
         <div className="flex items-center gap-4">
-          <Link href="/" className="font-bebas text-3xl text-[#F5E6CC] uppercase hover:text-[#790D20]">
-            &larr; Burgerash Admin
+          <Link href="/" className="font-bebas text-3xl text-[#F5E6CC] uppercase inline-flex items-center gap-2 hover:opacity-80">
+            <span aria-hidden>&larr;</span>
+            <BrandLogo variant="icon" tone="sand" className="h-9 w-auto sm:hidden" />
+            <BrandLogo variant="horizontal" tone="sand" className="h-9 w-auto hidden sm:block" />
+            <span>Admin</span>
           </Link>
           <span className="font-mono text-xs px-2 py-1 bg-[#790D20] text-[#F5E6CC] font-bold">PANOU DE CONTROL</span>
         </div>

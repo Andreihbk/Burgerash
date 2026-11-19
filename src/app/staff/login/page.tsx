@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { BrandLogo } from "@/components/BrandLogo";
 import { safeNext } from "@/lib/safe-next";
 
 export const metadata: Metadata = { title: "Acces personal | Burgerash", robots: { index: false } };
@@ -25,6 +26,7 @@ export default async function StaffAuthLoginPage({
         action="/api/staff-auth/login"
         className="w-full max-w-sm border-2 border-[#332420] shadow-[4px_4px_0_0_#332420] p-6 flex flex-col gap-4"
       >
+        <BrandLogo variant="full" tone="wine" className="h-24 w-auto mx-auto" />
         <h1 className="font-bebas text-4xl tracking-wide">ACCES PERSONAL</h1>
         <input type="hidden" name="next" value={safeNext(next)} />
         <label className="font-nunito font-bold flex flex-col gap-1">
