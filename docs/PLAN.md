@@ -89,6 +89,11 @@ Definition of done for every task: `npm run build` + `npm run lint` pass.
 - [ ] L.0 TODO staff auth + RLS: /kitchen (and later /dispatch /rider /admin) are open to anyone with the URL,
       and RLS is `using (true)` on orders (anyone with the anon key can read/update orders). Add Supabase Auth
       + staff-only policies (tasks 4.1, 4.2). Do not launch without it.
+- [ ] L.0b Replace the TEMPORARY password gate (`STAFF_PASSWORD` env var, `src/proxy.ts`, `/staff-login`,
+      `/api/staff-login`, `src/lib/staff-auth.ts`) with Supabase Auth + RLS. The gate only hides the /kitchen
+      page: the anon key can still read/update `orders` directly until RLS is real. Gate covers /kitchen only;
+      extend the `proxy.ts` matcher to /dispatch /rider /admin when they are built. Set STAFF_PASSWORD in
+      Vercel (no password = nobody gets in).
 - [x] L.1 Opening hours + open/closed badge (block or warn on orders when closed)
   - Hours live in src/lib/hours.ts only; server rejects closed orders (403). TODO: set real CONTACT.phone / CONTACT.address there (hidden on the site until set).
 - [ ] L.2 Allergens per product (shown on cards / product detail)
