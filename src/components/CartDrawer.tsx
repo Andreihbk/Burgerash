@@ -128,12 +128,12 @@ export default function CartDrawer() {
       <div className="absolute inset-y-0 right-0 flex w-full max-w-md">
         <div className="w-full min-w-0 bg-brand-paper border-l-4 border-brand-dark flex flex-col shadow-2xl">
           {/* Drawer Header */}
-          <div className="bg-brand-dark text-brand-paper px-6 py-4 flex items-center justify-between border-b-2 border-brand-dark">
+          <div className="bg-brand-red text-brand-paper px-6 py-4 flex items-center justify-between border-b-2 border-brand-dark">
             <div className="flex items-center gap-2">
-              <ShoppingBag className="w-6 h-6 text-brand-red" />
+              <ShoppingBag className="w-6 h-6 text-brand-paper" />
               <h2 className="font-bebas text-2xl tracking-wide">COȘUL TĂU</h2>
             </div>
-            <button onClick={closeCart} className="text-brand-paper hover:text-brand-red transition-colors">
+            <button onClick={closeCart} className="text-brand-paper hover:text-white transition-colors">
               <X className="w-6 h-6" />
             </button>
           </div>

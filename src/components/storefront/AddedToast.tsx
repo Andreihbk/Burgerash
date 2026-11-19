@@ -27,7 +27,7 @@ export default function AddedToast() {
       {lastAdded && (
         <div
           key={addedSeq}
-          className="animate-toast-in pointer-events-auto flex items-center gap-4 bg-[#332420] text-[#F5E6CC] border-2 border-[#F5E6CC] rounded-lg px-4 py-3 shadow-[4px_4px_0px_0px_#790D20]"
+          className="animate-toast-in pointer-events-auto flex items-center gap-4 bg-[#790D20] text-[#F5E6CC] border-2 border-[#F5E6CC] rounded-lg px-4 py-3 shadow-[4px_4px_0px_0px_#332420]"
         >
           <Check className="w-5 h-5 shrink-0 stroke-[3]" />
           <div className="min-w-0">

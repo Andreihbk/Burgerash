@@ -18,7 +18,7 @@ export default function SiteHeader() {
   return (
     <header
       style={{ height: HEADER_HEIGHT }}
-      className="sticky top-0 z-40 bg-[#332420] text-[#F5E6CC] border-b-2 border-[#332420] px-4 sm:px-6 flex items-center justify-between gap-3 shadow-md"
+      className="sticky top-0 z-40 bg-[#790D20] text-[#F5E6CC] border-b-2 border-[#332420] px-4 sm:px-6 flex items-center justify-between gap-3 shadow-md"
     >
       <a href="#" className="flex flex-col justify-center min-w-0" aria-label="burgerash, începutul paginii">
         <BrandLogo className="h-8 w-auto text-[#F5E6CC]" />
@@ -64,14 +64,14 @@ export default function SiteHeader() {
         <button
           onClick={openCart}
           aria-label={`Coș, ${totalItems} produse`}
-          className="relative bg-[#790D20] text-[#F5E6CC] px-4 py-2 rounded-lg font-bebas text-xl tracking-wide flex items-center gap-2 border-2 border-[#F5E6CC] shadow-[3px_3px_0px_0px_#F5E6CC] hover:translate-y-[-2px] active:translate-y-[0px] transition-all"
+          className="relative bg-[#F5E6CC] text-[#790D20] px-4 py-2 rounded-lg font-bebas text-xl tracking-wide flex items-center gap-2 border-2 border-[#332420] shadow-[3px_3px_0px_0px_#332420] hover:translate-y-[-2px] active:translate-y-[0px] transition-all"
         >
           <ShoppingBag className="w-5 h-5" />
           <span>COȘ</span>
           {totalItems > 0 && (
             <span
               key={addedSeq}
-              className={`absolute -top-2 -right-2 bg-[#F5E6CC] text-[#332420] font-mono text-xs font-black w-6 h-6 rounded-full flex items-center justify-center border-2 border-[#332420] ${
+              className={`absolute -top-2 -right-2 bg-[#790D20] text-[#F5E6CC] font-mono text-xs font-black w-6 h-6 rounded-full flex items-center justify-center border-2 border-[#F5E6CC] ${
                 addedSeq > 0 ? "animate-badge-pop" : ""
               }`}
             >
