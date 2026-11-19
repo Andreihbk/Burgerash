@@ -144,7 +144,7 @@ export default function HeroBoard() {
             FACEM <span className="text-[#790D20]">CRUSTĂ.</span>
           </h1>
           <p className="font-nunito font-semibold text-base sm:text-lg text-[#332420] mt-4 max-w-md">
-            Smash burgeri din Sector 6. Comanzi aici, fără comisioane.
+            Carne. Foc. Chiflă. Atât. Comanzi direct de aici, fără aplicații și fără comisioane.
           </p>
 
           {/* Mobile sticker stack (pure SVG, no cart state) */}
