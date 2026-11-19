@@ -3,12 +3,11 @@
 import { useCallback, useEffect, useState } from "react";
 import { MENU_SECTIONS } from "@/lib/catalog";
 import { isSupabaseConfigured, supabase } from "@/lib/supabase";
+import { isRowSoldOut, type StockRow } from "@/lib/stock-row";
 import { Display } from "@/components/Display";
 
 // "Stoc epuizat" on/off per product (product_stock). Staff only: RLS lets `authenticated` read,
 // insert and update sold_out. No row = available. The storefront and /api/orders read the same table.
-
-type StockRow = { product_id: string; sold_out: boolean };
 
 export default function StockToggles() {
   const [soldOut, setSoldOut] = useState<Set<string>>(new Set());
@@ -17,7 +16,8 @@ export default function StockToggles() {
   const [error, setError] = useState<string | null>(null);
 
   const apply = useCallback((rows: StockRow[]) => {
-    setSoldOut(new Set(rows.filter((r) => r.sold_out).map((r) => r.product_id)));
+    // An expired Ebriza POS snooze shows as available, like on the storefront.
+    setSoldOut(new Set(rows.filter((r) => isRowSoldOut(r)).map((r) => r.product_id)));
   }, []);
 
   useEffect(() => {
@@ -25,7 +25,7 @@ export default function StockToggles() {
     let active = true;
 
     async function load() {
-      const { data, error: err } = await supabase.from("product_stock").select("product_id, sold_out");
+      const { data, error: err } = await supabase.from("product_stock").select("product_id, sold_out, snoozed_until");
       if (!active) return;
       if (err) {
         setError("Nu am putut încărca stocul.");

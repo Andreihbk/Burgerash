@@ -83,7 +83,9 @@ delivery address needs street, city, county, country.
 ## Environments (Help article: help.ebriza.com/ro/articles/5658844)
 - Stage `https://stageapi.ebriza.com`, live `https://api.ebriza.com`; DIFFERENT credentials and Client IDs.
 - Ebriza creates the app on stage first, then live. Webhook URL pairs (stage + live) are sent by email to dev@ebriza.com.
-- Our code must pick the base URL from `EBRIZA_ENV` (planned, see docs/EBRIZA_PLAN.md C1); never default to live.
+- Our code picks the base URL from `EBRIZA_BASE_URL` (only these two hosts accepted). Unset = stage outside production,
+  error in production; never defaults to live (`resolveEbrizaBaseUrl` in src/lib/ebriza.ts).
+- Our webhook routes: `/api/ebriza/<EBRIZA_WEBHOOK_SECRET>/{change-status,sync-products,start-accepting-orders,set-item-unavailable}`.
 
 ## Paid orders: which call (API ref, verified 2026-11-19)
 - `POST /bills/openbillwithclient` (no token): open bill, goes through the POS kitchen/delivery flow. USE THIS, with `payments: [{type: 2, value}]` for Netopia orders.

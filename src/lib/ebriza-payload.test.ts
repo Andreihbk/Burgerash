@@ -6,6 +6,22 @@ import {
   type EbrizaPayloadItem,
   type EbrizaPayloadOrder,
 } from "./ebriza-payload";
+import { EBRIZA_BOTTLE_DEPOSIT_IDS, EBRIZA_SKU_MAP, EBRIZA_SKU_TO_CATALOG_ID } from "./ebriza-sku-map";
+import { INITIAL_PRODUCTS } from "./catalog";
+
+describe("EBRIZA_SKU_MAP", () => {
+  it("maps every catalog product to a unique lowercase ASCII SKU", () => {
+    for (const p of INITIAL_PRODUCTS) expect(EBRIZA_SKU_MAP[p.id], p.id).toBeTruthy();
+    const skus = Object.values(EBRIZA_SKU_MAP);
+    expect(skus.every((s) => s && /^[a-z0-9-]+$/.test(s))).toBe(true);
+    expect(new Set(skus).size).toBe(skus.length);
+    expect(EBRIZA_SKU_TO_CATALOG_ID.get("mod-fara-ceapa")).toBe("mod-no-onion");
+  });
+
+  it("flags only drinks for the SGR deposit", () => {
+    expect([...EBRIZA_BOTTLE_DEPOSIT_IDS].sort()).toEqual(["prod-cola", "prod-fanta", "prod-sprite", "prod-water"]);
+  });
+});
 
 function lockSequence() {
   let n = 0;
@@ -23,7 +39,6 @@ const deliveryOrder: EbrizaPayloadOrder = {
   delivery_address: "Str. Lipscani 10",
   delivery_details: "Bl. A, sc. 2, ap. 14, interfon 14",
   order_note: "Sunați la sosire",
-  subtotal: 101,
   delivery_fee: 15,
   tip_amount: 5,
   total_amount: 121,
@@ -63,7 +78,6 @@ const pickupOrder: EbrizaPayloadOrder = {
   delivery_address: null,
   delivery_details: null,
   order_note: null,
-  subtotal: 48,
   delivery_fee: 0,
   tip_amount: 0,
   total_amount: 48,
@@ -129,6 +143,24 @@ describe("buildOpenBillPayload", () => {
       },
       client: { firstName: "Mihai", lastName: "Mihai", phone: "0733987654" },
     });
+  });
+
+  it("adds no SGR deposit line unless bottle deposits are enabled", () => {
+    const payload = buildOpenBillPayload(pickupOrder, pickupItems, { newLock: lockSequence() });
+    expect(payload.bill.items.some((line) => "type" in line && line.type === 1001)).toBe(false);
+  });
+
+  it("adds an SGR deposit line sharing the bottle's lock when enabled", () => {
+    const items = [{ ...pickupItems[1], quantity: 2 }, pickupItems[0]];
+    const payload = buildOpenBillPayload(pickupOrder, items, {
+      newLock: lockSequence(),
+      bottleDepositIds: EBRIZA_BOTTLE_DEPOSIT_IDS,
+    });
+    expect(payload.bill.items).toEqual([
+      { sku: "drink-cola", quantity: 2, lock: "lock-1" },
+      { type: 1001, lock: "lock-1", quantity: 2 },
+      { sku: "brg-hot-boy", quantity: 1, lock: "lock-2" },
+    ]);
   });
 
   it("never sends a delivery fee on pickup", () => {

@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-let result: { data: { product_id: string }[] | null; error: { message: string } | null } = { data: [], error: null };
+let result: { data: { product_id: string; snoozed_until?: string | null }[] | null; error: { message: string } | null } = { data: [], error: null };
 const eqSpy = vi.fn();
 
 vi.mock("@/lib/supabase-admin", () => ({
@@ -29,6 +29,20 @@ describe("getSoldOutIds", () => {
     const ids = await getSoldOutIds();
     expect(ids).toEqual(new Set(["prod-classic", "prod-cola"]));
     expect(eqSpy).toHaveBeenCalledWith("product_stock", "sold_out", true);
+  });
+
+  it("treats an expired Ebriza snooze as available", async () => {
+    const past = new Date(Date.now() - 60_000).toISOString();
+    const future = new Date(Date.now() + 60_000).toISOString();
+    result = {
+      data: [
+        { product_id: "prod-classic", snoozed_until: past },
+        { product_id: "prod-cola", snoozed_until: future },
+        { product_id: "prod-fries", snoozed_until: null },
+      ],
+      error: null,
+    };
+    expect(await getSoldOutIds()).toEqual(new Set(["prod-cola", "prod-fries"]));
   });
 
   it("throws when Supabase errors (caller fails closed)", async () => {

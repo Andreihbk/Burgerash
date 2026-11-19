@@ -13,6 +13,11 @@ vi.mock("@/lib/stock", () => ({
   soldOutNames: vi.fn(() => []),
   STOCK_UNAVAILABLE_ERROR: "stock",
 }));
+const accepting = vi.fn(async () => true);
+vi.mock("@/lib/store-settings", () => ({
+  isAcceptingOrders: () => accepting(),
+  ORDERS_PAUSED_ERROR: "paused",
+}));
 // Opening hours depend on the wall clock: always open in these tests.
 vi.mock("@/lib/hours", () => ({ getStatus: () => ({ open: true }), CLOSED_ORDER_ERROR: "closed" }));
 vi.mock("next/server", async (importOriginal) => ({
@@ -56,6 +61,19 @@ afterEach(() => {
   vi.unstubAllEnvs();
   vi.restoreAllMocks();
   rpc.mockReset();
+});
+
+describe("POST /api/orders POS pause (Ebriza)", () => {
+  it("rejects with 403 paused while the POS paused online orders", async () => {
+    vi.stubEnv("NEXT_PUBLIC_ORDERING_ENABLED", "true");
+    stubRpc();
+    accepting.mockResolvedValueOnce(false);
+    vi.spyOn(console, "warn").mockImplementation(() => {});
+    const res = await POST(request());
+    expect(res.status).toBe(403);
+    expect(await res.json()).toEqual({ error: "paused", code: "paused" });
+    expect(calledFns()).not.toContain("create_order");
+  });
 });
 
 describe("POST /api/orders ordering switch", () => {

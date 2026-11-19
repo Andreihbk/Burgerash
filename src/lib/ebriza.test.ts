@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { EbrizaOpenBillWithClientRequest } from "@/types/ebriza";
-import { getBillByExternal, openBillWithClient, redact, resetEbrizaTokenCache } from "./ebriza";
+import { getBillByExternal, openBillWithClient, redact, resetEbrizaTokenCache, resolveEbrizaBaseUrl } from "./ebriza";
 
 const payload: EbrizaOpenBillWithClientRequest = {
   bill: {
@@ -23,6 +23,7 @@ beforeEach(() => {
   vi.spyOn(console, "info").mockImplementation(() => {});
   vi.spyOn(console, "warn").mockImplementation(() => {});
   vi.spyOn(console, "error").mockImplementation(() => {});
+  vi.stubEnv("EBRIZA_BASE_URL", "");
   resetEbrizaTokenCache();
 });
 
@@ -60,7 +61,7 @@ describe("path 1 (clientid only)", () => {
     expect(res.ok && res.data.billId).toBe("bill-42");
 
     const [url, init] = fetchMock.mock.calls[0];
-    expect(url).toBe("https://api.ebriza.com/bills/openbillwithclient");
+    expect(url).toBe("https://stageapi.ebriza.com/bills/openbillwithclient"); // stage by default outside production
     const headers = init?.headers as Record<string, string>;
     expect(headers["ebriza-clientid"]).toBe("client-x");
     expect(headers["ebriza-appname"]).toBe("Burgerash");
@@ -96,7 +97,7 @@ describe("path 2 (token)", () => {
 
     expect(fetchMock).toHaveBeenCalledTimes(3); // one token call only
     const [tokenUrl, tokenInit] = fetchMock.mock.calls[0];
-    expect(tokenUrl).toBe("https://api.ebriza.com/token");
+    expect(tokenUrl).toBe("https://stageapi.ebriza.com/token");
     const tokenHeaders = tokenInit?.headers as Record<string, string>;
     expect(tokenHeaders.Authorization).toBe(`Basic ${Buffer.from("app-id:app-secret").toString("base64")}`);
     expect(tokenHeaders["Content-Type"]).toBe("application/x-www-form-urlencoded");
@@ -126,6 +127,39 @@ describe("path 2 (token)", () => {
     const res = await openBillWithClient(payload);
     expect(res).toMatchObject({ ok: false, httpStatus: 401, kind: "unauthorized" });
     expect(fetchMock).toHaveBeenCalledTimes(4);
+  });
+});
+
+describe("base URL (EBRIZA_BASE_URL)", () => {
+  it("defaults to stage outside production and never to live", () => {
+    expect(resolveEbrizaBaseUrl(undefined, "development")).toBe("https://stageapi.ebriza.com");
+    expect(resolveEbrizaBaseUrl("", "test")).toBe("https://stageapi.ebriza.com");
+    expect(resolveEbrizaBaseUrl(undefined, "production")).toBeNull();
+  });
+
+  it("accepts only the two Ebriza hosts", () => {
+    expect(resolveEbrizaBaseUrl("https://api.ebriza.com/", "production")).toBe("https://api.ebriza.com");
+    expect(resolveEbrizaBaseUrl("https://stageapi.ebriza.com", "production")).toBe("https://stageapi.ebriza.com");
+    expect(resolveEbrizaBaseUrl("https://evil.example.com", "development")).toBeNull();
+    expect(resolveEbrizaBaseUrl("http://api.ebriza.com", "development")).toBeNull();
+  });
+
+  it("calls live when EBRIZA_BASE_URL is live", async () => {
+    vi.stubEnv("EBRIZA_BASE_URL", "https://api.ebriza.com");
+    vi.stubEnv("EBRIZA_PATH", "1");
+    vi.stubEnv("EBRIZA_CLIENT_ID", "client-x");
+    fetchMock.mockResolvedValueOnce(jsonResponse(200, { id: "bill-1" }));
+    await openBillWithClient(payload);
+    expect(fetchMock.mock.calls[0][0]).toBe("https://api.ebriza.com/bills/openbillwithclient");
+  });
+
+  it("refuses to call anything when misconfigured", async () => {
+    vi.stubEnv("EBRIZA_BASE_URL", "https://evil.example.com");
+    vi.stubEnv("EBRIZA_PATH", "1");
+    vi.stubEnv("EBRIZA_CLIENT_ID", "client-x");
+    const res = await openBillWithClient(payload);
+    expect(res.ok).toBe(false);
+    expect(fetchMock).not.toHaveBeenCalled();
   });
 });
 

@@ -3,7 +3,7 @@ import "server-only";
 import { supabaseAdmin } from "@/lib/supabase-admin";
 import { isEbrizaMockMode, openBillWithClient } from "@/lib/ebriza";
 import { buildOpenBillPayload, EbrizaPayloadError, type EbrizaPayloadItem, type EbrizaPayloadOrder } from "@/lib/ebriza-payload";
-import { resolveEbrizaSku } from "@/lib/ebriza-sku-map";
+import { EBRIZA_BOTTLE_DEPOSIT_IDS, resolveEbrizaSku } from "@/lib/ebriza-sku-map";
 import type { EbrizaSyncStatus } from "@/types/database";
 
 interface SyncOutcome {
@@ -45,7 +45,9 @@ export async function syncOrderToEbriza(order: EbrizaPayloadOrder, items: Ebriza
       modifiers: item.modifiers.map((m) => ({ ...m, ebriza_sku: resolveEbrizaSku(m.id, { mock }) })),
     }));
 
-    const payload = buildOpenBillPayload(order, mapped);
+    // SGR deposit lines only when explicitly enabled (website does not charge them yet).
+    const bottleDepositIds = process.env.EBRIZA_SEND_SGR === "true" ? EBRIZA_BOTTLE_DEPOSIT_IDS : undefined;
+    const payload = buildOpenBillPayload(order, mapped, { bottleDepositIds });
     const result = await openBillWithClient(payload);
 
     outcome = result.ok

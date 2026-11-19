@@ -2,14 +2,20 @@
 // A row in product_stock with sold_out = true means sold out; no row means available.
 import { INITIAL_PRODUCTS } from "@/lib/catalog";
 import { supabaseAdmin } from "@/lib/supabase-admin";
+import { isSnoozeActive, type StockRow } from "@/lib/stock-row";
 
 export const STOCK_UNAVAILABLE_ERROR = "Nu putem verifica stocul acum. Încearcă din nou în câteva momente.";
 
 /** Ids of products currently marked sold out. Throws if Supabase cannot be read. */
 export async function getSoldOutIds(): Promise<Set<string>> {
-  const { data, error } = await supabaseAdmin.from("product_stock").select("product_id").eq("sold_out", true);
+  const { data, error } = await supabaseAdmin
+    .from("product_stock")
+    .select("product_id, sold_out, snoozed_until")
+    .eq("sold_out", true);
   if (error) throw new Error(`product_stock read failed: ${error.message}`);
-  return new Set((data ?? []).map((row: { product_id: string }) => row.product_id));
+  const now = new Date();
+  // Rows are already sold_out = true; an expired Ebriza snooze counts as available.
+  return new Set(((data ?? []) as StockRow[]).filter((row) => isSnoozeActive(row, now)).map((row) => row.product_id));
 }
 
 /** Names of the requested products that are sold out (deduplicated, in request order). */

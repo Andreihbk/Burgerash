@@ -96,6 +96,9 @@ export interface Order {
   ebriza_sync_status: EbrizaSyncStatus;
   ebriza_error: string | null;
   ebriza_error_code: string | null;
+  /** Last BillStatus from the Ebriza ChangeStatusUrl webhook (e.g. 20 InPreparation). */
+  ebriza_status: number | null;
+  ebriza_status_at: string | null;
   created_at: string;
   updated_at: string;
   items?: OrderItem[];

@@ -8,6 +8,7 @@ import { getSoldOutIds, soldOutMessage, soldOutNames, STOCK_UNAVAILABLE_ERROR } 
 import { checkBot, fakeOrderSuccess, TOO_FAST_ERROR } from "@/lib/bot-check";
 import { OrderInputError, parseOrderInput, type OrderInput } from "@/lib/order-input";
 import { checkOrderRateLimit, RATE_LIMIT } from "@/lib/rate-limit";
+import { isAcceptingOrders, ORDERS_PAUSED_ERROR } from "@/lib/store-settings";
 
 function badRequest(message: string) {
   return NextResponse.json({ error: message }, { status: 400 });
@@ -52,6 +53,11 @@ export async function POST(req: Request) {
 
   if (!getStatus().open) {
     return NextResponse.json({ error: CLOSED_ORDER_ERROR, code: "closed" }, { status: 403 });
+  }
+
+  // POS pause (Ebriza StartAcceptingOrdersUrl). Fails open if the flag cannot be read.
+  if (!(await isAcceptingOrders())) {
+    return NextResponse.json({ error: ORDERS_PAUSED_ERROR, code: "paused" }, { status: 403 });
   }
 
   const limit = await checkOrderRateLimit(req.headers);

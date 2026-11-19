@@ -1,5 +1,19 @@
 import { describe, expect, it } from "vitest";
-import { getStatus, statusLabel } from "./hours";
+import { getStatus, nextScheduleStart, statusLabel } from "./hours";
+
+describe("nextScheduleStart (Ebriza snooze end)", () => {
+  it("is the next day's opening when snoozed during the day", () => {
+    // Wed 2026-11-18 15:20 Bucharest (UTC+2) -> Thu 10:00 = 08:00Z
+    expect(nextScheduleStart(new Date("2026-11-18T13:20:00Z")).toISOString()).toBe("2026-11-19T08:00:00.000Z");
+    // Fri 21:00 -> Sat 12:00 (weekend hours) = 10:00Z
+    expect(nextScheduleStart(new Date("2026-11-20T19:00:00Z")).toISOString()).toBe("2026-11-21T10:00:00.000Z");
+  });
+
+  it("is today's opening when snoozed after midnight, before opening", () => {
+    // Thu 01:30 -> Thu 10:00
+    expect(nextScheduleStart(new Date("2026-11-18T23:30:00Z")).toISOString()).toBe("2026-11-19T08:00:00.000Z");
+  });
+});
 
 // Bucharest is UTC+2 in winter, UTC+3 in summer. 2026-11-18 = Wednesday, 2026-11-21 = Saturday.
 describe("getStatus", () => {

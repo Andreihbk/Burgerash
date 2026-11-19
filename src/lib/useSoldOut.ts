@@ -3,12 +3,11 @@
 import { useSyncExternalStore } from "react";
 import type { RealtimeChannel } from "@supabase/supabase-js";
 import { isSupabaseConfigured, supabase } from "@/lib/supabase";
+import { isRowSoldOut, type StockRow } from "@/lib/stock-row";
 
 // Live "stoc epuizat" flags for the storefront (anon read of product_stock + Realtime).
 // One shared store: the first subscriber loads the table and opens one channel, the last one closes it.
 // Display only: /api/orders is the real gate. If Supabase is unreachable nothing shows as sold out.
-
-type StockRow = { product_id: string; sold_out?: boolean };
 
 const EMPTY: ReadonlySet<string> = new Set();
 let soldOut: ReadonlySet<string> = EMPTY;
@@ -21,15 +20,15 @@ function setSoldOut(next: ReadonlySet<string>) {
 }
 
 async function load() {
-  const { data, error } = await supabase.from("product_stock").select("product_id, sold_out");
+  const { data, error } = await supabase.from("product_stock").select("product_id, sold_out, snoozed_until");
   if (error || !data) return;
-  setSoldOut(new Set((data as StockRow[]).filter((r) => r.sold_out).map((r) => r.product_id)));
+  setSoldOut(new Set((data as StockRow[]).filter((r) => isRowSoldOut(r)).map((r) => r.product_id)));
 }
 
 function applyChange(row: StockRow | undefined, deleted: boolean) {
   if (!row?.product_id) return;
   const next = new Set(soldOut);
-  if (deleted || !row.sold_out) next.delete(row.product_id);
+  if (deleted || !isRowSoldOut(row)) next.delete(row.product_id);
   else next.add(row.product_id);
   setSoldOut(next);
 }

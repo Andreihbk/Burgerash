@@ -78,6 +78,20 @@ export function getStatus(now: Date = new Date()): OpeningStatus {
   };
 }
 
+/**
+ * Start of the next day's schedule (Ebriza POS snooze end: "next day at the start of the schedule").
+ * Before today's opening (after midnight) that is today's opening. Accurate to the minute;
+ * a DST switch overnight can shift it by one hour, which is fine for a snooze.
+ */
+export function nextScheduleStart(now: Date = new Date()): Date {
+  const { day, minutes } = bucharestNow(now);
+  const minutesAhead =
+    minutes < HOURS[day].open ? HOURS[day].open - minutes : 1440 - minutes + HOURS[(day + 1) % 7].open;
+  const result = new Date(now.getTime() + minutesAhead * 60_000);
+  result.setUTCSeconds(0, 0);
+  return result;
+}
+
 export function statusLabel(status: OpeningStatus): string {
   if (status.open) return `Deschis până la ${status.closesAt}`;
   return `Închis · deschidem ${status.next?.when} la ${status.next?.time}`;

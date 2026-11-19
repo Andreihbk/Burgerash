@@ -1,6 +1,10 @@
 # Ebriza integration plan
 
-Status: DESIGN ONLY (2026-11-19). No app code changed. Sonnet draft: have Opus review sections 3-5 before building.
+Status (2026-11-19): part 1 BUILT: C1 (as `EBRIZA_BASE_URL`), C2 (SKU map), C4a (SGR behind `EBRIZA_SEND_SGR`, off),
+C7 (4 webhook routes + migration `20261123000000_ebriza_webhooks.sql`). Owner decisions taken: the POS status DRIVES our order
+status (forward-only, cancel included), not only stored; SGR flagged for all 4 drinks but not sent/charged yet.
+Webhook routes live at `/api/ebriza/<S>/<hook>` (not `/api/webhooks/ebriza/...` as drafted below); the hook names are
+`change-status`, `sync-products`, `start-accepting-orders`, `set-item-unavailable`.
 
 Sources
 - **API ref** = official Ebriza API reference (https://ebriza.com/app/public/docs). It renders client-side, so a local copy is kept in `docs/vendor/ebriza-api-reference.md`. That folder is **gitignored**: never commit it. Sections below are cited by name, e.g. `[API ref: Open bill with client]`.
@@ -135,7 +139,8 @@ HTTPS only (the API itself is HTTPS-only). Do not paste the real secrets into th
 Already used by `src/lib/ebriza.ts`: `EBRIZA_MOCK`, `EBRIZA_PATH`, `EBRIZA_CLIENT_ID`, `EBRIZA_APP_ID`, `EBRIZA_APP_SECRET`, `EBRIZA_APP_NAME`.
 
 New:
-- `EBRIZA_ENV` (`stage` | `live`; selects the base URL; required when not mock)
+- `EBRIZA_BASE_URL` (built instead of `EBRIZA_ENV`: `https://stageapi.ebriza.com` or `https://api.ebriza.com`; unset = stage outside production, error in production)
+- `EBRIZA_SEND_SGR` (optional; `true` adds type 1001 deposit lines for the drinks)
 - `EBRIZA_WEBHOOK_SECRET`
 - `EBRIZA_WEBHOOK_SECRET_PREVIOUS` (optional, only during rotation)
 - `EBRIZA_USE_PROVIDER_INTEGRATION` (optional; stays unset/false until Q7)

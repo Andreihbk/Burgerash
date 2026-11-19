@@ -12,7 +12,8 @@ import { EBRIZA_RETRYABLE_CODES } from "@/types/ebriza";
 // Server-side ONLY. Never import from a client component.
 // Facts: .claude/skills/ebriza-api/reference.md
 
-const BASE_URL = "https://api.ebriza.com";
+export const EBRIZA_STAGE_URL = "https://stageapi.ebriza.com";
+export const EBRIZA_LIVE_URL = "https://api.ebriza.com";
 const TIMEOUT_MS = 8000;
 const TOKEN_SAFETY_MARGIN_MS = 60_000;
 const MOCK_DELAY_MS = 120;
@@ -22,16 +23,41 @@ type EbrizaPath = 1 | 2;
 interface EbrizaConfig {
   mock: boolean;
   path: EbrizaPath;
+  /** null = misconfigured (production without EBRIZA_BASE_URL, or a non-Ebriza URL). */
+  baseUrl: string | null;
   clientId: string | undefined;
   appId: string | undefined;
   appSecret: string | undefined;
   appName: string | undefined;
 }
 
+/**
+ * EBRIZA_BASE_URL selects stage or live (different credentials and Client IDs).
+ * Only the two Ebriza hosts are accepted. Unset: stage outside production; in production
+ * it is an error. Never defaults to live.
+ */
+export function resolveEbrizaBaseUrl(
+  value: string | undefined = process.env.EBRIZA_BASE_URL,
+  nodeEnv: string | undefined = process.env.NODE_ENV,
+): string | null {
+  const url = value?.trim().replace(/\/+$/, "");
+  if (!url) return nodeEnv === "production" ? null : EBRIZA_STAGE_URL;
+  return url === EBRIZA_STAGE_URL || url === EBRIZA_LIVE_URL ? url : null;
+}
+
+let loggedBaseUrl: string | null | undefined;
+
 function getConfig(): EbrizaConfig {
+  const baseUrl = resolveEbrizaBaseUrl();
+  if (baseUrl !== loggedBaseUrl) {
+    loggedBaseUrl = baseUrl;
+    if (baseUrl) console.info(`[ebriza] base URL ${baseUrl}`);
+    else console.error("[ebriza] EBRIZA_BASE_URL missing or not an Ebriza host; calls are disabled");
+  }
   return {
     mock: process.env.EBRIZA_MOCK === "true",
     path: process.env.EBRIZA_PATH === "2" ? 2 : 1,
+    baseUrl,
     clientId: process.env.EBRIZA_CLIENT_ID || undefined,
     appId: process.env.EBRIZA_APP_ID || undefined,
     appSecret: process.env.EBRIZA_APP_SECRET || undefined,
@@ -77,7 +103,8 @@ async function getToken(config: EbrizaConfig, forceRefresh: boolean): Promise<Eb
   }
 
   const basic = Buffer.from(`${config.appId}:${config.appSecret}`).toString("base64");
-  const res = await timedFetch(`${BASE_URL}/token`, {
+  if (!config.baseUrl) return failure(null, "unknown", null, "EBRIZA_BASE_URL not configured");
+  const res = await timedFetch(`${config.baseUrl}/token`, {
     method: "POST",
     headers: {
       Authorization: `Basic ${basic}`,
@@ -166,6 +193,10 @@ async function ebrizaRequest(
   if (!config.clientId) {
     return failure(null, "missing_client_id", "0664", "EBRIZA_CLIENT_ID not set");
   }
+  if (!config.baseUrl) {
+    return failure(null, "unknown", null, "EBRIZA_BASE_URL not configured");
+  }
+  const baseUrl = config.baseUrl;
 
   for (let attempt = 0; attempt < 2; attempt++) {
     const headers: Record<string, string> = {
@@ -180,7 +211,7 @@ async function ebrizaRequest(
       headers.Authorization = `bearer ${token.data}`;
     }
 
-    const res = await timedFetch(`${BASE_URL}${path}`, {
+    const res = await timedFetch(`${baseUrl}${path}`, {
       method,
       headers,
       body: body === undefined ? undefined : JSON.stringify(body),

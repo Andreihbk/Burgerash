@@ -140,8 +140,16 @@ High priority, not a launch gate by itself: **Ebriza integration** (E.1-E.5, L.2
 - [ ] 2.5 `/admin` menu/price edits and opening hours (hours stay in `src/lib/hours.ts` until then)
 
 ## Phase 3 - Ebriza webhooks (needs approved Marketplace app)
-- [ ] 3.1 `/api/webhooks/ebriza/[secret]`: on callback, re-fetch the bill, map status to Supabase.
-- [ ] 3.2 Subscribe to Order and Bill entities (`POST /webHooks/subscribe`).
+- [x] 3.0 (2026-11-19) The 4 URL webhooks, `/api/ebriza/[secret]/{change-status,sync-products,start-accepting-orders,set-item-unavailable}`
+      (`src/lib/ebriza-webhook.ts` auth/parsing, `ebriza-webhook-handlers.ts`). Secret in the path (no signature is documented),
+      constant-time check, `EBRIZA_WEBHOOK_SECRET` + `_PREVIOUS`. Defensive parsing until Ebriza sends sample payloads (Q1).
+      change-status drives `orders.status` forward-only (owner decision) + stores `ebriza_status`; set-item-unavailable snoozes
+      `product_stock` until the next opening; start-accepting-orders sets `store_settings.accepting_orders` (checked by /api/orders);
+      sync-products acks + logs only. Migration `20261123000000_ebriza_webhooks.sql` (run it in the Supabase SQL Editor).
+      `EBRIZA_BASE_URL` (stage default outside production). Tests: `src/lib/ebriza-webhooks.test.ts`.
+- [ ] 3.1 Re-fetch the bill (`GET /bills/get`, path 2) before trusting a cancel; adjust parsers once Ebriza sends real payloads.
+- [ ] 3.2 Subscribe to Order and Bill entities (`POST /webHooks/subscribe`), only if Q8 says it is needed.
+- [ ] 3.3 Storefront banner while `store_settings.accepting_orders` is false (today only /api/orders refuses).
 
 ## Phase 4 - Hardening before launch
 - [x] 4.1 Staff login (Supabase Auth) on /kitchen /dispatch /rider /admin
@@ -152,7 +160,8 @@ High priority, not a launch gate by itself: **Ebriza integration** (E.1-E.5, L.2
 - [ ] L.1 (see B.5: all products, from supplier labels) Get real allergens for new products from the owner (CRISPY, CRISPY BACON, Chips, Nuggets). Until then the
       cards show "Alergeni: întreabă-ne" (`allergens: null` in catalog.ts). Also re-check allergens of CLASIC/HOT BOY/DOUBLE/HOT HONEY
       against the new menu board ingredients (Gouda, bacon, sos spicy, hot honey).
-- [ ] L.2 Fill `ebriza-sku-map.ts` for prod-crispy, prod-crispy-bacon, prod-chips, prod-nuggets (null = order saves, sync fails 0104).
+- [x] L.2 `ebriza-sku-map.ts` filled with all 20 SKUs (EBRIZA_PLAN 5b). The same SKUs must be entered in the POS (E.5).
+      SGR deposit flagged for the 4 drinks; sent only with `EBRIZA_SEND_SGR=true` (website does not charge it yet).
 - [ ] L.3 docs/brand history: IMG_4143.jpeg and image.png (phone photos, possible GPS) were removed from the tree only; they stay in
       git history of this public repo. Decide later if a history rewrite is worth it.
 - [x] L.0 TODO staff auth + RLS: /kitchen (and later /dispatch /rider /admin) are open to anyone with the URL,

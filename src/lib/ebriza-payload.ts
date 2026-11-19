@@ -47,6 +47,11 @@ export type EbrizaPayloadItem = Pick<
 export interface BuildOptions {
   /** Generates the shared lock GUID for a product line and its modifiers. */
   newLock?: () => string;
+  /**
+   * Catalog ids whose line gets an SGR deposit line `{ type: 1001, lock, quantity }`.
+   * Omitted/empty = no deposit lines (default while EBRIZA_SEND_SGR is off).
+   */
+  bottleDepositIds?: ReadonlySet<string>;
 }
 
 /** Thrown when the order cannot be mapped (e.g. missing SKU). Code mirrors the Ebriza error. */
@@ -105,6 +110,10 @@ export function buildOpenBillPayload(
     for (const mod of item.modifiers ?? []) {
       // Modifier quantity = product quantity (open question: confirm in the real Ebriza test).
       lines.push({ sku: mod.ebriza_sku as string, quantity: item.quantity, lock, isMod: true });
+    }
+    // SGR: same lock as the bottle line; amount and VAT come from the POS system products.
+    if (item.product_id && options.bottleDepositIds?.has(item.product_id)) {
+      lines.push({ type: EbrizaItemType.BottleDeposit, lock, quantity: item.quantity });
     }
   }
 
