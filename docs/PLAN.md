@@ -72,7 +72,11 @@ Definition of done for every task: `npm run build` + `npm run lint` pass.
 - [x] 2.1 `/kitchen` KDS, 3 columns (Nou = pending, În preparare = preparing, Gata = ready_for_packing)
       Supabase only (no Ebriza), Realtime on `orders`, optimistic one-tap advance + undo, sound toggle.
       Phone = tabs, md+ = 3 columns. No auth yet (see "Before launch").
-- [ ] 2.2 `/dispatch` packing + rider assignment
+- [x] 2.2 `/dispatch` handoff (rider assignment NOT done, see below)
+      Supabase only, Realtime on `orders`. Columns De predat (ready_for_packing) and În livrare
+      (out_for_delivery). Delivery: ready -> out_for_delivery -> delivered; pickup: ready -> "Predat" (delivered).
+      Behind the STAFF_PASSWORD proxy. PENDING: rider assignment needs a migration (awaiting OK;
+      `orders.rider_name` text already exists).
 - [ ] 2.3 `/rider` mobile view
 - [ ] 2.4 `/admin` stock, menu, hours
 
