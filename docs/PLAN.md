@@ -48,8 +48,10 @@ Definition of done for every task: `npm run build` + `npm run lint` pass.
       (ticker, scanlines, glitch, marquee, flash, custom-cursor) removed.
       BASELINE for P.3/P.4 (`/`, production build): 10 scripts, 607 KB raw / 185 KB gzip JS, 6 preloaded fonts
       (the font change did not reduce the file count: Google already served one file for all Nunito weights).
-- [ ] P.3 Refactor 1: `src/store/uiStore.ts` (customizing, lastAdded, addedSeq); server ProductCard / MenuSections /
+- [x] P.3 Refactor 1: `src/store/uiStore.ts` (customizing, lastAdded, addedSeq); server ProductCard / MenuSections /
       LocationSection / SiteFooter in `src/components/storefront/`, client ProductActions; StoreFront takes them as slots.
+      Also: OpenCartButton (client, used by LocationSection), `ids.ts` (sectionDomId, isCustomizable); CustomizeModal split out
+      inside StoreFront.tsx (keyed by product, local state) ready to move in P.4.
 - [ ] P.4 Refactor 2: client islands SiteHeader, HeroBoard, CategoryBar (IntersectionObserver), CustomizeModal (dialog a11y:
       Escape, focus, aria-modal), AddedToast, MobileCartBar; CartDrawer via next/dynamic on first open; delete StoreFront.tsx.
       Compare First Load JS + Lighthouse with P.2 baseline.

@@ -1,8 +1,9 @@
 "use client";
 
-import { forwardRef, memo, useCallback, useMemo, useEffect, useImperativeHandle, useRef, useState } from "react";
+import { forwardRef, memo, useCallback, useMemo, useEffect, useImperativeHandle, useRef, useState, type ReactNode } from "react";
 import { INITIAL_MODIFIERS, INITIAL_PRODUCTS, MENU_SECTIONS } from "@/lib/catalog";
 import { useCartStore } from "@/store/cartStore";
+import { useUiStore } from "@/store/uiStore";
 import { useCartHydrated } from "@/store/useCartHydrated";
 import { formatLei } from "@/lib/format";
 import { BurgerStamp } from "./BurgerStamp";
@@ -10,17 +11,16 @@ import { BrandLogo } from "./BrandLogo";
 import MenuBoardBase from "./MenuBoard";
 import CartDrawer from "./CartDrawer";
 import TodayAtBurgerash from "./TodayAtBurgerash";
-import { heroStatusLine, scheduleLines, shortStatusLabel, statusLabel } from "@/lib/hours";
+import { heroStatusLine, shortStatusLabel, statusLabel } from "@/lib/hours";
 import { useOpeningStatus } from "@/lib/useOpeningStatus";
 import type { OpeningStatus } from "@/lib/hours";
 import { OrderItemModifier, Product } from "@/types/database";
-import { ShoppingBag, Plus, SlidersHorizontal, X, Check, MapPin, ArrowRight } from "lucide-react";
+import { sectionDomId } from "./storefront/ids";
+import { ShoppingBag, X, Check, ArrowRight } from "lucide-react";
 
 // Header has a fixed height so the category bar can stick right under it.
 const HEADER_HEIGHT = 72;
 const ALL_TAB = "all";
-
-const sectionDomId = (categoryId: string) => `meniu-${categoryId}`;
 
 const HERO_PRODUCTS = ["prod-classic", "prod-hot-boy", "prod-double"]
   .map((id) => INITIAL_PRODUCTS.find((p) => p.id === id))
@@ -132,27 +132,28 @@ const StickerStack = forwardRef<StickerStackHandle, { size: number; modalOpen: b
   },
 );
 
-const isCustomizable = (product: Product) =>
-  product.category_id === "cat-burgers" || product.category_id === "cat-chicken";
-
-export default function Storefront() {
+export default function Storefront({
+  menu,
+  location,
+  footer,
+}: {
+  menu: ReactNode;
+  location: ReactNode;
+  footer: ReactNode;
+}) {
   const [activeTab, setActiveTab] = useState<string>(ALL_TAB);
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const [selectedModifiers, setSelectedModifiers] = useState<OrderItemModifier[]>([]);
-  const [itemNote, setItemNote] = useState<string>("");
-  const [itemQty, setItemQty] = useState<number>(1);
-  const [toast, setToast] = useState<{ key: number; name: string } | null>(null);
-  const [badgeBump, setBadgeBump] = useState(0);
+  const customizing = useUiStore((state) => state.customizing);
+  const openCustomize = useUiStore((state) => state.openCustomize);
+  const lastAdded = useUiStore((state) => state.lastAdded);
+  const addedSeq = useUiStore((state) => state.addedSeq);
+  const clearAdded = useUiStore((state) => state.clearAdded);
   const realStatus = useOpeningStatus();
   const status = useMemo(() => applyDevPreview(realStatus), [realStatus]);
   const stickersRef = useRef<StickerStackHandle>(null);
 
   const barRef = useRef<HTMLDivElement>(null);
   const menuTopRef = useRef<HTMLDivElement>(null);
-  const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const toastSeq = useRef(0);
 
-  const addItem = useCartStore((state) => state.addItem);
   const openCart = useCartStore((state) => state.openCart);
   const hydrated = useCartHydrated();
   const storedItems = useCartStore((state) => state.getTotalItemsCount());
@@ -191,11 +192,12 @@ export default function Storefront() {
     stickersRef.current?.hover(name ? BOARD_LINE_TO_ID[name] ?? null : null, name !== null);
   }, []);
 
+  // Toast auto-hides 2.6s after the latest add (a new add restarts the timer).
   useEffect(() => {
-    return () => {
-      if (toastTimer.current) clearTimeout(toastTimer.current);
-    };
-  }, []);
+    if (!addedSeq) return;
+    const id = setTimeout(clearAdded, 2600);
+    return () => clearTimeout(id);
+  }, [addedSeq, clearAdded]);
 
   const scrollToTab = (tabId: string) => {
     const target =
@@ -209,52 +211,9 @@ export default function Storefront() {
     setActiveTab(tabId);
   };
 
-  const handleAdd = (
-    product: Product,
-    modifiers?: OrderItemModifier[],
-    note?: string,
-    quantity?: number
-  ) => {
-    addItem(product, modifiers, note, quantity);
-    setBadgeBump((n) => n + 1);
-    toastSeq.current += 1;
-    setToast({ key: toastSeq.current, name: product.name });
-    if (toastTimer.current) clearTimeout(toastTimer.current);
-    toastTimer.current = setTimeout(() => setToast(null), 2600);
-  };
-
   const handleOpenCartFromToast = () => {
-    setToast(null);
+    clearAdded();
     openCart();
-  };
-
-  const handleOpenModal = (product: Product) => {
-    setSelectedProduct(product);
-    setSelectedModifiers([]);
-    setItemNote("");
-    setItemQty(1);
-  };
-
-  const toggleModifier = (mod: typeof INITIAL_MODIFIERS[0]) => {
-    setSelectedModifiers((prev) => {
-      const exists = prev.some((m) => m.id === mod.id);
-      if (exists) return prev.filter((m) => m.id !== mod.id);
-      return [
-        ...prev,
-        {
-          id: mod.id,
-          name: mod.name,
-          price: mod.price,
-          ebriza_sku: mod.ebriza_sku,
-        },
-      ];
-    });
-  };
-
-  const handleConfirmModal = () => {
-    if (!selectedProduct) return;
-    handleAdd(selectedProduct, selectedModifiers, itemNote, itemQty);
-    setSelectedProduct(null);
   };
 
   const tabs = [
@@ -322,9 +281,9 @@ export default function Storefront() {
             <span>COȘ</span>
             {totalItems > 0 && (
               <span
-                key={badgeBump}
+                key={addedSeq}
                 className={`absolute -top-2 -right-2 bg-[#F5E6CC] text-[#332420] font-mono text-xs font-black w-6 h-6 rounded-full flex items-center justify-center border-2 border-[#332420] ${
-                  badgeBump > 0 ? "animate-badge-pop" : ""
+                  addedSeq > 0 ? "animate-badge-pop" : ""
                 }`}
               >
                 {totalItems}
@@ -348,7 +307,7 @@ export default function Storefront() {
 
           {/* Mobile sticker stack (pure SVG, no cart state) */}
           <div className="self-center my-5 md:hidden">
-            <StickerStack size={112} modalOpen={!!selectedProduct} onPick={handleOpenModal} />
+            <StickerStack size={112} modalOpen={!!customizing} onPick={openCustomize} />
           </div>
 
           <button
@@ -393,7 +352,7 @@ export default function Storefront() {
           <MenuBoard lit={status ? status.open : false} linkedNames={BOARD_LINKED_NAMES} onLineActive={handleBoardLine} />
           {/* md+: stickers slapped over the board's top corner (scaled down at md) */}
           <div className="hidden md:block absolute -top-14 -right-4 lg:-top-16 lg:-right-4 xl:-right-10 z-10 origin-top-right md:scale-[0.65] lg:scale-100">
-            <StickerStack ref={stickersRef} size={104} modalOpen={!!selectedProduct} onPick={handleOpenModal} />
+            <StickerStack ref={stickersRef} size={104} modalOpen={!!customizing} onPick={openCustomize} />
           </div>
         </div>
       </section>
@@ -445,215 +404,14 @@ export default function Storefront() {
           </h2>
         </div>
 
-        <div className="space-y-14">
-          {MENU_SECTIONS.map(({ category, products }) => (
-            <section key={category.id} id={sectionDomId(category.id)} aria-labelledby={`${sectionDomId(category.id)}-title`}>
-              <div className="flex items-center gap-4 mb-6">
-                <h3
-                  id={`${sectionDomId(category.id)}-title`}
-                  className="font-bebas text-4xl tracking-wide text-[#332420] shrink-0"
-                >
-                  {category.name}
-                </h3>
-                <div className="flex-1 h-2 border-y-2 border-[#332420]" />
-              </div>
+        {menu}
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {products.map((product) => (
-                  <ProductCard
-                    key={product.id}
-                    product={product}
-                    onAdd={() => handleAdd(product)}
-                    onCustomize={isCustomizable(product) ? () => handleOpenModal(product) : undefined}
-                  />
-                ))}
-              </div>
-            </section>
-          ))}
-        </div>
-
-        {/* SECȚIUNEA LOCAȚIE & PROGRAM */}
-        <section
-          id="location"
-          className="mt-20 grid grid-cols-1 md:grid-cols-2 border-4 border-[#332420] rounded-xl overflow-hidden shadow-[6px_6px_0px_0px_#332420]"
-        >
-          <div className="bg-[#332420] text-[#F5E6CC] p-8 md:p-10">
-            <div className="inline-flex items-center gap-2 text-[#F5E6CC] font-mono text-xs font-bold mb-2">
-              <MapPin className="w-4 h-4"/>
-              <span>CARTIERUL CRUSTEI</span>
-            </div>
-            <h3 className="font-bebas text-5xl tracking-wide mb-4 text-[#F5E6CC]">
-              UNDE GĂSEȘTI CRUSTA
-            </h3>
-            <p className="font-nunito font-bold text-base text-[#F5E6CC]/80 mb-6">
-              Fix lângă liceu, în Sector 6, București. Urmărește mirosul de vită Black Angus caramelizată pe plită.
-            </p>
-            <div className="font-mono text-sm space-y-1.5 border-t border-[#F5E6CC]/20 pt-4">
-              <p className="text-[#F5E6CC] font-bold">PROGRAMUL DE FOC:</p>
-              {scheduleLines().map((l) => (
-                <p key={l.label}>
-                  {l.label}: {l.hours}
-                </p>
-              ))}
-            </div>
-          </div>
-
-          <div className="bg-[#790D20] text-[#F5E6CC] p-8 md:p-10 flex flex-col justify-between">
-            <div>
-              <h3 className="font-bebas text-5xl tracking-wide mb-4">
-                LIVRARE PROPRIE & PICKUP
-              </h3>
-              <p className="font-nunito font-bold text-base text-[#F5E6CC]/90 mb-6">
-                Comandă direct de pe site fără comisioane ascunse. Livrare gratuită în cartier la comenzi de peste 120 LEI sau ridicare direct de la geam în 15 minute.
-              </p>
-            </div>
-            <button
-              onClick={openCart}
-              className="self-start bg-[#F5E6CC] text-[#332420] font-bebas text-2xl px-8 py-3.5 rounded-lg border-2 border-[#332420] shadow-[4px_4px_0px_0px_#332420] hover:bg-white transition-all"
-            >
-              DESCHIDE COȘUL DE COMANDĂ
-            </button>
-          </div>
-        </section>
+        {location}
       </main>
 
-      {/* MODAL PERSONALIZARE BURGER (MODIFIERS) */}
-      {selectedProduct && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-          <div className="bg-[#F5E6CC] border-4 border-[#332420] rounded-xl max-w-lg w-full shadow-[8px_8px_0px_0px_#332420] max-h-[90vh] flex flex-col overflow-hidden">
-            <div className="brand-scroll flex-1 min-h-0 overflow-y-auto p-6">
-              <div className="flex justify-between items-start border-b-2 border-[#332420] pb-3 mb-4">
-                <div>
-                  <span className="font-mono text-xs text-[#790D20] font-bold">
-                    PERSONALIZEAZĂ BURGERUL
-                  </span>
-                  <h3 className="font-bebas text-4xl text-[#332420]">
-                    {selectedProduct.name}
-                  </h3>
-                </div>
-                <button
-                  onClick={() => setSelectedProduct(null)}
-                  aria-label="Închide"
-                  className="p-1 text-[#332420] hover:text-[#790D20]"
-                >
-                  <X className="w-6 h-6"/>
-                </button>
-              </div>
+      {customizing && <CustomizeModal key={customizing.id} product={customizing} />}
 
-              <div className="flex justify-center mb-4">
-                <BurgerStamp product={selectedProduct} className="h-36 w-36 rotate-[-6deg]" />
-              </div>
-              {selectedProduct.description && (
-                <p className="font-nunito text-sm text-[#332420]/80 text-center max-w-sm mx-auto mb-4">
-                  {selectedProduct.description}
-                </p>
-              )}
-
-              <div className="space-y-4">
-                {(
-                  [
-                    { title: "EXTRA", mods: INITIAL_MODIFIERS.filter((m) => m.price > 0) },
-                    { title: "FĂRĂ", mods: INITIAL_MODIFIERS.filter((m) => m.price === 0) },
-                  ] as const
-                ).map((group) => (
-                  <div key={group.title}>
-                    <p className="font-bebas text-xl text-[#332420] mb-2">{group.title}</p>
-                    <div className="grid grid-cols-1 gap-2">
-                      {group.mods.map((mod) => {
-                        const checked = selectedModifiers.some((m) => m.id === mod.id);
-                        return (
-                          <button
-                            key={mod.id}
-                            type="button"
-                            onClick={() => toggleModifier(mod)}
-                            className={`flex items-center justify-between p-3 rounded-lg border-2 border-[#332420] font-nunito font-bold text-sm transition-all ${
-                              checked
-                                ? "bg-[#790D20] text-white"
-                                : "bg-white text-[#332420] hover:bg-white/80"
-                            }`}
-                          >
-                            <span className="flex items-center gap-2">
-                              <span
-                                className={`w-5 h-5 rounded flex items-center justify-center border ${
-                                  checked
-                                    ? "bg-white text-[#790D20] border-white"
-                                    : "border-[#332420]"
-                                }`}
-                              >
-                                {checked && <Check className="w-3.5 h-3.5 stroke-[3]"/>}
-                              </span>
-                              {mod.name}
-                            </span>
-                            {mod.price > 0 && (
-                              <span className="font-mono text-xs">+{formatLei(mod.price)}</span>
-                            )}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
-                ))}
-
-                <div>
-                  <label className="block font-nunito font-extrabold tracking-wide text-sm mb-1">
-                    NOTĂ PENTRU BUCĂTĂRIE:
-                  </label>
-                  <input
-                    type="text"
-                    value={itemNote}
-                    onChange={(e) => setItemNote(e.target.value)}
-                    placeholder="Ex: bine făcut, sosul separat..."
-                    className="w-full border-2 border-[#332420] rounded-lg p-2.5 bg-white font-nunito font-semibold text-sm"
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className="shrink-0 flex items-center justify-between gap-3 p-4 border-t-4 border-[#332420] bg-[#F5E6CC]">
-              <div className="flex items-center gap-3 bg-white border-2 border-[#332420] rounded-lg px-3 py-1.5">
-                <button
-                  type="button"
-                  aria-label="Scade cantitatea"
-                  onClick={() => setItemQty(Math.max(1, itemQty - 1))}
-                  className="font-mono font-black text-lg px-2"
-                >
-                  −
-                </button>
-                <span className="font-mono font-bold text-base">{itemQty}</span>
-                <button
-                  type="button"
-                  aria-label="Crește cantitatea"
-                  onClick={() => setItemQty(itemQty + 1)}
-                  className="font-mono font-black text-lg px-2"
-                >
-                  +
-                </button>
-              </div>
-
-              <button
-                type="button"
-                onClick={handleConfirmModal}
-                className="bg-[#790D20] text-white font-bebas text-2xl px-5 py-3 rounded-lg border-2 border-[#332420] shadow-[3px_3px_0px_0px_#332420] hover:bg-[#332420] transition-all whitespace-nowrap"
-              >
-                ADAUGĂ ·{" "}
-                {formatLei(
-                  (selectedProduct.price + selectedModifiers.reduce((sum, m) => sum + m.price, 0)) * itemQty,
-                )}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* FOOTER */}
-      <footer className="max-w-6xl mx-auto px-4 mt-20 pt-8 border-t-2 border-[#332420]/20 flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-xs text-[#332420]/70">
-        <div>
-          <p className="font-bold text-[#332420]">
-            GOOD BURGERS /// GOOD PEOPLE /// ALWAYS
-          </p>
-          <p className="mt-1">© 2026 Burgerash. Toate drepturile rezervate.</p>
-        </div>
-      </footer>
+      {footer}
 
       {/* TOAST: added to cart (does not open the drawer) */}
       <div
@@ -661,15 +419,15 @@ export default function Storefront() {
         aria-live="polite"
         className="fixed z-50 left-4 right-4 bottom-24 md:left-auto md:right-6 md:bottom-6 pointer-events-none flex justify-center md:justify-end"
       >
-        {toast && (
+        {lastAdded && (
           <div
-            key={toast.key}
+            key={addedSeq}
             className="animate-toast-in pointer-events-auto flex items-center gap-4 bg-[#332420] text-[#F5E6CC] border-2 border-[#F5E6CC] rounded-lg px-4 py-3 shadow-[4px_4px_0px_0px_#790D20]"
           >
             <Check className="w-5 h-5 shrink-0 stroke-[3]" />
             <div className="min-w-0">
               <p className="font-nunito font-black text-sm leading-tight">Adăugat în coș</p>
-              <p className="font-mono text-[11px] text-[#F5E6CC]/70 truncate">{toast.name}</p>
+              <p className="font-mono text-[11px] text-[#F5E6CC]/70 truncate">{lastAdded.name}</p>
             </div>
             <button
               type="button"
@@ -695,7 +453,7 @@ export default function Storefront() {
           >
             <span>
               COȘ (
-              <span key={badgeBump} className={`inline-block ${badgeBump > 0 ? "animate-badge-pop" : ""}`}>
+              <span key={addedSeq} className={`inline-block ${addedSeq > 0 ? "animate-badge-pop" : ""}`}>
                 {totalItems}
               </span>
               ) · {formatLei(grandTotal)}
@@ -710,64 +468,152 @@ export default function Storefront() {
   );
 }
 
-function ProductCard({
-  product,
-  onAdd,
-  onCustomize,
-}: {
-  product: Product;
-  onAdd: () => void;
-  onCustomize?: () => void;
-}) {
+// Customize modal. Keyed by product id by the parent, so its state resets on every open.
+function CustomizeModal({ product }: { product: Product }) {
+  const [selectedModifiers, setSelectedModifiers] = useState<OrderItemModifier[]>([]);
+  const [itemNote, setItemNote] = useState("");
+  const [itemQty, setItemQty] = useState(1);
+  const addItem = useCartStore((state) => state.addItem);
+  const notifyAdded = useUiStore((state) => state.notifyAdded);
+  const closeCustomize = useUiStore((state) => state.closeCustomize);
+
+  const toggleModifier = (mod: (typeof INITIAL_MODIFIERS)[0]) => {
+    setSelectedModifiers((prev) => {
+      if (prev.some((m) => m.id === mod.id)) return prev.filter((m) => m.id !== mod.id);
+      return [...prev, { id: mod.id, name: mod.name, price: mod.price, ebriza_sku: mod.ebriza_sku }];
+    });
+  };
+
+  const handleConfirm = () => {
+    addItem(product, selectedModifiers, itemNote, itemQty);
+    notifyAdded(product.name);
+    closeCustomize();
+  };
+
   return (
-    <div className="bg-white border-2 border-[#332420] rounded-xl p-5 flex flex-col justify-between shadow-[5px_5px_0px_0px_#332420] hover:translate-y-[-3px] transition-all relative group">
-      <div>
-        {/* Sticker instead of photo (photos kept in public/images/menu for later) */}
-        <div className="w-full h-52 mb-4 flex items-center justify-center bg-[#F5E6CC]/50 rounded-lg border border-[#332420]/15">
-          <BurgerStamp
-            product={product}
-            className="h-44 w-44 rotate-[-6deg] group-hover:rotate-0 transition-transform duration-300 drop-shadow-[4px_4px_0px_rgba(51,36,32,0.25)]"
-          />
-        </div>
+  <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+        <div className="bg-[#F5E6CC] border-4 border-[#332420] rounded-xl max-w-lg w-full shadow-[8px_8px_0px_0px_#332420] max-h-[90vh] flex flex-col overflow-hidden">
+          <div className="brand-scroll flex-1 min-h-0 overflow-y-auto p-6">
+            <div className="flex justify-between items-start border-b-2 border-[#332420] pb-3 mb-4">
+              <div>
+                <span className="font-mono text-xs text-[#790D20] font-bold">
+                  PERSONALIZEAZĂ BURGERUL
+                </span>
+                <h3 className="font-bebas text-4xl text-[#332420]">
+                  {product.name}
+                </h3>
+              </div>
+              <button
+                onClick={closeCustomize}
+                aria-label="Închide"
+                className="p-1 text-[#332420] hover:text-[#790D20]"
+              >
+                <X className="w-6 h-6"/>
+              </button>
+            </div>
 
-        <h4 className="font-bebas text-3xl tracking-wide text-[#332420] mb-2">{product.name}</h4>
+            <div className="flex justify-center mb-4">
+              <BurgerStamp product={product} className="h-36 w-36 rotate-[-6deg]" />
+            </div>
+            {product.description && (
+              <p className="font-nunito text-sm text-[#332420]/80 text-center max-w-sm mx-auto mb-4">
+                {product.description}
+              </p>
+            )}
 
-        <p className="font-nunito font-bold text-sm text-[#332420]/75 mb-6">{product.description}</p>
-      </div>
+            <div className="space-y-4">
+              {(
+                [
+                  { title: "EXTRA", mods: INITIAL_MODIFIERS.filter((m) => m.price > 0) },
+                  { title: "FĂRĂ", mods: INITIAL_MODIFIERS.filter((m) => m.price === 0) },
+                ] as const
+              ).map((group) => (
+                <div key={group.title}>
+                  <p className="font-bebas text-xl text-[#332420] mb-2">{group.title}</p>
+                  <div className="grid grid-cols-1 gap-2">
+                    {group.mods.map((mod) => {
+                      const checked = selectedModifiers.some((m) => m.id === mod.id);
+                      return (
+                        <button
+                          key={mod.id}
+                          type="button"
+                          onClick={() => toggleModifier(mod)}
+                          className={`flex items-center justify-between p-3 rounded-lg border-2 border-[#332420] font-nunito font-bold text-sm transition-all ${
+                            checked
+                              ? "bg-[#790D20] text-white"
+                              : "bg-white text-[#332420] hover:bg-white/80"
+                          }`}
+                        >
+                          <span className="flex items-center gap-2">
+                            <span
+                              className={`w-5 h-5 rounded flex items-center justify-center border ${
+                                checked
+                                  ? "bg-white text-[#790D20] border-white"
+                                  : "border-[#332420]"
+                              }`}
+                            >
+                              {checked && <Check className="w-3.5 h-3.5 stroke-[3]"/>}
+                            </span>
+                            {mod.name}
+                          </span>
+                          {mod.price > 0 && (
+                            <span className="font-mono text-xs">+{formatLei(mod.price)}</span>
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
 
-      <div className="flex items-center justify-between pt-4 border-t-2 border-[#332420]/10 mt-auto gap-2">
-        <div>
-          <span className="text-[10px] font-mono text-[#332420]/60 block">
-            {product.weight_grams ? `GRAMAJ ${product.weight_grams}G` : "PREȚ"}
-          </span>
-          <span className="font-nunito font-black text-2xl text-[#332420]">
-            {product.price} <span className="text-sm font-bold">LEI</span>
-          </span>
-        </div>
+              <div>
+                <label className="block font-nunito font-extrabold tracking-wide text-sm mb-1">
+                  NOTĂ PENTRU BUCĂTĂRIE:
+                </label>
+                <input
+                  type="text"
+                  value={itemNote}
+                  onChange={(e) => setItemNote(e.target.value)}
+                  placeholder="Ex: bine făcut, sosul separat..."
+                  className="w-full border-2 border-[#332420] rounded-lg p-2.5 bg-white font-nunito font-semibold text-sm"
+                />
+              </div>
+            </div>
+          </div>
 
-        <div className="flex items-center gap-2">
-          {onCustomize && (
+          <div className="shrink-0 flex items-center justify-between gap-3 p-4 border-t-4 border-[#332420] bg-[#F5E6CC]">
+            <div className="flex items-center gap-3 bg-white border-2 border-[#332420] rounded-lg px-3 py-1.5">
+              <button
+                type="button"
+                aria-label="Scade cantitatea"
+                onClick={() => setItemQty(Math.max(1, itemQty - 1))}
+                className="font-mono font-black text-lg px-2"
+              >
+                −
+              </button>
+              <span className="font-mono font-bold text-base">{itemQty}</span>
+              <button
+                type="button"
+                aria-label="Crește cantitatea"
+                onClick={() => setItemQty(itemQty + 1)}
+                className="font-mono font-black text-lg px-2"
+              >
+                +
+              </button>
+            </div>
+
             <button
               type="button"
-              onClick={onCustomize}
-              className="bg-[#F5E6CC] text-[#332420] border-2 border-[#332420] px-3 py-2.5 rounded-lg font-bebas text-base flex items-center gap-1 hover:bg-[#332420] hover:text-[#F5E6CC] transition-colors"
-              title="Personalizează ingredientele"
+              onClick={handleConfirm}
+              className="bg-[#790D20] text-white font-bebas text-2xl px-5 py-3 rounded-lg border-2 border-[#332420] shadow-[3px_3px_0px_0px_#332420] hover:bg-[#332420] transition-all whitespace-nowrap"
             >
-              <SlidersHorizontal className="w-4 h-4"/>
-              <span>EXTRA</span>
+              ADAUGĂ ·{" "}
+              {formatLei(
+                (product.price + selectedModifiers.reduce((sum, m) => sum + m.price, 0)) * itemQty,
+              )}
             </button>
-          )}
-
-          <button
-            type="button"
-            onClick={onAdd}
-            className="bg-[#790D20] text-[#F5E6CC] border-2 border-[#332420] px-4 py-2.5 rounded-lg font-bebas text-lg flex items-center gap-1.5 shadow-[2px_2px_0px_0px_#332420] hover:bg-[#332420] active:translate-y-[1px] transition-all"
-          >
-            <Plus className="w-5 h-5 stroke-[3]"/>
-            <span>ADAUGĂ</span>
-          </button>
+          </div>
         </div>
       </div>
-    </div>
   );
 }
