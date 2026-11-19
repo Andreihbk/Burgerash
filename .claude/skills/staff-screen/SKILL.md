@@ -16,7 +16,7 @@ Do not invent statuses; if one is missing, propose a schema change and ask.
 4. New order -> visible alert (and sound) on kitchen and dispatch.
 5. Show order number (BRG-XXXX), age of the order (live timer), items with modifiers, notes, cutlery, delivery/pickup.
 6. Touch-first: large targets, readable at arm's length on a tablet; /rider is phone-first.
-7. Brand tokens only (#790D20, #F5E6CC, #332420; Eatvetica / Bebas Neue / Roboto Mono). No new colors.
+7. Brand tokens only (#790D20, #F5E6CC, #332420; Nunito 900 display / Nunito body / Roboto Mono accents). No new colors.
 8. Staff screens must keep working if Ebriza is down; never block on Ebriza calls in the UI.
 9. Auth: leave a clear TODO guard until Supabase Auth is added (plan task 4.1). Do not ship without it.
 

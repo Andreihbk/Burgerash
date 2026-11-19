@@ -1,3 +1,6 @@
+-- !!! WARNING: Do not re-run on the live DB; use migrations (supabase/migrations).
+-- !!! Re-running this file re-creates the open "Public access" policies.
+
 -- ==========================================
 -- BURGERASH SUPABASE SCHEMA + REALTIME
 -- ==========================================

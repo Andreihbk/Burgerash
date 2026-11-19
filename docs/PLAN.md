@@ -131,7 +131,7 @@ Definition of done for every task: `npm run build` + `npm run lint` pass.
 - [x] L.0 TODO staff auth + RLS: /kitchen (and later /dispatch /rider /admin) are open to anyone with the URL,
       and RLS is `using (true)` on orders (anyone with the anon key can read/update orders). Add Supabase Auth
       + staff-only policies (tasks 4.1, 4.2). Do not launch without it.
-- [ ] L.0b Replace the TEMPORARY password gate (`STAFF_PASSWORD` env var, `src/proxy.ts`, `/staff-login`,
+- [x] L.0b Replace the TEMPORARY password gate (`STAFF_PASSWORD` env var, `src/proxy.ts`, `/staff-login`,
       `/api/staff-login`, `src/lib/staff-auth.ts`) with Supabase Auth + RLS. The gate only hides the /kitchen
       page: the anon key can still read/update `orders` directly until RLS is real. Gate covers /kitchen only;
       extend the `proxy.ts` matcher to /dispatch /rider /admin when they are built. Set STAFF_PASSWORD in
@@ -157,10 +157,9 @@ Definition of done for every task: `npm run build` + `npm run lint` pass.
     full navigation to /staff/login.
   - NOTE: "authenticated = staff" only holds while sign-ups AND anonymous sign-ins are OFF in Supabase Auth.
     If we add customer accounts later (loyalty), policies must check a staff table instead of the role.
-- [x] L.1 Opening hours + open/closed badge (block or warn on orders when closed)
+- [x] L.7 Opening hours + open/closed badge (block or warn on orders when closed)
   - Hours live in src/lib/hours.ts only; server rejects closed orders (403). TODO: set real CONTACT.phone / CONTACT.address there (hidden on the site until set).
-- [ ] L.2 Allergens per product (shown on cards / product detail)
-- [x] L.3 Order status page via secret link
+- [x] L.8 Order status page via secret link
   - Part A done (code): migration `20261119000000_order_public_token.sql` (YOU must run it in Supabase before deploying), `/comanda/[token]` server page (service_role lookup, no phone/address/rider shown, noindex, auto-refresh 20s), `public_token` returned by `/api/orders`. Part B done: "URMĂREȘTE COMANDA" button on the cart success screen, last order saved in localStorage (`src/lib/last-order.ts`), small "COMANDA TA" link in SiteHeader until the order is delivered/canceled (status page clears it).
 - [ ] L.4 Delivery zone (check address before accepting delivery orders)
 - [ ] L.5 Legal pages: terms, GDPR privacy, ANPC links, company details
