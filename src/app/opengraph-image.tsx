@@ -1,103 +1,67 @@
 import { ImageResponse } from "next/og";
+import { SITE_NAME, SITE_TAGLINE } from "@/lib/site";
 
-export const alt = "Burgerash: Nu facem medium. Facem crustă.";
+export const alt = `${SITE_NAME}: ${SITE_TAGLINE}`;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
+// Brand tokens only: full logo (icon + wordmark + tagline, see BrandLogo.tsx) in wine on sand.
 const WINE = "#790D20";
 const SAND = "#F5E6CC";
-const CHARCOAL = "#332420";
 
-// Bebas Neue for the image text; falls back to the default font if the download fails.
-async function loadBebas(): Promise<ArrayBuffer | null> {
+type OgFont = { name: string; data: ArrayBuffer; weight: 700 | 900; style: "normal" };
+
+// Nunito (the logo's font) at 700 and 900; falls back to the default font if the download fails.
+async function loadNunito(): Promise<OgFont[]> {
   try {
-    const css = await (await fetch("https://fonts.googleapis.com/css2?family=Bebas+Neue")).text();
-    const url = css.match(/src: url\((.+?)\) format\('(?:opentype|truetype)'\)/)?.[1];
-    return url ? await (await fetch(url)).arrayBuffer() : null;
+    const css = await (await fetch("https://fonts.googleapis.com/css2?family=Nunito:wght@700;900")).text();
+    const blocks = css.split("@font-face").slice(1);
+    const fonts: OgFont[] = [];
+    for (const block of blocks) {
+      const weight = Number(block.match(/font-weight:\s*(\d+)/)?.[1]);
+      const url = block.match(/src: url\((.+?)\) format\('(?:opentype|truetype)'\)/)?.[1];
+      if ((weight === 700 || weight === 900) && url && !fonts.some((f) => f.weight === weight)) {
+        fonts.push({ name: "Nunito", data: await (await fetch(url)).arrayBuffer(), weight, style: "normal" });
+      }
+    }
+    return fonts;
   } catch {
-    return null;
+    return [];
   }
 }
 
-const MENU: [string, string][] = [
-  ["CLASIC", "36"],
-  ["HOT BOY", "39"],
-  ["DOUBLE", "46"],
-  ["CRISPY", "38"],
-  ["HOT HONEY", "38"],
-];
-
-const STICKERS = [
-  { label: "CLASIC", bg: "#0B391C", fg: SAND, x: 0, y: 70, r: -10 },
-  { label: "DOUBLE", bg: "#6D050A", fg: SAND, x: 170, y: 0, r: 8 },
-  { label: "HOT BOY", bg: "#B50711", fg: SAND, x: 330, y: 90, r: -4 },
-];
-
 export default async function Image() {
-  const font = await loadBebas();
-  const fonts = font ? [{ name: "Bebas", data: font, style: "normal" as const, weight: 400 as const }] : undefined;
-  const family = font ? "Bebas" : "sans-serif";
+  const fonts = await loadNunito();
+  const family = fonts.length ? "Nunito" : "sans-serif";
 
   return new ImageResponse(
     (
-      <div style={{ width: "100%", height: "100%", display: "flex", background: SAND, fontFamily: family, padding: 48 }}>
-        <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", width: 520, color: CHARCOAL }}>
-          <div style={{ display: "flex", fontSize: 40, color: WINE, letterSpacing: 4 }}>BURGERASH</div>
-          <div style={{ display: "flex", fontSize: 118, lineHeight: 0.92, marginTop: 12 }}>NU FACEM MEDIUM.</div>
-          <div style={{ display: "flex", fontSize: 118, lineHeight: 0.92, color: WINE }}>FACEM CRUSTĂ.</div>
+      <div
+        style={{
+          width: "100%",
+          height: "100%",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          background: SAND,
+          color: WINE,
+          fontFamily: family,
+        }}
+      >
+        <svg width="198" height="220" viewBox="0 0 44 49" fill="none" stroke={WINE} strokeWidth="3.4" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M3 22 C3 11 11 3 22 3 C33 3 41 11 41 22 Z" />
+          <path d="M27 9 C32 10 35 13 36 18" />
+          <rect x="3" y="27" width="38" height="5" rx="2" />
+          <path d="M3 37 H41 V40 A6 6 0 0 1 35 46 H9 A6 6 0 0 1 3 40 Z" />
+        </svg>
+        <div style={{ display: "flex", fontSize: 190, fontWeight: 900, lineHeight: 1, marginTop: 8 }}>burgerash</div>
+        <div style={{ display: "flex", fontSize: 40, fontWeight: 700, letterSpacing: 14, marginTop: 14 }}>
+          HAND CRAFTED BURGERS
         </div>
-
-        <div style={{ display: "flex", position: "relative", flex: 1, justifyContent: "flex-end", alignItems: "center" }}>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              width: 470,
-              background: WINE,
-              border: `6px solid ${CHARCOAL}`,
-              borderRadius: 16,
-              padding: 18,
-              boxShadow: `12px 12px 0 ${CHARCOAL}`,
-            }}
-          >
-            <div style={{ display: "flex", flexDirection: "column", background: SAND, borderRadius: 8, padding: "26px 30px", color: WINE }}>
-              <div style={{ display: "flex", height: 70 }} />
-              {MENU.map(([name, price]) => (
-                <div key={name} style={{ display: "flex", justifyContent: "space-between", fontSize: 38, lineHeight: 1.3 }}>
-                  <span>{name}</span>
-                  <span>{price} LEI</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {STICKERS.map((s) => (
-            <div
-              key={s.label}
-              style={{
-                position: "absolute",
-                left: s.x - 40,
-                top: s.y - 20,
-                width: 170,
-                height: 170,
-                borderRadius: 85,
-                background: s.bg,
-                border: `6px solid ${SAND}`,
-                boxShadow: `6px 6px 0 ${CHARCOAL}`,
-                color: s.fg,
-                fontSize: 38,
-                alignItems: "center",
-                justifyContent: "center",
-                display: "flex",
-                transform: `rotate(${s.r}deg)`,
-              }}
-            >
-              {s.label}
-            </div>
-          ))}
-        </div>
+        <div style={{ display: "flex", fontSize: 28, fontWeight: 700, letterSpacing: 2, marginTop: 44 }}>burgerash.ro</div>
       </div>
     ),
-    { ...size, fonts },
+    { ...size, fonts: fonts.length ? fonts : undefined },
   );
 }
