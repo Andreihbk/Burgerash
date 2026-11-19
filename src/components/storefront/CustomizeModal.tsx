@@ -5,6 +5,7 @@ import { INITIAL_MODIFIERS } from "@/lib/catalog";
 import { useCartStore } from "@/store/cartStore";
 import { useUiStore } from "@/store/uiStore";
 import { formatLei } from "@/lib/format";
+import { isOrderingEnabled } from "@/lib/ordering";
 import { useIsSoldOut } from "@/lib/useSoldOut";
 import { BurgerStamp } from "../BurgerStamp";
 import type { OrderItemModifier, Product } from "@/types/database";
@@ -29,7 +30,7 @@ export default function CustomizeModal({ product }: { product: Product }) {
   const soldOut = useIsSoldOut(product.id);
 
   const handleConfirm = () => {
-    if (soldOut) return;
+    if (soldOut || !isOrderingEnabled()) return;
     addItem(product, selectedModifiers, itemNote, itemQty);
     notifyAdded(product.name);
     closeCustomize();
@@ -203,7 +204,7 @@ export default function CustomizeModal({ product }: { product: Product }) {
             <button
               type="button"
               onClick={handleConfirm}
-              disabled={soldOut}
+              disabled={soldOut || !isOrderingEnabled()}
               className="bg-[#790D20] text-white font-bebas text-2xl px-5 py-3 rounded-lg border-2 border-[#332420] shadow-[3px_3px_0px_0px_#332420] hover:bg-[#332420] transition-all whitespace-nowrap disabled:bg-[#F5E6CC] disabled:text-[#790D20] disabled:border-dashed disabled:border-[#790D20] disabled:shadow-none"
             >
               {soldOut ? (

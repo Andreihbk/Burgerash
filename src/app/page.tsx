@@ -1,6 +1,7 @@
 import SiteHeader from "@/components/storefront/SiteHeader";
 import HeroBoard from "@/components/storefront/HeroBoard";
 import CategoryBar from "@/components/storefront/CategoryBar";
+import OrderingBanner from "@/components/storefront/OrderingBanner";
 import TodayStatus from "@/components/storefront/TodayStatus";
 import MenuSections from "@/components/storefront/MenuSections";
 import LocationSection from "@/components/storefront/LocationSection";
@@ -25,6 +26,7 @@ export default function Home() {
         <CategoryBar />
 
         <main className="max-w-6xl mx-auto px-4 pt-6 pb-10">
+          <OrderingBanner />
           <TodayStatus />
 
           <div id={MENU_TOP_ID} className="mb-8">

@@ -1,12 +1,11 @@
 // Public site identity for SEO (metadata, robots, sitemap, JSON-LD).
-// Set NEXT_PUBLIC_SITE_URL in Vercel once the domain is known; until then the Vercel production URL is used.
+// Canonical domain is https://www.burgerash.ro. NEXT_PUBLIC_SITE_URL may override it (e.g. staging).
+
+const DEFAULT_SITE_URL = "https://www.burgerash.ro";
 
 function resolveSiteUrl(): string {
   const explicit = process.env.NEXT_PUBLIC_SITE_URL?.trim();
-  if (explicit) return explicit.replace(/\/+$/, "");
-  const vercel = process.env.VERCEL_PROJECT_PRODUCTION_URL?.trim();
-  if (vercel) return `https://${vercel}`;
-  return "http://localhost:3000";
+  return (explicit || DEFAULT_SITE_URL).replace(/\/+$/, "");
 }
 
 export const SITE_URL = resolveSiteUrl();

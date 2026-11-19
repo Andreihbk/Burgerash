@@ -4,6 +4,7 @@ import { priceOrder, PricingError, type RequestedItem } from "@/lib/pricing";
 import { normalizeRoPhone, PHONE_ERROR } from "@/lib/phone";
 import { EMAIL_ERROR, isValidEmail } from "@/lib/email";
 import { CLOSED_ORDER_ERROR, getStatus } from "@/lib/hours";
+import { isOrderingEnabled } from "@/lib/ordering";
 import { syncOrderToEbriza } from "@/lib/ebriza-sync";
 import { getSoldOutIds, soldOutMessage, soldOutNames, STOCK_UNAVAILABLE_ERROR } from "@/lib/stock";
 import type { FulfillmentType, PaymentMethod } from "@/types/database";
@@ -20,6 +21,11 @@ function badRequest(message: string) {
 }
 
 export async function POST(req: Request) {
+  // Pre-launch switch: checked first so nothing else (DB, stock, Ebriza) is touched while closed.
+  if (!isOrderingEnabled()) {
+    return NextResponse.json({ error: "ordering_closed" }, { status: 503 });
+  }
+
   if (!isSupabaseAdminConfigured) {
     return NextResponse.json({ error: "Comenzile nu sunt disponibile momentan." }, { status: 503 });
   }

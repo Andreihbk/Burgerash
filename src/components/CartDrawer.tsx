@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useCartStore } from "@/store/cartStore";
 import { normalizeRoPhone, PHONE_ERROR } from "@/lib/phone";
+import { isOrderingEnabled, ORDERING_CLOSED_BANNER } from "@/lib/ordering";
 import { useOpeningStatus } from "@/lib/useOpeningStatus";
 import { useSoldOutIds } from "@/lib/useSoldOut";
 import { useCartHydrated } from "@/store/useCartHydrated";
@@ -51,6 +52,7 @@ export default function CartDrawer() {
   const [emailError, setEmailError] = useState("");
   const hydrated = useCartHydrated();
   const openingStatus = useOpeningStatus();
+  const orderingOff = !isOrderingEnabled();
   const isClosed = openingStatus !== null && !openingStatus.open;
   const soldOutIds = useSoldOutIds();
   const hasSoldOut = items.some((i) => soldOutIds.has(i.product.id));
@@ -63,7 +65,7 @@ export default function CartDrawer() {
 
   const handleCheckoutSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (isClosed || hasSoldOut) return;
+    if (orderingOff || isClosed || hasSoldOut) return;
     const phone = normalizeRoPhone(formData.phone);
     if (!phone) {
       setPhoneError(PHONE_ERROR);
@@ -181,7 +183,15 @@ export default function CartDrawer() {
               </div>
             ) : step === "cart" ? (
               <div>
-                {isClosed && openingStatus && (
+                {orderingOff && (
+                  <div
+                    role="status"
+                    className="mb-4 rounded-lg border-2 border-brand-red bg-brand-red/10 p-3 font-nunito text-sm font-bold text-brand-dark"
+                  >
+                    {ORDERING_CLOSED_BANNER}
+                  </div>
+                )}
+                {!orderingOff && isClosed && openingStatus && (
                   <div
                     role="status"
                     className="mb-4 rounded-lg border-2 border-brand-red bg-brand-red/10 p-3 font-nunito text-sm font-bold text-brand-dark"
@@ -434,10 +444,10 @@ export default function CartDrawer() {
 
                 <button
                   type="submit"
-                  disabled={isSubmitting || isClosed || hasSoldOut}
+                  disabled={isSubmitting || orderingOff || isClosed || hasSoldOut}
                   className="w-full bg-brand-red text-white font-bebas text-2xl py-4 rounded-lg shadow-[4px_4px_0px_0px_#121212] hover:bg-brand-dark transition-all mt-6 disabled:opacity-50"
                 >
-                  {isClosed ? "Suntem închiși acum" : hasSoldOut ? "Produs epuizat în coș" : isSubmitting ? "SE TRIMITE..." : `PLASEAZĂ COMANDA · ${formatLei(grandTotal)}`}
+                  {orderingOff ? "Comenzile pornesc la lansare" : isClosed ? "Suntem închiși acum" : hasSoldOut ? "Produs epuizat în coș" : isSubmitting ? "SE TRIMITE..." : `PLASEAZĂ COMANDA · ${formatLei(grandTotal)}`}
                 </button>
               </form>
             )}
@@ -474,7 +484,7 @@ export default function CartDrawer() {
 
               <button
                 onClick={() => setStep("checkout")}
-                disabled={hasSoldOut}
+                disabled={hasSoldOut || orderingOff}
                 className="w-full disabled:opacity-50 bg-brand-dark text-brand-paper font-bebas text-2xl py-4 rounded-lg shadow-[4px_4px_0px_0px_#C5081F] hover:bg-brand-red transition-all flex items-center justify-center gap-2 mt-4"
               >
                 <span>CONTINUĂ LA CHECKOUT</span>
