@@ -72,6 +72,7 @@ export interface OrderItem {
 export interface Order {
   id: string;
   order_number: string; // Ex: "BRG-1042"
+  public_token: string; // Secret for the customer status link /comanda/[token]
   status: OrderStatus;
   fulfillment_type: FulfillmentType;
   payment_method: PaymentMethod;

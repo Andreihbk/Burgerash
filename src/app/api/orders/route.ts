@@ -134,6 +134,7 @@ export async function POST(req: Request) {
     success: true,
     order_id: created.id,
     order_number: created.order_number,
+    public_token: created.public_token,
     ...totals,
   });
 }
