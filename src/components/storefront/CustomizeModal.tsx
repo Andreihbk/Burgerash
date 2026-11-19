@@ -1,72 +1,16 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useEffect, useRef, useState } from "react";
 import { INITIAL_MODIFIERS } from "@/lib/catalog";
 import { useCartStore } from "@/store/cartStore";
 import { useUiStore } from "@/store/uiStore";
 import { formatLei } from "@/lib/format";
-import { BurgerStamp } from "./BurgerStamp";
-import CartDrawer from "./CartDrawer";
-import TodayAtBurgerash from "./TodayAtBurgerash";
-import { OrderItemModifier, Product } from "@/types/database";
+import { BurgerStamp } from "../BurgerStamp";
+import type { OrderItemModifier, Product } from "@/types/database";
 import { X, Check } from "lucide-react";
-import SiteHeader from "./storefront/SiteHeader";
-import HeroBoard from "./storefront/HeroBoard";
-import CategoryBar from "./storefront/CategoryBar";
-import AddedToast from "./storefront/AddedToast";
-import MobileCartBar from "./storefront/MobileCartBar";
-import { MENU_TOP_ID } from "./storefront/layout";
-import { useStorefrontStatus } from "./storefront/useStorefrontStatus";
 
-// P.4a: header, hero, category bar, toast and mobile cart bar are islands in ./storefront/.
-// P.4b moves CustomizeModal and the dynamic CartDrawer out, then deletes this file.
-export default function Storefront({
-  menu,
-  location,
-  footer,
-}: {
-  menu: ReactNode;
-  location: ReactNode;
-  footer: ReactNode;
-}) {
-  const customizing = useUiStore((state) => state.customizing);
-  const status = useStorefrontStatus();
-
-  return (
-    <div className="min-h-screen bg-[#F5E6CC] text-[#332420] font-nunito pb-24">
-      <SiteHeader />
-      <HeroBoard />
-      <CategoryBar />
-
-      {/* FULL MENU: one section per category */}
-      <main className="max-w-6xl mx-auto px-4 pt-6 pb-10">
-        <TodayAtBurgerash status={status} />
-
-        <div id={MENU_TOP_ID} className="mb-8">
-          <p className="font-mono text-xs font-bold tracking-widest text-[#790D20]">COMANDĂ ONLINE</p>
-          <h2 className="font-bebas text-5xl sm:text-6xl tracking-wide text-[#332420] leading-none">
-            MENIU
-          </h2>
-        </div>
-
-        {menu}
-
-        {location}
-      </main>
-
-      {customizing && <CustomizeModal key={customizing.id} product={customizing} />}
-
-      {footer}
-
-      <AddedToast />
-      <MobileCartBar />
-      <CartDrawer />
-    </div>
-  );
-}
-
-// Customize modal. Keyed by product id by the parent, so its state resets on every open.
-function CustomizeModal({ product }: { product: Product }) {
+// Customize modal. Keyed by product id by the host, so its state resets on every open.
+export default function CustomizeModal({ product }: { product: Product }) {
   const [selectedModifiers, setSelectedModifiers] = useState<OrderItemModifier[]>([]);
   const [itemNote, setItemNote] = useState("");
   const [itemQty, setItemQty] = useState(1);
@@ -87,16 +31,69 @@ function CustomizeModal({ product }: { product: Product }) {
     closeCustomize();
   };
 
+  const dialogRef = useRef<HTMLDivElement>(null);
+
+  // Dialog a11y: Escape closes, Tab stays inside, focus moves in on open and returns to the opener on close,
+  // page scroll is locked while open.
+  useEffect(() => {
+    const opener = document.activeElement as HTMLElement | null;
+    const dialog = dialogRef.current;
+    const focusables = () =>
+      Array.from(
+        dialog?.querySelectorAll<HTMLElement>('button, input, [href], [tabindex]:not([tabindex="-1"])') ?? [],
+      ).filter((el) => !el.hasAttribute("disabled"));
+    focusables()[0]?.focus();
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        closeCustomize();
+        return;
+      }
+      if (e.key !== "Tab") return;
+      const els = focusables();
+      if (els.length === 0) return;
+      const first = els[0];
+      const last = els[els.length - 1];
+      const active = document.activeElement;
+      if (e.shiftKey && (active === first || !dialog?.contains(active))) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && (active === last || !dialog?.contains(active))) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      document.body.style.overflow = prevOverflow;
+      opener?.focus?.();
+    };
+  }, [closeCustomize]);
+
   return (
-  <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-        <div className="bg-[#F5E6CC] border-4 border-[#332420] rounded-xl max-w-lg w-full shadow-[8px_8px_0px_0px_#332420] max-h-[90vh] flex flex-col overflow-hidden">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+      onMouseDown={(e) => {
+        if (e.target === e.currentTarget) closeCustomize();
+      }}
+    >
+        <div
+          ref={dialogRef}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="customize-title"
+          className="bg-[#F5E6CC] border-4 border-[#332420] rounded-xl max-w-lg w-full shadow-[8px_8px_0px_0px_#332420] max-h-[90vh] flex flex-col overflow-hidden">
           <div className="brand-scroll flex-1 min-h-0 overflow-y-auto p-6">
             <div className="flex justify-between items-start border-b-2 border-[#332420] pb-3 mb-4">
               <div>
                 <span className="font-mono text-xs text-[#790D20] font-bold">
                   PERSONALIZEAZĂ BURGERUL
                 </span>
-                <h3 className="font-bebas text-4xl text-[#332420]">
+                <h3 id="customize-title" className="font-bebas text-4xl text-[#332420]">
                   {product.name}
                 </h3>
               </div>

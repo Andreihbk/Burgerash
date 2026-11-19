@@ -56,9 +56,11 @@ Definition of done for every task: `npm run build` + `npm run lint` pass.
       status line), CategoryBar (scroll spy), AddedToast, MobileCartBar. Shared: `layout.ts` (HEADER_HEIGHT, scrollToTab,
       sticky offset read from the DOM), `useStorefrontStatus`, `useCartSummary`. StoreFront.tsx now only composes them +
       CustomizeModal + CartDrawer. Build + lint pass. (Lighthouse/JS comparison is left for P.4b.)
-- [ ] P.4b Refactor 2 (part 2): CustomizeModal island (dialog a11y: Escape, focus trap/restore, aria-modal, role=dialog);
-      CartDrawer via next/dynamic on first open; delete StoreFront.tsx (page.tsx composes the islands directly).
-      Compare First Load JS + Lighthouse with the P.2 baseline (10 scripts, 607 KB raw / 185 KB gzip).
+- [x] P.4b Refactor 2 (part 2): `CustomizeModal` island (role=dialog, aria-modal, Escape, focus trap + restore, scroll lock,
+      backdrop click) loaded via next/dynamic by `CustomizeModalHost`; `CartDrawerHost` loads CartDrawer via next/dynamic on first
+      open (stays mounted after); `TodayStatus` client wrapper; StoreFront.tsx deleted, `page.tsx` composes the islands.
+      Result (`/`, production build): 10 scripts, 592 KB raw / 182 KB gzip JS (baseline 607 / 185), 6 fonts. Small gain: most
+      of the JS is shared framework + zustand + lucide. Lighthouse not run (no browser here); run it on the Vercel preview.
 
 ## Phase 1 - Ebriza adapter (works in mock mode, no credentials needed)
 - [x] 1.1 Fix `src/types/ebriza.ts` against `.claude/skills/ebriza-api/reference.md`.
