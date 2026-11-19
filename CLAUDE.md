@@ -18,7 +18,8 @@ Staff apps must keep working if Ebriza is slow or down.
 - Brand tokens are fixed: #790D20 wine, #F5E6CC sand, #332420 charcoal.
 - Product sticker accents (globals.css `--color-sticker-*`, each used ONLY on that product's sticker):
   classic #0B391C, double #6D050A, cheesy #EE9E23 (wine text), hot-boy #B50711,
-  hot-honey #650329, chicken #063640. These + the 3 brand tokens are the ONLY allowed colors.
+  hot-honey #650329, chicken #063640. Drink stickers (same rule): cola #E61A27, fanta #F58220,
+  sprite #008B47, water #2E7DBA. These + the 3 brand tokens are the ONLY allowed colors.
 - Fonts (latin-ext subset): Bebas Neue for display/headings, Nunito for body and form labels,
   Roboto Mono only for small accents. No other fonts.
 - Product visuals are SVG stickers (BurgerStamp.tsx), not photos.

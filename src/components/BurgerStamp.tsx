@@ -26,10 +26,16 @@ const PRODUCT_STICKERS: Record<string, StickerStyle> = {
   "prod-crispy-chicken": { lines: ["CHICKEN", "BURGER"], accent: "var(--color-sticker-chicken)" },
 };
 
-// Simple stickers (no artwork): sides use wine, drinks use charcoal.
+// Simple stickers (no artwork): sides use wine; each drink has its own accent.
 const SIMPLE_ACCENT_BY_CATEGORY: Record<string, string> = {
   "cat-sides": WINE,
   "cat-drinks": CHARCOAL,
+};
+const SIMPLE_STICKERS: Record<string, { accent: string; ink?: string }> = {
+  "prod-cola": { accent: "var(--color-sticker-cola)" },
+  "prod-fanta": { accent: "var(--color-sticker-fanta)" },
+  "prod-sprite": { accent: "var(--color-sticker-sprite)" },
+  "prod-water": { accent: "var(--color-sticker-water)" },
 };
 
 // Bebas Neue caps are roughly 0.36em wide; keep names inside a ~150-unit band.
@@ -49,8 +55,10 @@ export function BurgerStamp({ product, className = "" }: BurgerStampProps) {
 
   const style = PRODUCT_STICKERS[product.id];
   const isSimple = !style;
-  const accent = style?.accent ?? SIMPLE_ACCENT_BY_CATEGORY[product.category_id] ?? WINE;
-  const ink = style?.ink ?? SAND;
+  const simple = SIMPLE_STICKERS[product.id];
+  const accent =
+    style?.accent ?? simple?.accent ?? SIMPLE_ACCENT_BY_CATEGORY[product.category_id] ?? WINE;
+  const ink = style?.ink ?? simple?.ink ?? SAND;
   const lines = style?.lines ?? [product.name.toUpperCase()];
   const label = isSimple ? product.name : `${product.name}, ${product.weight_grams ?? ""} g`;
 

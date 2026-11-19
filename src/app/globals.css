@@ -27,6 +27,10 @@
   --color-sticker-hot-boy: #B50711;   /* HOT BOY   - chili red */
   --color-sticker-hot-honey: #650329; /* HOT HONEY - plum */
   --color-sticker-chicken: #063640;   /* CHICKEN BURGER - deep teal */
+  --color-sticker-cola: #E61A27;      /* COLA   - cola red */
+  --color-sticker-fanta: #F58220;     /* FANTA  - orange */
+  --color-sticker-sprite: #008B47;    /* SPRITE - green */
+  --color-sticker-water: #2E7DBA;     /* WATER  - blue */
 }
 
 /* Font mappings: Bebas Neue = display/headings, Nunito = body/labels, Roboto Mono = small accents.
