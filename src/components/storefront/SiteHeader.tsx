@@ -21,11 +21,8 @@ export default function SiteHeader() {
       style={{ height: HEADER_HEIGHT }}
       className="sticky top-0 z-40 bg-[#790D20] text-[#F5E6CC] border-b-2 border-[#332420] px-4 sm:px-6 flex items-center justify-between gap-3 shadow-md"
     >
-      <a href="#" className="flex flex-col justify-center min-w-0" aria-label="burgerash, începutul paginii">
-        <BrandLogo className="h-8 w-auto text-[#F5E6CC]" />
-        <p className="hidden sm:block text-[10px] tracking-widest font-mono text-[#F5E6CC]/70 mt-0.5">
-          HAND CRAFTED SMASH BURGERS
-        </p>
+      <a href="#" className="flex items-center min-w-0" aria-label="burgerash, începutul paginii">
+        <BrandLogo variant="horizontal" tone="sand" className="h-10 w-auto" />
       </a>
 
       <div className="flex items-center gap-4">

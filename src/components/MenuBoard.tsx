@@ -63,10 +63,7 @@ export default function MenuBoard({
           {/* Header Panou */}
           <div className="text-center mb-[1.5em]">
             <div className="inline-flex flex-col items-center">
-              <BrandLogo layout="stacked" className="h-[5em] w-auto text-[#790D20]" />
-              <p className="font-nunito font-bold text-[0.75em] tracking-widest text-[#332420]">
-                hand crafted burgers
-              </p>
+              <BrandLogo variant="full" tone="wine" className="h-[7em] w-auto" />
             </div>
           </div>
 
