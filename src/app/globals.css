@@ -33,17 +33,17 @@
   --color-sticker-water: #2E7DBA;     /* WATER  - blue */
 }
 
-/* Font mappings: Nunito 900 = display/headings (temporary, until Eatvetica is licensed; class name font-bebas kept so every use switches here), Nunito = body/labels, Roboto Mono = small accents.
+/* Font mappings: Eatvetica = display/headings (class name font-bebas kept so every use switches here; Nunito is the glyph fallback), Nunito = body/labels/digits, Roboto Mono = small accents.
    `inline` is required: next/font defines --font-* on <body>, so they must resolve per element, not on :root. */
 @theme inline {
-  --font-bebas: var(--font-nunito), system-ui, sans-serif;
+  --font-bebas: var(--font-eatvetica), var(--font-nunito), system-ui, sans-serif;
   --font-mono: var(--font-roboto-mono), monospace;
   --font-nunito: var(--font-nunito), system-ui, sans-serif;
 }
 
-/* Display font = Nunito Black (see token above) */
+/* Display font = Eatvetica (single weight: no faux bold) */
 .font-bebas {
-  font-weight: 900;
+  font-weight: 400;
 }
 
 /* Reset and Global Styles */

@@ -20,8 +20,9 @@ Staff apps must keep working if Ebriza is slow or down.
   classic #0B391C, hot-boy #B50711, double #6D050A, crispy #063640, hot-honey #650329,
   crispy-bacon #EE9E23 (wine text). Drink stickers (same rule): cola #E61A27, fanta #F58220,
   sprite #008B47, water #2E7DBA. These + the 3 brand tokens are the ONLY allowed colors.
-- Fonts (latin-ext subset): Nunito weight 900 for display/headings (temporary, until Eatvetica is licensed; Titan One/Lilita One lack Ș/Ț), Nunito regular for body and form labels,
-  Roboto Mono only for small accents. No other fonts.
+- Fonts: Eatvetica for display/headings (designer's written permission), Nunito for body and all digits,
+  Roboto Mono for small accents. No other fonts. Eatvetica has no Romanian diacritics: keep stripDiacritics
+  on display text and digits in Nunito (`<Display>`).
 - Product visuals are SVG stickers (BurgerStamp.tsx), not photos.
 - Product names follow the stickers, in Romanian, everywhere (catalog, cards, cart, stickers):
   CLASIC, HOT BOY, DOUBLE, CRISPY, HOT HONEY, CRISPY BACON. Fries, Chips, Nuggets, Sauces and drinks
@@ -29,7 +30,7 @@ Staff apps must keep working if Ebriza is slow or down.
   for names, weights, prices and descriptions.
 - No /events page.
 - Order numbers: BRG-XXXX. Free delivery over 120 RON.
-- Secrets only in env vars (see .env.example). NEVER commit keys. The repo is PUBLIC.
+- Secrets only in env vars (see .env.example). NEVER commit keys. The repo is PRIVATE now, but treat every secret rule as unchanged.
 - Ebriza credentials are server-side only (no NEXT_PUBLIC_ prefix).
 - Naming: PascalCase components, camelCase/kebab-case utilities.
 

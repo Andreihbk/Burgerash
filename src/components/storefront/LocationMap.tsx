@@ -4,8 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import type { GeoJSONSource, Map as MapLibreMap } from "maplibre-gl";
 import { DELIVERY_RADIUS_KM, SITE_COORDS } from "@/lib/site";
 
-// TEMPORARY: radius slider is only for tuning the circle locally (NEXT_PUBLIC_FONT_PREVIEW=true).
-const SHOW_SLIDER = process.env.NEXT_PUBLIC_FONT_PREVIEW === "true";
+// TEMPORARY: radius slider is only for tuning the circle locally (NEXT_PUBLIC_MAP_TUNING=true).
+const SHOW_SLIDER = process.env.NEXT_PUBLIC_MAP_TUNING === "true";
 
 const STYLE_URL = "https://tiles.openfreemap.org/styles/positron";
 const ATTRIBUTION = "© OpenFreeMap © OpenMapTiles © OpenStreetMap contributors";
