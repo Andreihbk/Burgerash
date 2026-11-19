@@ -1,12 +1,13 @@
 // Order pricing shared by the cart (display) and /api/orders (source of truth).
 // The server ALWAYS recalculates from catalog.ts and ignores client prices.
 import { INITIAL_MODIFIERS, INITIAL_PRODUCTS, modifierAppliesToProduct } from "@/lib/catalog";
+import { ORDER_LIMITS } from "@/lib/order-input";
 import type { FulfillmentType, OrderItemModifier } from "@/types/database";
 
 export const DELIVERY_FEE_STANDARD = 12.0;
 export const FREE_DELIVERY_THRESHOLD = 120.0;
 
-const MAX_QUANTITY_PER_LINE = 50;
+const MAX_QUANTITY_PER_LINE = ORDER_LIMITS.maxQuantityPerLine;
 const MAX_TIP = 500;
 const MAX_CUTLERY_SETS = 20;
 

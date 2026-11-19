@@ -1,25 +1,21 @@
 import { after, NextResponse } from "next/server";
 import { isSupabaseAdminConfigured, supabaseAdmin } from "@/lib/supabase-admin";
-import { priceOrder, PricingError, type RequestedItem } from "@/lib/pricing";
-import { normalizeRoPhone, PHONE_ERROR } from "@/lib/phone";
-import { EMAIL_ERROR, isValidEmail } from "@/lib/email";
+import { priceOrder, PricingError } from "@/lib/pricing";
 import { CLOSED_ORDER_ERROR, getStatus } from "@/lib/hours";
 import { isOrderingEnabled } from "@/lib/ordering";
 import { syncOrderToEbriza } from "@/lib/ebriza-sync";
 import { getSoldOutIds, soldOutMessage, soldOutNames, STOCK_UNAVAILABLE_ERROR } from "@/lib/stock";
-import type { FulfillmentType, PaymentMethod } from "@/types/database";
-
-const FULFILLMENT_TYPES: FulfillmentType[] = ["delivery", "pickup"];
-const PAYMENT_METHODS: PaymentMethod[] = ["cash_on_delivery", "card_on_delivery", "online_card"];
-
-function optionalText(value: unknown, max = 500): string | null {
-  return typeof value === "string" && value.trim() ? value.trim().slice(0, max) : null;
-}
+import { checkBot, fakeOrderSuccess, TOO_FAST_ERROR } from "@/lib/bot-check";
+import { OrderInputError, parseOrderInput, type OrderInput } from "@/lib/order-input";
+import { checkOrderRateLimit, RATE_LIMIT } from "@/lib/rate-limit";
 
 function badRequest(message: string) {
   return NextResponse.json({ error: message }, { status: 400 });
 }
 
+// Order of checks (PLAN B.1): ordering switch -> honeypot/timing -> input validation (+ opening hours)
+// -> rate limit -> stock + pricing -> create_order. Cheap, DB-free checks come first, so bots and
+// bad input never touch Supabase or use up a real customer's rate-limit quota.
 export async function POST(req: Request) {
   // Pre-launch switch: checked first so nothing else (DB, stock, Ebriza) is touched while closed.
   if (!isOrderingEnabled()) {
@@ -32,51 +28,45 @@ export async function POST(req: Request) {
 
   let body: Record<string, unknown>;
   try {
-    body = await req.json();
+    const parsed: unknown = await req.json();
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) return badRequest("Cerere invalidă.");
+    body = parsed as Record<string, unknown>;
   } catch {
     return badRequest("Cerere invalidă.");
   }
 
-  const fulfillmentType = body.fulfillment_type as FulfillmentType;
-  const paymentMethod = body.payment_method as PaymentMethod;
-  if (!FULFILLMENT_TYPES.includes(fulfillmentType)) return badRequest("Tip de livrare invalid.");
-  if (!PAYMENT_METHODS.includes(paymentMethod)) return badRequest("Metodă de plată invalidă.");
+  const bot = checkBot(body);
+  if (!bot.ok) {
+    console.warn(`[orders] bot check blocked a request: ${bot.reason}`);
+    // Honeypot: the bot believes it worked; nothing is stored. Too fast: humans can simply resubmit.
+    return bot.reason === "honeypot" ? NextResponse.json(fakeOrderSuccess()) : badRequest(TOO_FAST_ERROR);
+  }
+
+  let input: OrderInput;
+  try {
+    input = parseOrderInput(body);
+  } catch (err) {
+    if (err instanceof OrderInputError) return badRequest(err.message);
+    throw err;
+  }
 
   if (!getStatus().open) {
     return NextResponse.json({ error: CLOSED_ORDER_ERROR, code: "closed" }, { status: 403 });
   }
 
-  const customerName = optionalText(body.customer_name, 120);
-  const customerPhone = optionalText(body.customer_phone, 40);
-  const deliveryAddress = optionalText(body.delivery_address);
-  if (!customerName || !customerPhone) return badRequest("Numele și telefonul sunt obligatorii.");
-  const normalizedPhone = normalizeRoPhone(customerPhone);
-  if (!normalizedPhone) return badRequest(PHONE_ERROR);
-  const customerEmail = optionalText(body.customer_email, 200);
-  if (customerEmail && !isValidEmail(customerEmail)) return badRequest(EMAIL_ERROR);
-  if (fulfillmentType === "delivery" && !deliveryAddress) return badRequest("Adresa este obligatorie.");
-
-  if (!Array.isArray(body.items)) return badRequest("Coșul este gol.");
-
-  // Only ids, quantities and notes are taken from the client; all prices come from catalog.ts.
-  const requestedItems: RequestedItem[] = body.items.map((raw: unknown) => {
-    const item = (raw ?? {}) as Record<string, unknown>;
-    const modifiers = Array.isArray(item.modifiers) ? item.modifiers : [];
-    return {
-      product_id: item.product_id,
-      quantity: item.quantity,
-      note: item.note,
-      modifier_ids: modifiers
-        .map((m) => (m && typeof m === "object" ? (m as { id?: unknown }).id : m))
-        .filter((id): id is string => typeof id === "string"),
-    };
-  });
+  const limit = await checkOrderRateLimit(req.headers);
+  if (!limit.allowed) {
+    return NextResponse.json(
+      { error: "rate_limited" },
+      { status: 429, headers: { "Retry-After": String(RATE_LIMIT.retryAfterSeconds) } },
+    );
+  }
 
   // Sold-out products (product_stock) are rejected before pricing. If the stock cannot be read we
   // fail closed: create_order needs Supabase anyway, so this adds no new failure mode.
   let soldOut: string[];
   try {
-    soldOut = soldOutNames(requestedItems.map((i) => i.product_id), await getSoldOutIds());
+    soldOut = soldOutNames(input.items.map((i) => i.product_id), await getSoldOutIds());
   } catch (err) {
     console.error("Stock check error:", err);
     return NextResponse.json({ error: STOCK_UNAVAILABLE_ERROR }, { status: 503 });
@@ -88,10 +78,10 @@ export async function POST(req: Request) {
   let priced;
   try {
     priced = priceOrder({
-      items: requestedItems,
-      fulfillmentType,
-      tipAmount: body.tip_amount,
-      cutlerySets: body.cutlery_sets,
+      items: input.items,
+      fulfillmentType: input.fulfillmentType,
+      tipAmount: input.tipAmount,
+      cutlerySets: input.cutlerySets,
     });
   } catch (err) {
     if (err instanceof PricingError) return badRequest(err.message);
@@ -99,21 +89,21 @@ export async function POST(req: Request) {
   }
 
   const { items, ...totals } = priced;
+  const order = {
+    fulfillment_type: input.fulfillmentType,
+    payment_method: input.paymentMethod,
+    customer_name: input.customerName,
+    customer_phone: input.customerPhone,
+    customer_email: input.customerEmail,
+    delivery_address: input.deliveryAddress,
+    delivery_details: input.deliveryDetails,
+    order_note: input.orderNote,
+  };
 
   // Order + items are inserted in one Postgres transaction (supabase/schema.sql: create_order).
   // Server-only service_role client: anon cannot call create_order directly (PLAN L.0, Option B).
   const { data, error } = await supabaseAdmin.rpc("create_order", {
-    p_order: {
-      fulfillment_type: fulfillmentType,
-      payment_method: paymentMethod,
-      customer_name: customerName,
-      customer_phone: normalizedPhone,
-      customer_email: customerEmail,
-      delivery_address: fulfillmentType === "delivery" ? deliveryAddress : null,
-      delivery_details: optionalText(body.delivery_details),
-      order_note: optionalText(body.order_note),
-      ...totals,
-    },
+    p_order: { ...order, ...totals },
     p_items: items,
   });
 
@@ -133,14 +123,7 @@ export async function POST(req: Request) {
       {
         id: created.id,
         order_number: created.order_number,
-        fulfillment_type: fulfillmentType,
-        payment_method: paymentMethod,
-        customer_name: customerName,
-        customer_phone: normalizedPhone,
-        customer_email: customerEmail,
-        delivery_address: fulfillmentType === "delivery" ? deliveryAddress : null,
-        delivery_details: optionalText(body.delivery_details),
-        order_note: optionalText(body.order_note),
+        ...order,
         delivery_fee: totals.delivery_fee,
         tip_amount: totals.tip_amount,
         total_amount: totals.total_amount,

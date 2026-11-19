@@ -5,7 +5,10 @@ Definition of done for every task: `npm run build` + `npm run lint` pass.
 
 ## PRE-LAUNCH BLOCKERS (owner decisions, 2026-11-19; order = priority)
 Nothing here is built yet. Do not set `NEXT_PUBLIC_ORDERING_ENABLED=true` in Production until all are done.
-1. [ ] **B.1 Rate limit + bot protection on `/api/orders`** (basic limit per IP + captcha/bot check). Model: Sonnet.
+1. [x] **B.1 Rate limit + bot protection on `/api/orders`** (basic limit per IP + captcha/bot check). Model: Sonnet.
+   - Done 2026-11-19: Supabase rate limit 5/10 min + 20/day per hashed IP (fail open), honeypot (fake success),
+     3 s minimum form time (normal 400), server-side input caps. No captcha (no new accounts).
+   - Go-live needs: run `supabase/migrations/20261122000000_order_rate_limit.sql`, set `RATE_LIMIT_SALT` in Vercel.
 2. [ ] **B.2 Legal pages** (see L.5): Terms, GDPR privacy, delivery & returns, ANPC/SOL links, company details.
    - Company data is pending from the owner: use clear placeholders (e.g. `[DENUMIRE SRL]`, `[CUI]`), never invent data.
    - Privacy must mention map tiles from OpenStreetMap and Netopia as payment processor.

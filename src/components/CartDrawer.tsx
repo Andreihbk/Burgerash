@@ -13,8 +13,16 @@ import { closedCartNotice } from "@/lib/hours";
 import { saveLastOrder } from "@/lib/last-order";
 import { X, Trash2, Plus, Minus, ShoppingBag, ArrowRight, CheckCircle2 } from "lucide-react";
 import { Display } from "@/components/Display";
+import { HONEYPOT_FIELD } from "@/lib/bot-check";
+import { ORDER_LIMITS, RATE_LIMITED_MESSAGE } from "@/lib/order-input";
 
 const ERROR_TEXT = "Nu am putut trimite comanda. Încearcă din nou în câteva secunde.";
+
+/** Error codes from /api/orders that must be shown as a sentence, not as the raw code. */
+const ERROR_CODE_TEXT: Record<string, string> = {
+  rate_limited: RATE_LIMITED_MESSAGE,
+  ordering_closed: ORDERING_CLOSED_BANNER,
+};
 
 export default function CartDrawer() {
   const {
@@ -51,6 +59,8 @@ export default function CartDrawer() {
   const [errorMessage, setErrorMessage] = useState("");
   const [phoneError, setPhoneError] = useState("");
   const [emailError, setEmailError] = useState("");
+  // When the checkout step was opened (bot timing check, see lib/bot-check.ts).
+  const [checkoutOpenedAt, setCheckoutOpenedAt] = useState<number | null>(null);
   const hydrated = useCartHydrated();
   const openingStatus = useOpeningStatus();
   const orderingOff = !isOrderingEnabled();
@@ -67,6 +77,7 @@ export default function CartDrawer() {
   const handleCheckoutSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (orderingOff || isClosed || hasSoldOut) return;
+    const honeypot = new FormData(e.currentTarget as HTMLFormElement).get(HONEYPOT_FIELD);
     const phone = normalizeRoPhone(formData.phone);
     if (!phone) {
       setPhoneError(PHONE_ERROR);
@@ -97,6 +108,8 @@ export default function CartDrawer() {
         tip_amount: tipAmount,
         total_amount: grandTotal,
         cutlery_sets: cutlerySets,
+        form_elapsed_ms: checkoutOpenedAt === null ? 0 : Date.now() - checkoutOpenedAt,
+        [HONEYPOT_FIELD]: typeof honeypot === "string" ? honeypot : "",
         items: items.map((i) => ({
           product_id: i.product.id,
           product_name: i.product.name,
@@ -116,7 +129,10 @@ export default function CartDrawer() {
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(res.status < 500 && data.error ? data.error : ERROR_TEXT);
+      if (!res.ok) {
+        const code = typeof data.error === "string" ? data.error : "";
+        throw new Error(ERROR_CODE_TEXT[code] ?? (res.status < 500 && code ? code : ERROR_TEXT));
+      }
 
       const number = data.order_number || "BRG-999";
       setOrderNumber(number);
@@ -340,12 +356,19 @@ export default function CartDrawer() {
                   </div>
                 )}
 
+                {/* Honeypot: off-screen, hidden from screen readers and keyboard. Humans leave it empty. */}
+                <div aria-hidden="true" className="absolute -left-[10000px] top-0 h-px w-px overflow-hidden">
+                  <label htmlFor={HONEYPOT_FIELD}>Lasă acest câmp gol</label>
+                  <input type="text" id={HONEYPOT_FIELD} name={HONEYPOT_FIELD} tabIndex={-1} autoComplete="off" defaultValue="" />
+                </div>
+
                 <div>
                   <label className="block font-nunito font-extrabold tracking-wide text-sm mb-1">NUME COMPLET *</label>
                   <input
                     type="text"
                     required
                     autoComplete="name"
+                    maxLength={ORDER_LIMITS.name}
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     className="w-full border-2 border-brand-dark p-2.5 rounded font-nunito font-semibold bg-white"
@@ -360,6 +383,7 @@ export default function CartDrawer() {
                     required
                     autoComplete="tel"
                     inputMode="tel"
+                    maxLength={ORDER_LIMITS.phone}
                     value={formData.phone}
                     onChange={(e) => {
                       setFormData({ ...formData, phone: e.target.value });
@@ -385,6 +409,7 @@ export default function CartDrawer() {
                   <input
                     type="email"
                     autoComplete="email"
+                    maxLength={ORDER_LIMITS.email}
                     value={formData.email}
                     onChange={(e) => {
                       setFormData({ ...formData, email: e.target.value });
@@ -413,6 +438,7 @@ export default function CartDrawer() {
                         type="text"
                         required
                         autoComplete="street-address"
+                        maxLength={ORDER_LIMITS.address}
                         value={formData.address}
                         onChange={(e) => setFormData({ ...formData, address: e.target.value })}
                         className="w-full border-2 border-brand-dark p-2.5 rounded font-nunito font-semibold bg-white"
@@ -424,6 +450,7 @@ export default function CartDrawer() {
                       <label className="block font-nunito font-extrabold tracking-wide text-sm mb-1">DETALII (Bloc, Scară, Etaj, Ap, Interfon)</label>
                       <input
                         type="text"
+                        maxLength={ORDER_LIMITS.details}
                         value={formData.details}
                         onChange={(e) => setFormData({ ...formData, details: e.target.value })}
                         className="w-full border-2 border-brand-dark p-2.5 rounded font-nunito font-semibold bg-white"
@@ -436,6 +463,7 @@ export default function CartDrawer() {
                 <div>
                   <label className="block font-nunito font-extrabold tracking-wide text-sm mb-1">OBSERVAȚII COMANDĂ</label>
                   <textarea
+                    maxLength={ORDER_LIMITS.orderNote}
                     value={formData.note}
                     onChange={(e) => setFormData({ ...formData, note: e.target.value })}
                     className="w-full border-2 border-brand-dark p-2.5 rounded font-nunito font-semibold bg-white h-20"
@@ -484,7 +512,10 @@ export default function CartDrawer() {
               </div>
 
               <button
-                onClick={() => setStep("checkout")}
+                onClick={() => {
+                  setStep("checkout");
+                  setCheckoutOpenedAt(Date.now());
+                }}
                 disabled={hasSoldOut || orderingOff}
                 className="w-full disabled:opacity-50 bg-brand-dark text-brand-paper font-bebas text-2xl py-4 rounded-lg shadow-[4px_4px_0px_0px_#C5081F] hover:bg-brand-red transition-all flex items-center justify-center gap-2 mt-4"
               >
