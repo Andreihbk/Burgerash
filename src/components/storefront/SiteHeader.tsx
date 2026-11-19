@@ -9,6 +9,7 @@ import { HEADER_HEIGHT } from "./layout";
 import { useCartSummary } from "./useCartSummary";
 import { useStorefrontStatus } from "./useStorefrontStatus";
 import LastOrderLink from "./LastOrderLink";
+import { Display } from "@/components/Display";
 
 export default function SiteHeader() {
   const status = useStorefrontStatus();
@@ -30,13 +31,13 @@ export default function SiteHeader() {
           href="#lightboard"
           className="hidden md:inline-block font-bebas text-lg tracking-wider text-[#F5E6CC]/80 hover:text-[#F5E6CC] transition-colors"
         >
-          PANOU MENIU
+          <Display>PANOU MENIU</Display>
         </a>
         <a
           href="#location"
           className="hidden md:inline-block font-bebas text-lg tracking-wider text-[#F5E6CC]/80 hover:text-[#F5E6CC] transition-colors"
         >
-          LOCAȚIE
+          <Display>LOCAȚIE</Display>
         </a>
 
         <LastOrderLink />
@@ -67,7 +68,7 @@ export default function SiteHeader() {
           className="relative bg-[#F5E6CC] text-[#790D20] px-4 py-2 rounded-lg font-bebas text-xl tracking-wide flex items-center gap-2 border-2 border-[#332420] shadow-[3px_3px_0px_0px_#332420] hover:translate-y-[-2px] active:translate-y-[0px] transition-all"
         >
           <ShoppingBag className="w-5 h-5" />
-          <span>COȘ</span>
+          <span><Display>COȘ</Display></span>
           {totalItems > 0 && (
             <span
               key={addedSeq}

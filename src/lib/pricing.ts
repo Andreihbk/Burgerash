@@ -1,6 +1,6 @@
 // Order pricing shared by the cart (display) and /api/orders (source of truth).
 // The server ALWAYS recalculates from catalog.ts and ignores client prices.
-import { INITIAL_MODIFIERS, INITIAL_PRODUCTS } from "@/lib/catalog";
+import { INITIAL_MODIFIERS, INITIAL_PRODUCTS, modifierAppliesToProduct } from "@/lib/catalog";
 import type { FulfillmentType, OrderItemModifier } from "@/types/database";
 
 export const DELIVERY_FEE_STANDARD = 12.0;
@@ -70,6 +70,9 @@ export function priceOrder(input: {
     const modifiers = [...new Set(req.modifier_ids)].map((modId): OrderItemModifier => {
       const mod = INITIAL_MODIFIERS.find((m) => m.id === modId);
       if (!mod || !mod.is_available) throw new PricingError(`Modificator indisponibil: ${modId}`);
+      if (!modifierAppliesToProduct(mod, product)) {
+        throw new PricingError(`Modificatorul ${mod.name} nu se aplică pentru ${product.name}`);
+      }
       return { id: mod.id, name: mod.name, price: mod.price, ebriza_sku: mod.ebriza_sku };
     });
 

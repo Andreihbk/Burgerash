@@ -9,6 +9,7 @@ import { BurgerStamp } from "../BurgerStamp";
 import MenuBoardBase from "../MenuBoard";
 import { ALL_TAB, prefersReducedMotion, scrollToTab } from "./layout";
 import { useStorefrontStatus } from "./useStorefrontStatus";
+import { Display } from "@/components/Display";
 
 // Hero fan: 5 stickers (CRISPY BACON is on the board and cards, not in the fan).
 const HERO_PRODUCTS = ["prod-classic", "prod-double", "prod-hot-boy", "prod-hot-honey", "prod-crispy"]
@@ -139,9 +140,9 @@ export default function HeroBoard() {
       <section className="max-w-6xl mx-auto px-4 sm:px-6 pt-6 pb-6 md:pt-16 lg:pt-20 grid grid-cols-1 md:grid-cols-2 md:items-center gap-6 md:gap-8 lg:gap-14 md:min-h-[min(calc(100svh-9rem),52rem)]">
         <div className="flex flex-col items-start">
           <h1 className="font-bebas text-4xl sm:text-6xl md:text-4xl lg:text-6xl xl:text-7xl leading-[0.95] text-[#332420]">
-            NU FACEM MEDIUM.
+            <Display>NU FACEM MEDIUM.</Display>
             <br />
-            FACEM <span className="text-[#790D20]">CRUSTĂ.</span>
+            <Display>FACEM</Display> <span className="text-[#790D20]"><Display>CRUSTĂ.</Display></span>
           </h1>
           <p className="font-nunito font-semibold text-base sm:text-lg text-[#332420] mt-4 max-w-md">
             Carne. Foc. Chiflă. Atât. Comanzi direct de aici, fără aplicații și fără comisioane.
@@ -157,11 +158,11 @@ export default function HeroBoard() {
             onClick={() => scrollToTab(ALL_TAB)}
             className="mt-2 md:mt-6 lg:mt-8 min-h-[52px] bg-[#790D20] text-[#F5E6CC] font-bebas text-2xl tracking-wider px-10 py-3 rounded-lg border-2 border-[#332420] shadow-[4px_4px_0px_0px_#332420] hover:bg-[#332420] active:translate-y-px transition-colors duration-200"
           >
-            COMANDĂ
+            <Display>COMANDĂ</Display>
           </button>
 
           <ul className="mt-5 flex flex-wrap gap-2">
-            {["Livrare proprie", "Ridicare în 15 min", "Plata la livrare"].map((f) => (
+            {["Livrare proprie", "Ridicare în 15 min", "Plata online cu cardul"].map((f) => (
               <li
                 key={f}
                 className="font-nunito font-bold text-xs sm:text-sm leading-none px-3 py-2 rounded-md bg-[#790D20] text-[#F5E6CC]"

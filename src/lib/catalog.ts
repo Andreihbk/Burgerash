@@ -291,12 +291,12 @@ export const INITIAL_PRODUCTS: Product[] = [
 ];
 
 export const INITIAL_MODIFIERS: Modifier[] = [
-{ id: "mod-extra-patty", name: "Extra Chiftea Smash", group_name: "extra", price: 12, ebriza_sku: "mod-extra-patty", is_available: true, position: 1 },
-{ id: "mod-extra-cheddar", name: "Extra American Cheddar", group_name: "extra", price: 5, ebriza_sku: "mod-extra-cheddar", is_available: true, position: 2 },
-{ id: "mod-extra-bacon", name: "Extra Crispy Bacon", group_name: "extra", price: 6, ebriza_sku: "mod-extra-bacon", is_available: true, position: 3 },
-{ id: "mod-extra-jalapeno", name: "Extra Jalapeño", group_name: "extra", price: 4, ebriza_sku: "mod-extra-jalapeno", is_available: true, position: 4 },
-{ id: "mod-no-onion", name: "Fără Ceapă", group_name: "remove", price: 0, ebriza_sku: "mod-fara-ceapa", is_available: true, position: 5 },
-{ id: "mod-no-pickles", name: "Fără Castraveți Murați", group_name: "remove", price: 0, ebriza_sku: "mod-fara-muraturi", is_available: true, position: 6 },
+{ id: "mod-extra-patty", name: "Extra Chiftea Smash", group_name: "extra", price: 12, ebriza_sku: "mod-extra-patty", category_ids: ["cat-burgers"], is_available: true, position: 1 },
+{ id: "mod-extra-cheddar", name: "Extra American Cheddar", group_name: "extra", price: 5, ebriza_sku: "mod-extra-cheddar", category_ids: ["cat-burgers"], is_available: true, position: 2 },
+{ id: "mod-extra-bacon", name: "Extra Crispy Bacon", group_name: "extra", price: 6, ebriza_sku: "mod-extra-bacon", category_ids: ["cat-burgers"], is_available: true, position: 3 },
+{ id: "mod-extra-jalapeno", name: "Extra Jalapeño", group_name: "extra", price: 4, ebriza_sku: "mod-extra-jalapeno", category_ids: ["cat-burgers"], is_available: true, position: 4 },
+{ id: "mod-no-onion", name: "Fără Ceapă", group_name: "remove", price: 0, ebriza_sku: "mod-fara-ceapa", category_ids: ["cat-burgers"], is_available: true, position: 5 },
+{ id: "mod-no-pickles", name: "Fără Castraveți Murați", group_name: "remove", price: 0, ebriza_sku: "mod-fara-muraturi", category_ids: ["cat-burgers"], is_available: true, position: 6 },
 ];
 
 /** Storefront menu: every active category with its available products, in menu order. */
@@ -309,3 +309,11 @@ export const MENU_SECTIONS: { category: Category; products: Product[] }[] = INIT
     ),
   }))
   .filter((s) => s.products.length > 0);
+
+export function modifierAppliesToProduct(modifier: Modifier, product: Product): boolean {
+  return modifier.category_ids.includes(product.category_id);
+}
+
+export function getModifiersForProduct(product: Product): Modifier[] {
+  return INITIAL_MODIFIERS.filter((m) => modifierAppliesToProduct(m, product));
+}

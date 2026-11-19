@@ -12,6 +12,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { RIDERS } from "@/lib/riders";
 import { isSupabaseConfigured, supabase } from "@/lib/supabase";
 import type { Order, OrderStatus } from "@/types/database";
+import { Display } from "@/components/Display";
 
 type DispatchStatus = Extract<OrderStatus, "ready_for_packing" | "out_for_delivery">;
 
@@ -244,7 +245,7 @@ export default function DispatchPage() {
             <BrandLogo variant="icon" tone="sand" className="h-8 w-auto sm:hidden" />
             <BrandLogo variant="horizontal" tone="sand" className="h-8 w-auto hidden sm:block" />
           </Link>
-          <span className="font-bebas text-2xl tracking-wide text-[#F5E6CC]/70 hidden sm:inline">DISPECERAT</span>
+          <span className="font-bebas text-2xl tracking-wide text-[#F5E6CC]/70 hidden sm:inline"><Display>DISPECERAT</Display></span>
         </div>
         <div className="flex items-center gap-3">
           <span className="font-mono text-xs" role="status">
@@ -285,7 +286,7 @@ export default function DispatchPage() {
                 active ? "bg-[#790D20] text-[#F5E6CC]" : "bg-transparent text-[#332420]"
               }`}
             >
-              {col.title} ({count})
+              <Display>{col.title} ({count})</Display>
             </button>
           );
         })}
@@ -301,7 +302,7 @@ export default function DispatchPage() {
               aria-label={col.title}
             >
               <h2 className="hidden md:flex items-center justify-between bg-[#332420] text-[#F5E6CC] px-4 py-2 font-bebas text-2xl tracking-wide">
-                <span>{col.title}</span>
+                <span><Display>{col.title}</Display></span>
                 <span className="font-mono text-sm">{list.length}</span>
               </h2>
               <div className="p-3 flex flex-col gap-4">
@@ -367,7 +368,7 @@ function Ticket({
       }`}
     >
       <header className="flex items-baseline justify-between gap-2 px-4 pt-3 pb-2 border-b-2 border-[#332420]">
-        <span className="font-bebas text-3xl tracking-wide leading-none">{order.order_number}</span>
+        <span className="font-bebas text-3xl tracking-wide leading-none"><Display>{order.order_number}</Display></span>
         <span className="font-mono text-sm font-bold flex items-center gap-2">
           {isDelivery ? "LIVRARE" : "RIDICARE"}
           <span className={late ? "bg-[#790D20] text-[#F5E6CC] px-2 py-0.5" : "bg-[#332420] text-[#F5E6CC] px-2 py-0.5"}>
@@ -465,7 +466,7 @@ function Ticket({
           disabled={blocked}
           className="flex-1 min-h-14 bg-[#790D20] text-[#F5E6CC] font-bebas text-2xl tracking-wide disabled:opacity-40 disabled:cursor-not-allowed"
         >
-          {next.label} →
+          <Display>{next.label} →</Display>
         </button>
       </footer>
     </article>

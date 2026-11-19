@@ -9,6 +9,7 @@ import { formatLei } from "@/lib/format";
 import type { OrderItemModifier, OrderStatus, FulfillmentType } from "@/types/database";
 import AutoRefresh from "./AutoRefresh";
 import ClearLastOrder from "./ClearLastOrder";
+import { Display } from "@/components/Display";
 
 export const dynamic = "force-dynamic";
 
@@ -72,7 +73,7 @@ export default async function OrderStatusPage({ params }: { params: Promise<{ to
         <div>
           <p className="font-mono text-xs font-bold">STAREA COMENZII</p>
           <h1 className="font-bebas text-4xl leading-none mt-1">
-            {canceled ? "COMANDĂ ANULATĂ" : done ? (order.fulfillment_type === "pickup" ? "COMANDĂ RIDICATĂ" : "COMANDĂ LIVRATĂ") : steps[Math.max(currentIndex, 0)].label.toUpperCase()}
+            <Display>{canceled ? "COMANDĂ ANULATĂ" : done ? (order.fulfillment_type === "pickup" ? "COMANDĂ RIDICATĂ" : "COMANDĂ LIVRATĂ") : steps[Math.max(currentIndex, 0)].label.toUpperCase()}</Display>
           </h1>
           {canceled && (
             <p className="font-nunito font-bold text-sm mt-2">
@@ -105,7 +106,7 @@ export default async function OrderStatusPage({ params }: { params: Promise<{ to
         )}
 
         <section className="border-2 border-[#332420] rounded-lg bg-white p-4 shadow-[4px_4px_0px_0px_#332420]">
-          <h2 className="font-bebas text-2xl tracking-wide mb-2">COMANDA TA</h2>
+          <h2 className="font-bebas text-2xl tracking-wide mb-2"><Display>COMANDA TA</Display></h2>
           <ul className="space-y-2">
             {order.order_items.map((item) => (
               <li key={item.id} className="font-nunito font-bold text-sm">

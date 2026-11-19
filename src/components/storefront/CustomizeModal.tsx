@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { INITIAL_MODIFIERS } from "@/lib/catalog";
+import { getModifiersForProduct } from "@/lib/catalog";
 import { useCartStore } from "@/store/cartStore";
 import { useUiStore } from "@/store/uiStore";
 import { formatLei } from "@/lib/format";
@@ -10,6 +10,7 @@ import { useIsSoldOut } from "@/lib/useSoldOut";
 import { BurgerStamp } from "../BurgerStamp";
 import type { OrderItemModifier, Product } from "@/types/database";
 import { X, Check } from "lucide-react";
+import { Display } from "@/components/Display";
 
 // Customize modal. Keyed by product id by the host, so its state resets on every open.
 export default function CustomizeModal({ product }: { product: Product }) {
@@ -20,7 +21,9 @@ export default function CustomizeModal({ product }: { product: Product }) {
   const notifyAdded = useUiStore((state) => state.notifyAdded);
   const closeCustomize = useUiStore((state) => state.closeCustomize);
 
-  const toggleModifier = (mod: (typeof INITIAL_MODIFIERS)[0]) => {
+  const productModifiers = getModifiersForProduct(product);
+
+  const toggleModifier = (mod: ReturnType<typeof getModifiersForProduct>[number]) => {
     setSelectedModifiers((prev) => {
       if (prev.some((m) => m.id === mod.id)) return prev.filter((m) => m.id !== mod.id);
       return [...prev, { id: mod.id, name: mod.name, price: mod.price, ebriza_sku: mod.ebriza_sku }];
@@ -99,7 +102,7 @@ export default function CustomizeModal({ product }: { product: Product }) {
                   PERSONALIZEAZĂ BURGERUL
                 </span>
                 <h3 id="customize-title" className="font-bebas text-4xl text-[#332420]">
-                  {product.name}
+                  <Display>{product.name}</Display>
                 </h3>
               </div>
               <button
@@ -123,12 +126,12 @@ export default function CustomizeModal({ product }: { product: Product }) {
             <div className="space-y-4">
               {(
                 [
-                  { title: "EXTRA", mods: INITIAL_MODIFIERS.filter((m) => m.price > 0) },
-                  { title: "FĂRĂ", mods: INITIAL_MODIFIERS.filter((m) => m.price === 0) },
+                  { title: "EXTRA", mods: productModifiers.filter((m) => m.price > 0) },
+                  { title: "FĂRĂ", mods: productModifiers.filter((m) => m.price === 0) },
                 ] as const
-              ).map((group) => (
+              ).filter((group) => group.mods.length > 0).map((group) => (
                 <div key={group.title}>
-                  <p className="font-bebas text-xl text-[#332420] mb-2">{group.title}</p>
+                  <p className="font-bebas text-xl text-[#332420] mb-2"><Display>{group.title}</Display></p>
                   <div className="grid grid-cols-1 gap-2">
                     {group.mods.map((mod) => {
                       const checked = selectedModifiers.some((m) => m.id === mod.id);
@@ -208,13 +211,12 @@ export default function CustomizeModal({ product }: { product: Product }) {
               className="bg-[#790D20] text-white font-bebas text-2xl px-5 py-3 rounded-lg border-2 border-[#332420] shadow-[3px_3px_0px_0px_#332420] hover:bg-[#332420] transition-all whitespace-nowrap disabled:bg-[#F5E6CC] disabled:text-[#790D20] disabled:border-dashed disabled:border-[#790D20] disabled:shadow-none"
             >
               {soldOut ? (
-                "EPUIZAT"
+                <Display>EPUIZAT</Display>
               ) : (
                 <>
-                  ADAUGĂ ·{" "}
-                  {formatLei(
-                    (product.price + selectedModifiers.reduce((sum, m) => sum + m.price, 0)) * itemQty,
-                  )}
+                  <Display>
+                    {`ADAUGĂ · ${formatLei((product.price + selectedModifiers.reduce((sum, m) => sum + m.price, 0)) * itemQty)}`}
+                  </Display>
                 </>
               )}
             </button>

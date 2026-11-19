@@ -1,6 +1,7 @@
 import { MENU_SECTIONS } from "@/lib/catalog";
 import ProductCard from "./ProductCard";
 import { sectionDomId } from "./ids";
+import { Display } from "@/components/Display";
 
 export default function MenuSections() {
   return (
@@ -12,7 +13,7 @@ export default function MenuSections() {
               id={`${sectionDomId(category.id)}-title`}
               className="font-bebas text-4xl tracking-wide text-[#332420] shrink-0"
             >
-              {category.name}
+              <Display>{category.name}</Display>
             </h3>
             <div className="flex-1 h-2 border-y-2 border-[#332420]" />
           </div>

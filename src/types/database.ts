@@ -44,6 +44,8 @@ export interface Modifier {
   id: string;
   name: string;
   group_name: "extra" | "sauce" | "remove";
+  /** Categories whose products may take this modifier (burger-only extras must never reach sides/drinks). */
+  category_ids: string[];
   price: number;
   ebriza_sku: string | null;
   is_available: boolean;

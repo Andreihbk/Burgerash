@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { readLastOrder, subscribeLastOrder, type LastOrder } from "@/lib/last-order";
+import { Display } from "@/components/Display";
 
 /** Small "Comanda ta" link to the saved order status page (cleared once the order is delivered/canceled). */
 export default function LastOrderLink() {
@@ -19,7 +20,7 @@ export default function LastOrderLink() {
       href={`/comanda/${order.token}`}
       className="inline-flex items-center min-h-11 font-bebas text-lg tracking-wider underline underline-offset-4 text-[#F5E6CC]/90 hover:text-[#F5E6CC]"
     >
-      COMANDA TA
+      <Display>COMANDA TA</Display>
     </a>
   );
 }

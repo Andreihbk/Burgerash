@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { MENU_SECTIONS } from "@/lib/catalog";
 import { isSupabaseConfigured, supabase } from "@/lib/supabase";
+import { Display } from "@/components/Display";
 
 // "Stoc epuizat" on/off per product (product_stock). Staff only: RLS lets `authenticated` read,
 // insert and update sold_out. No row = available. The storefront and /api/orders read the same table.
@@ -106,7 +107,7 @@ export default function StockToggles() {
   return (
     <section className="border-4 border-[#332420] bg-white p-6 shadow-[8px_8px_0px_0px_#332420]">
       <h2 className="font-bebas text-3xl uppercase text-[#332420] border-b-2 border-[#332420] pb-2 mb-2">
-        Stoc epuizat
+        <Display>Stoc epuizat</Display>
       </h2>
       <p className="font-nunito font-bold text-sm text-[#332420]/75 mb-4">
         Activează când un produs s-a terminat: apare EPUIZAT pe site și comenzile cu el sunt refuzate.
@@ -130,7 +131,7 @@ export default function StockToggles() {
                 const isOut = soldOut.has(product.id);
                 return (
                   <li key={product.id} className="flex items-center justify-between gap-4 px-4 py-2 min-h-14">
-                    <span className="font-bebas text-2xl tracking-wide text-[#332420]">{product.name}</span>
+                    <span className="font-bebas text-2xl tracking-wide text-[#332420]"><Display>{product.name}</Display></span>
                     <button
                       type="button"
                       role="switch"
@@ -142,7 +143,7 @@ export default function StockToggles() {
                         isOut ? "bg-[#790D20] text-[#F5E6CC]" : "bg-[#F5E6CC] text-[#332420]"
                       }`}
                     >
-                      {isOut ? "EPUIZAT" : "ÎN STOC"}
+                      <Display>{isOut ? "EPUIZAT" : "ÎN STOC"}</Display>
                     </button>
                   </li>
                 );

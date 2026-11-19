@@ -12,6 +12,7 @@ import SignOutButton from "@/components/SignOutButton";
 import StockToggles from "@/components/admin/StockToggles";
 import { bucharestDayStart } from "@/lib/bucharest-day";
 import { isSupabaseConfigured, supabase } from "@/lib/supabase";
+import { Display } from "@/components/Display";
 
 type Today = { count: number; total: number };
 
@@ -69,13 +70,13 @@ export default function AdminPage() {
         <section aria-label="Comenzi astăzi" className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div className="border-4 border-[#332420] bg-white p-6 shadow-[6px_6px_0px_0px_#332420]">
             <span className="font-mono text-xs font-bold text-[#790D20] uppercase">Comenzi astăzi</span>
-            <p className="font-bebas text-5xl text-[#332420] mt-2">{today ? today.count : "–"}</p>
+            <p className="font-bebas text-5xl text-[#332420] mt-2"><Display>{today ? today.count : "–"}</Display></p>
             <span className="font-mono text-xs text-[#332420]/70">fără cele anulate</span>
           </div>
 
           <div className="border-4 border-[#332420] bg-white p-6 shadow-[6px_6px_0px_0px_#332420]">
             <span className="font-mono text-xs font-bold text-[#790D20] uppercase">Total comenzi</span>
-            <p className="font-bebas text-5xl text-[#332420] mt-2">{today ? money(today.total) : "–"}</p>
+            <p className="font-bebas text-5xl text-[#332420] mt-2"><Display>{today ? money(today.total) : "–"}</Display></p>
             <span className="font-mono text-xs text-[#332420]/70">cu livrare și bacșiș</span>
           </div>
 

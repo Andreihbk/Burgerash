@@ -1,5 +1,6 @@
 import { Clock, MapPin, Phone } from "lucide-react";
 import { CONTACT, PREP_TEXT, statusLabel, type OpeningStatus } from "@/lib/hours";
+import { Display } from "@/components/Display";
 
 export default function TodayAtBurgerash({ status }: { status: OpeningStatus | null }) {
   const phoneHref = CONTACT.phone ? `tel:${CONTACT.phone.replace(/[^\d+]/g, "")}` : null;
@@ -12,7 +13,7 @@ export default function TodayAtBurgerash({ status }: { status: OpeningStatus | n
       <div>
         <p className="font-mono text-xs font-bold tracking-widest text-[#790D20]">AZI LA BURGERASH</p>
         <h2 id="azi-title" className="font-bebas text-3xl sm:text-4xl tracking-wide leading-none mt-1">
-          {status ? statusLabel(status).toUpperCase() : " "}
+          <Display>{status ? statusLabel(status).toUpperCase() : " "}</Display>
         </h2>
         <p className="font-nunito font-bold text-sm mt-2">
           {status ? `Program azi: ${status.todayHours}` : " "}

@@ -2,6 +2,7 @@ import { BurgerStamp } from "../BurgerStamp";
 import type { Product } from "@/types/database";
 import ProductActions from "./ProductActions";
 import { isCustomizable } from "./ids";
+import { Display } from "@/components/Display";
 
 export default function ProductCard({ product }: { product: Product }) {
   return (
@@ -15,7 +16,7 @@ export default function ProductCard({ product }: { product: Product }) {
           />
         </div>
 
-        <h4 className="font-bebas text-3xl tracking-wide text-[#332420] mb-2">{product.name}</h4>
+        <h4 className="font-bebas text-3xl tracking-wide text-[#332420] mb-2"><Display>{product.name}</Display></h4>
 
         <p className="font-nunito font-bold text-sm text-[#332420]/75 mb-3">{product.description}</p>
         {product.allergens === null && (

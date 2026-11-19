@@ -12,6 +12,7 @@ import CustomizeModalHost from "@/components/storefront/CustomizeModalHost";
 import CartDrawerHost from "@/components/storefront/CartDrawerHost";
 import { MENU_TOP_ID } from "@/components/storefront/layout";
 import { restaurantJsonLd } from "@/lib/structured-data";
+import { Display } from "@/components/Display";
 
 // `<` is escaped so catalog text can never close the script tag.
 const jsonLd = JSON.stringify(restaurantJsonLd()).replace(/</g, "\\u003c");
@@ -32,7 +33,7 @@ export default function Home() {
           <div id={MENU_TOP_ID} className="mb-8">
             <p className="font-mono text-xs font-bold tracking-widest text-[#790D20]">COMANDĂ ONLINE</p>
             <h2 className="font-bebas text-4xl sm:text-5xl text-[#332420] leading-none">
-              MENIU
+              <Display>MENIU</Display>
             </h2>
           </div>
 

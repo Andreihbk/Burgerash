@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { INITIAL_PRODUCTS } from "./catalog";
+import { getModifiersForProduct, INITIAL_MODIFIERS, INITIAL_PRODUCTS } from "./catalog";
 import { priceOrder, PricingError } from "./pricing";
 import { reconcileCartItems } from "./cart-reconcile";
 
@@ -40,6 +40,49 @@ describe("server pricing", () => {
   it("rejects removed products", () => {
     expect(() => price(["prod-cheesy"])).toThrow(PricingError);
     expect(() => price(["prod-crispy-chicken"])).toThrow(PricingError);
+  });
+});
+
+describe("modifier -> product mapping", () => {
+  const withMod = (product_id: string, modId: string) =>
+    priceOrder({
+      items: [{ product_id, quantity: 1, modifier_ids: [modId], note: null }],
+      fulfillmentType: "pickup",
+      tipAmount: 0,
+      cutlerySets: 0,
+    });
+
+  it("accepts burger modifiers on burgers", () => {
+    expect(withMod("prod-classic", "mod-extra-patty").items[0].unit_price).toBe(48);
+  });
+
+  it("rejects burger-only modifiers on sauces, sides and drinks", () => {
+    for (const id of ["prod-sauces", "prod-fries", "prod-chips", "prod-nuggets", "prod-cola", "prod-water"]) {
+      expect(() => withMod(id, "mod-extra-patty")).toThrow(PricingError);
+    }
+  });
+
+  it("only offers modifiers to burgers in the UI", () => {
+    for (const p of INITIAL_PRODUCTS) {
+      const offered = getModifiersForProduct(p).length;
+      expect(offered > 0).toBe(p.category_id === "cat-burgers");
+    }
+    expect(INITIAL_MODIFIERS.every((m) => m.category_ids.length > 0)).toBe(true);
+  });
+
+  it("drops a stale modifier from a saved cart line", () => {
+    const [line] = reconcileCartItems([
+      {
+        cartItemId: "x",
+        product: { id: "prod-sauces" } as never,
+        quantity: 1,
+        modifiers: [{ id: "mod-extra-patty", name: "Extra Chiftea Smash", price: 12, ebriza_sku: null }],
+        note: "",
+        unitPriceWithModifiers: 17,
+      },
+    ]);
+    expect(line.modifiers).toEqual([]);
+    expect(line.unitPriceWithModifiers).toBe(5);
   });
 });
 

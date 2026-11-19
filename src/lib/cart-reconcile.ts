@@ -1,6 +1,6 @@
 // Saved carts (localStorage) hold full product snapshots. When the menu changes, reconcile them
 // quietly against the current catalog: drop removed products, refresh names/prices/weights.
-import { INITIAL_MODIFIERS, INITIAL_PRODUCTS } from "@/lib/catalog";
+import { INITIAL_MODIFIERS, INITIAL_PRODUCTS, modifierAppliesToProduct } from "@/lib/catalog";
 import { roundMoney } from "@/lib/pricing";
 import type { OrderItemModifier, Product } from "@/types/database";
 
@@ -22,7 +22,7 @@ export function reconcileCartItems<T extends SavedLine>(items: unknown): T[] {
 
     const modifiers = (Array.isArray(raw.modifiers) ? raw.modifiers : []).flatMap((m): OrderItemModifier[] => {
       const current = INITIAL_MODIFIERS.find((c) => c.id === m?.id);
-      return current && current.is_available
+      return current && current.is_available && modifierAppliesToProduct(current, product)
         ? [{ id: current.id, name: current.name, price: current.price, ebriza_sku: current.ebriza_sku }]
         : [];
     });

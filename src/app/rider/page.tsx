@@ -11,6 +11,7 @@ import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "
 import { RIDERS } from "@/lib/riders";
 import { isSupabaseConfigured, supabase } from "@/lib/supabase";
 import type { Order } from "@/types/database";
+import { Display } from "@/components/Display";
 
 const STORAGE_KEY = "burgerash-rider";
 const UNDO_MS = 6000;
@@ -182,7 +183,7 @@ export default function RiderPage() {
 
       {!rider ? (
         <main className="flex-1 p-4 flex flex-col gap-4">
-          <h1 className="font-bebas text-4xl tracking-wide">CINE EȘTI?</h1>
+          <h1 className="font-bebas text-4xl tracking-wide"><Display>CINE EȘTI?</Display></h1>
           <div className="flex flex-col gap-3">
             {RIDERS.map((name) => (
               <button
@@ -191,7 +192,7 @@ export default function RiderPage() {
                 onClick={() => choose(name)}
                 className="min-h-16 border-2 border-[#332420] bg-transparent font-bebas text-3xl tracking-wide shadow-[4px_4px_0_0_#332420] active:translate-x-0.5 active:translate-y-0.5"
               >
-                {name}
+                <Display>{name}</Display>
               </button>
             ))}
           </div>
@@ -200,7 +201,7 @@ export default function RiderPage() {
         <main className="flex-1 p-3 flex flex-col gap-4 pb-28">
           <div className="flex items-baseline justify-between gap-2">
             <h1 className="font-bebas text-3xl tracking-wide">
-              {rider} · {list.length} {list.length === 1 ? "COMANDĂ" : "COMENZI"}
+              <Display>{rider} · {list.length} {list.length === 1 ? "COMANDĂ" : "COMENZI"}</Display>
             </h1>
             <button
               type="button"
@@ -233,7 +234,7 @@ export default function RiderPage() {
             onClick={undoDeliver}
             className="min-h-11 px-5 border-2 border-[#F5E6CC] font-bebas text-xl tracking-wide"
           >
-            ANULEAZĂ
+            <Display>ANULEAZĂ</Display>
           </button>
         </div>
       )}
@@ -248,7 +249,7 @@ function RiderCard({ order, onDelivered }: { order: Order; onDelivered: (order: 
   return (
     <article className="bg-[#F5E6CC] border-2 border-[#332420] shadow-[4px_4px_0_0_#332420]">
       <header className="px-4 pt-3 pb-2 border-b-2 border-[#332420] flex items-baseline justify-between gap-2">
-        <span className="font-bebas text-3xl tracking-wide leading-none">{order.order_number}</span>
+        <span className="font-bebas text-3xl tracking-wide leading-none"><Display>{order.order_number}</Display></span>
         <span className="font-nunito font-extrabold text-lg">{order.customer_name}</span>
       </header>
 
@@ -264,7 +265,7 @@ function RiderCard({ order, onDelivered }: { order: Order; onDelivered: (order: 
         }`}
       >
         <span className="font-mono text-sm font-bold">{pay.label}</span>
-        <span className="font-bebas text-4xl tracking-wide leading-none">{money(order.total_amount)}</span>
+        <span className="font-bebas text-4xl tracking-wide leading-none"><Display>{money(order.total_amount)}</Display></span>
       </div>
 
       <div className="p-3 grid grid-cols-2 gap-2">
@@ -272,7 +273,7 @@ function RiderCard({ order, onDelivered }: { order: Order; onDelivered: (order: 
           href={`tel:${order.customer_phone}`}
           className="min-h-16 border-2 border-[#332420] flex items-center justify-center font-bebas text-3xl tracking-wide"
         >
-          SUNĂ
+          <Display>SUNĂ</Display>
         </a>
         <a
           href={mapsHref}
@@ -280,14 +281,14 @@ function RiderCard({ order, onDelivered }: { order: Order; onDelivered: (order: 
           rel="noopener noreferrer"
           className="min-h-16 border-2 border-[#332420] flex items-center justify-center font-bebas text-3xl tracking-wide"
         >
-          HARTĂ
+          <Display>HARTĂ</Display>
         </a>
         <button
           type="button"
           onClick={() => onDelivered(order)}
           className="col-span-2 min-h-16 bg-[#790D20] text-[#F5E6CC] font-bebas text-3xl tracking-wide"
         >
-          LIVRAT ✓
+          <Display>LIVRAT ✓</Display>
         </button>
       </div>
     </article>

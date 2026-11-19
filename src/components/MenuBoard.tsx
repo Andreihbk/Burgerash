@@ -2,6 +2,7 @@
 
 import { MENU_SECTIONS } from "@/lib/catalog";
 import { BrandLogo } from "./BrandLogo";
+import { Display } from "@/components/Display";
 
 const LINE_CLASS =
   "flex w-full justify-between items-center font-nunito font-black text-[1em] text-[#332420] rounded";
@@ -82,7 +83,7 @@ export default function MenuBoard({
               <div key={group.title} className="relative pr-[1.25em]">
                 <div className="flex items-center gap-3 mb-[0.4em]">
                   <h3 className="font-bebas text-[1.4em] leading-none text-[#332420] shrink-0">
-                    {group.title}
+                    <Display>{group.title}</Display>
                   </h3>
                   <div className="flex-1 h-2 border-y-2 border-[#790D20] rounded-tr-xl" />
                 </div>

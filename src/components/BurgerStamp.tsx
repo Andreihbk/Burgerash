@@ -1,4 +1,5 @@
 import React from "react";
+import { stripDiacritics } from "@/lib/display";
 import type { Product } from "@/types/database";
 
 // Round product stickers, rebuilt in SVG from the printed sticker sheet.
@@ -114,7 +115,7 @@ function NameLines({ lines, ink, baselines, size }: { lines: string[]; ink: stri
     <g className="font-bebas" textAnchor="middle" style={{ fill: ink }}>
       {lines.map((line, i) => (
         <text key={line} x="100" y={baselines[i]} fontSize={size}>
-          {line}
+          {stripDiacritics(line)}
         </text>
       ))}
     </g>
@@ -155,7 +156,10 @@ function FullBody({ lines, ink, accent, weight }: { lines: string[]; ink: string
             className="font-bebas"
             style={{ fill: ink === SAND ? accent : ink }}
           >
-            {weight} G
+            <tspan className="font-nunito" style={{ fontWeight: 800, fontVariantNumeric: "tabular-nums" }}>
+              {weight}
+            </tspan>{" "}
+            G
           </text>
         </>
       )}

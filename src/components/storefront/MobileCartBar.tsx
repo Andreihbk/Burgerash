@@ -5,6 +5,7 @@ import { formatLei } from "@/lib/format";
 import { useCartStore } from "@/store/cartStore";
 import { useUiStore } from "@/store/uiStore";
 import { useCartSummary } from "./useCartSummary";
+import { Display } from "@/components/Display";
 
 /** Sticky bottom cart bar, mobile only (<768px). */
 export default function MobileCartBar() {
@@ -25,11 +26,11 @@ export default function MobileCartBar() {
         className="w-full flex items-center justify-between gap-3 bg-[#790D20] text-[#F5E6CC] font-bebas text-xl px-4 py-3 rounded-lg border-2 border-[#332420] shadow-[3px_3px_0px_0px_#332420] active:translate-y-[1px] transition-all"
       >
         <span>
-          COȘ (
+          <Display>COȘ</Display> (
           <span key={addedSeq} className={`inline-block ${addedSeq > 0 ? "animate-badge-pop" : ""}`}>
-            {totalItems}
+            <Display>{totalItems}</Display>
           </span>
-          ) · {formatLei(grandTotal)}
+          ) · <Display>{formatLei(grandTotal)}</Display>
         </span>
         <ArrowRight className="w-6 h-6 stroke-[3]" aria-hidden="true" />
       </button>

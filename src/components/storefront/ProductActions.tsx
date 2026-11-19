@@ -6,6 +6,7 @@ import { useUiStore } from "@/store/uiStore";
 import { isOrderingEnabled } from "@/lib/ordering";
 import { useIsSoldOut } from "@/lib/useSoldOut";
 import type { Product } from "@/types/database";
+import { Display } from "@/components/Display";
 
 // The only client part of a product card: add to cart / open the customize modal.
 export default function ProductActions({ product, customizable }: { product: Product; customizable: boolean }) {
@@ -19,7 +20,7 @@ export default function ProductActions({ product, customizable }: { product: Pro
   if (soldOut) {
     return (
       <span className="inline-flex min-h-11 items-center border-2 border-dashed border-[#790D20] px-4 py-2.5 rounded-lg font-bebas text-lg tracking-wide text-[#790D20]">
-        EPUIZAT
+        <Display>EPUIZAT</Display>
       </span>
     );
   }
@@ -35,7 +36,7 @@ export default function ProductActions({ product, customizable }: { product: Pro
           title="Personalizează ingredientele"
         >
           <SlidersHorizontal className="w-4 h-4" />
-          <span>EXTRA</span>
+          <span><Display>EXTRA</Display></span>
         </button>
       )}
 
@@ -50,7 +51,7 @@ export default function ProductActions({ product, customizable }: { product: Pro
         className="disabled:opacity-50 disabled:pointer-events-none bg-[#790D20] text-[#F5E6CC] border-2 border-[#332420] px-4 py-2.5 rounded-lg font-bebas text-lg flex items-center gap-1.5 shadow-[2px_2px_0px_0px_#332420] hover:bg-[#332420] active:translate-y-[1px] transition-all"
       >
         <Plus className="w-5 h-5 stroke-[3]" />
-        <span>ADAUGĂ</span>
+        <span><Display>ADAUGĂ</Display></span>
       </button>
     </div>
   );

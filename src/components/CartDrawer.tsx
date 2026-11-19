@@ -12,6 +12,7 @@ import { EMAIL_ERROR, isValidEmail } from "@/lib/email";
 import { closedCartNotice } from "@/lib/hours";
 import { saveLastOrder } from "@/lib/last-order";
 import { X, Trash2, Plus, Minus, ShoppingBag, ArrowRight, CheckCircle2 } from "lucide-react";
+import { Display } from "@/components/Display";
 
 const ERROR_TEXT = "Nu am putut trimite comanda. Încearcă din nou în câteva secunde.";
 
@@ -142,7 +143,7 @@ export default function CartDrawer() {
           <div className="bg-brand-red text-brand-paper px-6 py-4 flex items-center justify-between border-b-2 border-brand-dark">
             <div className="flex items-center gap-2">
               <ShoppingBag className="w-6 h-6 text-brand-paper" />
-              <h2 className="font-bebas text-2xl tracking-wide">COȘUL TĂU</h2>
+              <h2 className="font-bebas text-2xl tracking-wide"><Display>COȘUL TĂU</Display></h2>
             </div>
             <button onClick={closeCart} className="text-brand-paper hover:text-white transition-colors">
               <X className="w-6 h-6" />
@@ -154,7 +155,7 @@ export default function CartDrawer() {
             {step === "success" ? (
               <div className="text-center py-12 space-y-4">
                 <CheckCircle2 className="w-16 h-16 text-emerald-600 mx-auto" />
-                <h3 className="font-bebas text-4xl text-brand-dark">COMANDĂ PLASATĂ!</h3>
+                <h3 className="font-bebas text-4xl text-brand-dark"><Display>COMANDĂ PLASATĂ!</Display></h3>
                 <p className="font-mono text-lg font-bold bg-brand-dark text-brand-paper py-2 px-4 inline-block rounded">
                   Număr bon: {orderNumber}
                 </p>
@@ -167,7 +168,7 @@ export default function CartDrawer() {
                       href={`/comanda/${publicToken}`}
                       className="mt-2 inline-flex min-h-11 items-center bg-brand-dark text-brand-paper font-bebas text-xl px-6 py-3 rounded shadow-[3px_3px_0px_0px_#790D20]"
                     >
-                      URMĂREȘTE COMANDA
+                      <Display>URMĂREȘTE COMANDA</Display>
                     </a>
                   </div>
                 )}
@@ -178,7 +179,7 @@ export default function CartDrawer() {
                   }}
                   className="mt-4 bg-brand-red text-white font-bebas text-xl px-6 py-3 rounded shadow-[3px_3px_0px_0px_#121212]"
                 >
-                  ÎNAPOI LA MENIU
+                  <Display>ÎNAPOI LA MENIU</Display>
                 </button>
               </div>
             ) : step === "cart" ? (
@@ -209,7 +210,7 @@ export default function CartDrawer() {
                         : "text-brand-dark hover:bg-brand-dark/5"
                     }`}
                   >
-                    LIVRARE LA ADRESĂ
+                    <Display>LIVRARE LA ADRESĂ</Display>
                   </button>
                   <button
                     onClick={() => setFulfillmentType("pickup")}
@@ -219,7 +220,7 @@ export default function CartDrawer() {
                         : "text-brand-dark hover:bg-brand-dark/5"
                     }`}
                   >
-                    RIDICARE DIN RESTAURANT
+                    <Display>RIDICARE DIN RESTAURANT</Display>
                   </button>
                 </div>
 
@@ -237,7 +238,7 @@ export default function CartDrawer() {
                       >
                         <div className="flex justify-between items-start">
                           <div>
-                            <h4 className="font-bebas text-xl text-brand-dark">{item.product.name}</h4>
+                            <h4 className="font-bebas text-xl text-brand-dark"><Display>{item.product.name}</Display></h4>
                             {soldOutIds.has(item.product.id) && (
                               <p className="font-mono text-xs font-bold text-brand-red">
                                 EPUIZAT - scoate-l din coș ca să continui
@@ -288,7 +289,7 @@ export default function CartDrawer() {
                     {/* Extras: Cutlery & Tip */}
                     <div className="bg-white border-2 border-brand-dark rounded-lg p-4 space-y-4 mt-6 shadow-[3px_3px_0px_0px_#121212]">
                       <div className="flex justify-between items-center">
-                        <span className="font-bebas text-lg">SETURI TACĂMURI (Gratis)</span>
+                        <span className="font-bebas text-lg"><Display>SETURI TACĂMURI (Gratis)</Display></span>
                         <div className="flex items-center gap-2 border-2 border-brand-dark rounded px-2 py-0.5 bg-brand-paper">
                           <button onClick={() => setCutlerySets(cutlerySets - 1)} className="hover:text-brand-red">
                             <Minus className="w-3.5 h-3.5" />
@@ -301,7 +302,7 @@ export default function CartDrawer() {
                       </div>
 
                       <div className="flex flex-wrap justify-between items-center gap-2 pt-3 border-t border-brand-dark/10">
-                        <span className="font-bebas text-lg">BACȘIȘ ECHIPĂ</span>
+                        <span className="font-bebas text-lg"><Display>BACȘIȘ ECHIPĂ</Display></span>
                         <div className="flex gap-1.5">
                           {[0, 3, 5, 10].map((val) => (
                             <button
@@ -331,7 +332,7 @@ export default function CartDrawer() {
                   ← Înapoi la produsele din coș
                 </button>
 
-                <h3 className="font-bebas text-3xl text-brand-dark mb-4">DETALII LIVRARE</h3>
+                <h3 className="font-bebas text-3xl text-brand-dark mb-4"><Display>DETALII LIVRARE</Display></h3>
 
                 {errorMessage && (
                   <div className="bg-red-100 border-2 border-brand-red text-brand-red p-3 text-xs font-mono font-bold rounded">
@@ -447,7 +448,7 @@ export default function CartDrawer() {
                   disabled={isSubmitting || orderingOff || isClosed || hasSoldOut}
                   className="w-full bg-brand-red text-white font-bebas text-2xl py-4 rounded-lg shadow-[4px_4px_0px_0px_#121212] hover:bg-brand-dark transition-all mt-6 disabled:opacity-50"
                 >
-                  {orderingOff ? "Comenzile pornesc la lansare" : isClosed ? "Suntem închiși acum" : hasSoldOut ? "Produs epuizat în coș" : isSubmitting ? "SE TRIMITE..." : `PLASEAZĂ COMANDA · ${formatLei(grandTotal)}`}
+                  <Display>{orderingOff ? "Comenzile pornesc la lansare" : isClosed ? "Suntem închiși acum" : hasSoldOut ? "Produs epuizat în coș" : isSubmitting ? "SE TRIMITE..." : `PLASEAZĂ COMANDA · ${formatLei(grandTotal)}`}</Display>
                 </button>
               </form>
             )}
@@ -478,8 +479,8 @@ export default function CartDrawer() {
                 </div>
               )}
               <div className="flex justify-between gap-3 font-bebas text-2xl pt-2 border-t border-brand-dark/10">
-                <span>TOTAL DE PLATĂ:</span>
-                <span className="text-brand-red">{formatLei(grandTotal)}</span>
+                <span><Display>TOTAL DE PLATĂ:</Display></span>
+                <span className="text-brand-red"><Display>{formatLei(grandTotal)}</Display></span>
               </div>
 
               <button
@@ -487,7 +488,7 @@ export default function CartDrawer() {
                 disabled={hasSoldOut || orderingOff}
                 className="w-full disabled:opacity-50 bg-brand-dark text-brand-paper font-bebas text-2xl py-4 rounded-lg shadow-[4px_4px_0px_0px_#C5081F] hover:bg-brand-red transition-all flex items-center justify-center gap-2 mt-4"
               >
-                <span>CONTINUĂ LA CHECKOUT</span>
+                <span><Display>CONTINUĂ LA CHECKOUT</Display></span>
                 <ArrowRight className="w-5 h-5" />
               </button>
             </div>

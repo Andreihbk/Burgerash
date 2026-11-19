@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { MENU_SECTIONS } from "@/lib/catalog";
 import { sectionDomId } from "./ids";
 import { ALL_TAB, CATEGORY_BAR_ID, HEADER_HEIGHT, prefersReducedMotion, scrollToTab, stickyOffset } from "./layout";
+import { Display } from "@/components/Display";
 
 const TABS = [
   { id: ALL_TAB, name: "TOT MENIUL" },
@@ -67,7 +68,7 @@ export default function CategoryBar() {
                   : "bg-[#F5E6CC] text-[#332420] hover:bg-[#332420]/10"
               }`}
             >
-              {tab.name}
+              <Display>{tab.name}</Display>
             </button>
           );
         })}
