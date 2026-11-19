@@ -173,7 +173,8 @@ begin
 end;
 $$;
 
--- RLS & Politici permisive pentru MVP
+-- RLS & Politici permisive pentru MVP.
+-- REPLACED by migrations/20261120000000_staff_rls.sql (L.0b). Always run the migrations after this file.
 alter table public.categories enable row level security;
 alter table public.products enable row level security;
 alter table public.modifiers enable row level security;

@@ -2,7 +2,7 @@
 
 // /rider: phone-first view of the orders out for delivery for ONE rider. Supabase only (never Ebriza).
 // Rider choice is remembered in localStorage (not a login: anyone can pick any name).
-// TODO(4.1/4.2): staff auth (Supabase Auth) + real RLS. Until then guarded only by the STAFF_PASSWORD proxy.
+// Staff only: proxy.ts requires a Supabase Auth session; RLS lets `authenticated` read orders and update status/rider_name.
 
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";

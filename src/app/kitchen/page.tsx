@@ -1,8 +1,7 @@
 "use client";
 
 // /kitchen KDS. Reads and writes Supabase only (never Ebriza), so it keeps working if the POS is down.
-// TODO(4.1/4.2): staff auth (Supabase Auth) + real RLS. Until then this page and its writes are open to
-// anyone with the URL. Do not launch without it. See docs/PLAN.md "Before launch".
+// Staff only: proxy.ts requires a Supabase Auth session; RLS lets `authenticated` read orders and update status/rider_name.
 
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";

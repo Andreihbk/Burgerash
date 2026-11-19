@@ -100,7 +100,7 @@ Definition of done for every task: `npm run build` + `npm run lint` pass.
 - [x] 2.2 `/dispatch` handoff + rider assignment (option A: `src/lib/riders.ts` list -> `orders.rider_name`)
       Supabase only, Realtime on `orders`. Columns De predat (ready_for_packing) and În livrare
       (out_for_delivery). Delivery: ready -> out_for_delivery -> delivered; pickup: ready -> "Predat" (delivered).
-      Behind the STAFF_PASSWORD proxy. Delivery orders need a rider picked before "Plecat la client";
+      Behind the staff Supabase Auth proxy. Delivery orders need a rider picked before "Plecat la client";
       no schema change. Rider names are placeholders in `src/lib/riders.ts`.
 - [x] 2.3 `/rider` mobile view (pick name from riders.ts, saved in localStorage; out_for_delivery for that rider, Realtime, SUNĂ/HARTĂ/LIVRAT + 6s undo, shows total + cash/card to collect)
 - [ ] 2.4 `/admin` stock, menu, hours
@@ -110,7 +110,7 @@ Definition of done for every task: `npm run build` + `npm run lint` pass.
 - [ ] 3.2 Subscribe to Order and Bill entities (`POST /webHooks/subscribe`).
 
 ## Phase 4 - Hardening before launch
-- [ ] 4.1 Staff login (Supabase Auth) on /kitchen /dispatch /rider /admin
+- [x] 4.1 Staff login (Supabase Auth) on /kitchen /dispatch /rider /admin
 - [ ] 4.2 Replace permissive RLS with real policies
 - [ ] 4.3 End-to-end test: cart -> order -> POS -> status back
 
@@ -136,6 +136,10 @@ Definition of done for every task: `npm run build` + `npm run lint` pass.
     switch the /kitchen /dispatch /rider browser queries + Realtime to `createBrowserClient` from `@supabase/ssr`
     (the plain anon client has no session, so it would lose access once RLS closes); write the RLS migration;
     delete `staff-auth.ts`, `/staff-login`, `/api/staff-login`, `STAFF_PASSWORD`.
+  - Step 3 DONE (code): `proxy.ts` checks `getUser()` and redirects to `/staff/login`; `src/lib/supabase.ts` is now
+    `createBrowserClient` (session cookies -> queries + Realtime as `authenticated`); old gate deleted.
+    Migration `20261120000000_staff_rls.sql` (YOU run it in Supabase AFTER this deploy is live, then the anon curl
+    tests). Once run + tested, tick L.0 and 4.2. Remove `STAFF_PASSWORD` from Vercel. Step 4 (sign-out) still TODO.
   - NOTE: "authenticated = staff" only holds while sign-ups AND anonymous sign-ins are OFF in Supabase Auth.
     If we add customer accounts later (loyalty), policies must check a staff table instead of the role.
 - [x] L.1 Opening hours + open/closed badge (block or warn on orders when closed)

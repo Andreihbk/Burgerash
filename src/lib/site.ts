@@ -16,4 +16,4 @@ export const SITE_DESCRIPTION =
   "Nu facem medium. Facem crustă. Smash burgeri din Sector 6, comandă direct, fără comisioane.";
 
 /** Staff/internal routes: never indexed. */
-export const PRIVATE_PATHS = ["/kitchen", "/dispatch", "/rider", "/admin", "/staff-login", "/staff/", "/comanda/", "/api/"];
+export const PRIVATE_PATHS = ["/kitchen", "/dispatch", "/rider", "/admin", "/staff/", "/comanda/", "/api/"];

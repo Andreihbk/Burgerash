@@ -2,7 +2,7 @@
 
 // /dispatch: packed-order handoff. Reads and writes Supabase only (never Ebriza).
 // Delivery: ready_for_packing -> out_for_delivery -> delivered. Pickup: ready_for_packing -> delivered.
-// TODO(4.1/4.2): staff auth (Supabase Auth) + real RLS. Until then guarded only by the STAFF_PASSWORD proxy.
+// Staff only: proxy.ts requires a Supabase Auth session; RLS lets `authenticated` read orders and update status/rider_name.
 // TODO(rider assignment): waiting for the migration decision (see docs/PLAN.md 2.2).
 
 import Link from "next/link";

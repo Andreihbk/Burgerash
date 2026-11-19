@@ -1,4 +1,5 @@
-import { createClient, SupabaseClient } from "@supabase/supabase-js";
+import { createBrowserClient } from "@supabase/ssr";
+import type { SupabaseClient } from "@supabase/supabase-js";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
@@ -10,7 +11,11 @@ export const isSupabaseConfigured = Boolean(
     supabaseUrl.startsWith("http")
 );
 
-export const supabase: SupabaseClient = createClient(
+// Browser client for the staff pages (/kitchen /dispatch /rider). It reads the Supabase Auth session
+// from the cookies set by /api/staff-auth/login, so queries and Realtime run as `authenticated`.
+// Without a session it is plain anon, which RLS gives no access to orders (PLAN L.0b).
+// Server code that must bypass RLS uses src/lib/supabase-admin.ts instead.
+export const supabase: SupabaseClient = createBrowserClient(
   isSupabaseConfigured ? supabaseUrl : "https://placeholder-project.supabase.co",
   isSupabaseConfigured ? supabaseAnonKey : "placeholder-anon-key",
   {

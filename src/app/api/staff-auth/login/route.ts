@@ -4,7 +4,7 @@ import { isSupabaseConfigured } from "@/lib/supabase";
 import { safeNext } from "@/lib/safe-next";
 
 // Staff login with Supabase Auth (PLAN L.0b step 2). Sets the session cookies on the redirect response.
-// The old password gate (proxy.ts, /staff-login) still runs until step 3 swaps it for this session.
+// proxy.ts verifies this session on the staff pages (step 3).
 // "authenticated = staff" holds only while sign-ups and anonymous sign-ins are OFF in Supabase Auth.
 export async function POST(request: NextRequest) {
   const form = await request.formData();
