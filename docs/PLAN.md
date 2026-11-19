@@ -77,7 +77,7 @@ Definition of done for every task: `npm run build` + `npm run lint` pass.
       (out_for_delivery). Delivery: ready -> out_for_delivery -> delivered; pickup: ready -> "Predat" (delivered).
       Behind the STAFF_PASSWORD proxy. Delivery orders need a rider picked before "Plecat la client";
       no schema change. Rider names are placeholders in `src/lib/riders.ts`.
-- [ ] 2.3 `/rider` mobile view
+- [x] 2.3 `/rider` mobile view (pick name from riders.ts, saved in localStorage; out_for_delivery for that rider, Realtime, SUNĂ/HARTĂ/LIVRAT + 6s undo, shows total + cash/card to collect)
 - [ ] 2.4 `/admin` stock, menu, hours
 
 ## Phase 3 - Ebriza webhooks (needs approved Marketplace app)

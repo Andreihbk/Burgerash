@@ -1,63 +1,289 @@
-import Link from 'next/link';
+"use client";
+
+// /rider: phone-first view of the orders out for delivery for ONE rider. Supabase only (never Ebriza).
+// Rider choice is remembered in localStorage (not a login: anyone can pick any name).
+// TODO(4.1/4.2): staff auth (Supabase Auth) + real RLS. Until then guarded only by the STAFF_PASSWORD proxy.
+
+import Link from "next/link";
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { RIDERS } from "@/lib/riders";
+import { isSupabaseConfigured, supabase } from "@/lib/supabase";
+import type { Order } from "@/types/database";
+
+const STORAGE_KEY = "burgerash-rider";
+const UNDO_MS = 6000;
+
+// localStorage as an external store: server snapshot is null so hydration matches.
+const riderListeners = new Set<() => void>();
+function subscribeRider(cb: () => void) {
+  riderListeners.add(cb);
+  return () => void riderListeners.delete(cb);
+}
+function readRider(): string | null {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    return saved && (RIDERS as readonly string[]).includes(saved) ? saved : null;
+  } catch {
+    return null;
+  }
+}
+const readRiderServer = () => null;
+
+function sortOldestFirst(list: Order[]): Order[] {
+  return [...list].sort((a, b) => a.created_at.localeCompare(b.created_at));
+}
+
+function money(n: number): string {
+  return `${Number(n).toFixed(2).replace(".", ",")} RON`;
+}
+
+function collect(order: Order): { label: string; due: boolean } {
+  if (order.is_paid || order.payment_method === "online_card") return { label: "PLĂTIT ONLINE · nu încasa", due: false };
+  if (order.payment_method === "cash_on_delivery") return { label: "NUMERAR LA LIVRARE", due: true };
+  return { label: "CARD LA LIVRARE", due: true };
+}
 
 export default function RiderPage() {
+  const rider = useSyncExternalStore(subscribeRider, readRider, readRiderServer);
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [loaded, setLoaded] = useState(false);
+  const [connected, setConnected] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [undo, setUndo] = useState<Order | null>(null);
+  const undoTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  function choose(name: string | null) {
+    setOrders([]);
+    setLoaded(false);
+    setUndo(null);
+    try {
+      if (name) localStorage.setItem(STORAGE_KEY, name);
+      else localStorage.removeItem(STORAGE_KEY);
+    } catch {
+      // ignore
+    }
+    riderListeners.forEach((cb) => cb());
+  }
+
+  const load = useCallback(async (name: string) => {
+    const { data, error: err } = await supabase
+      .from("orders")
+      .select("*")
+      .eq("status", "out_for_delivery")
+      .eq("rider_name", name)
+      .order("created_at", { ascending: true });
+    if (err) {
+      setError("Nu pot încărca comenzile. Reîncerc la reconectare.");
+      return;
+    }
+    setError(null);
+    setOrders((data ?? []) as Order[]);
+    setLoaded(true);
+  }, []);
+
+  useEffect(() => {
+    if (!rider) return;
+    if (!isSupabaseConfigured) return;
+    const channel = supabase
+      .channel(`rider-orders-${rider}`)
+      .on("postgres_changes", { event: "*", schema: "public", table: "orders" }, (payload) => {
+        if (payload.eventType === "DELETE") {
+          const id = (payload.old as { id?: string }).id;
+          if (id) setOrders((prev) => prev.filter((o) => o.id !== id));
+          return;
+        }
+        const row = payload.new as Order;
+        if (row.status === "out_for_delivery" && row.rider_name === rider) {
+          setOrders((prev) => [...prev.filter((o) => o.id !== row.id), row]);
+        } else {
+          setOrders((prev) => prev.filter((o) => o.id !== row.id));
+        }
+      })
+      .subscribe((status) => {
+        const ok = status === "SUBSCRIBED";
+        setConnected(ok);
+        if (ok) void load(rider);
+      });
+
+    const onVisible = () => {
+      if (document.visibilityState === "visible") void load(rider);
+    };
+    document.addEventListener("visibilitychange", onVisible);
+
+    return () => {
+      document.removeEventListener("visibilitychange", onVisible);
+      void supabase.removeChannel(channel);
+    };
+  }, [rider, load]);
+
+  useEffect(() => {
+    return () => {
+      if (undoTimer.current) clearTimeout(undoTimer.current);
+    };
+  }, []);
+
+  useEffect(() => {
+    document.title = rider ? `${rider} | Burgerash` : "Curier | Burgerash";
+  }, [rider]);
+
+  async function deliver(order: Order) {
+    setOrders((prev) => prev.filter((o) => o.id !== order.id));
+    const { error: err } = await supabase.from("orders").update({ status: "delivered" }).eq("id", order.id);
+    if (err) {
+      setOrders((prev) => [...prev.filter((o) => o.id !== order.id), order]);
+      setError(`Nu am putut marca ${order.order_number} ca livrat. Încearcă din nou.`);
+      return;
+    }
+    setError(null);
+    if (undoTimer.current) clearTimeout(undoTimer.current);
+    setUndo(order);
+    undoTimer.current = setTimeout(() => setUndo(null), UNDO_MS);
+  }
+
+  async function undoDeliver() {
+    const order = undo;
+    if (!order) return;
+    if (undoTimer.current) clearTimeout(undoTimer.current);
+    setUndo(null);
+    setOrders((prev) => [...prev.filter((o) => o.id !== order.id), order]);
+    const { error: err } = await supabase.from("orders").update({ status: "out_for_delivery" }).eq("id", order.id);
+    if (err) {
+      setOrders((prev) => prev.filter((o) => o.id !== order.id));
+      setError(`Nu am putut anula livrarea pentru ${order.order_number}.`);
+    }
+  }
+
+  const list = sortOldestFirst(orders);
+
   return (
-    <div className="min-h-screen bg-[#F5E6CC] text-[#332420] flex flex-col max-w-md mx-auto border-x-4 border-[#332420]">
-      {/* Rider App Header */}
-      <header className="border-b-4 border-[#332420] bg-[#790D20] text-[#FFFFFF] p-4 flex justify-between items-center">
-        <Link href="/" className="font-bebas text-xl uppercase text-[#FFFFFF]">
-          &larr; Burgerash Rider
+    <div className="min-h-screen bg-[#F5E6CC] text-[#332420] flex flex-col">
+      <header className="bg-[#332420] text-[#F5E6CC] px-4 py-3 flex items-center justify-between gap-3">
+        <Link href="/" className="font-bebas text-2xl tracking-wide min-h-11 inline-flex items-center">
+          &larr; BURGERASH
         </Link>
-        <span className="font-mono text-xs font-bold bg-[#332420] text-[#F5E6CC] px-2 py-1">
-          ONLINE
-        </span>
+        {rider && (
+          <span className="font-mono text-xs" role="status">
+            {connected ? "● LIVE" : "○ OFFLINE"}
+          </span>
+        )}
       </header>
 
-      {/* Active Delivery Card */}
-      <main className="flex-1 p-4 space-y-4">
-        <div className="border-4 border-[#332420] bg-[#FFFFFF] p-4 shadow-[6px_6px_0px_0px_#332420]">
-          <div className="bg-[#790D20] text-[#FFFFFF] font-mono text-xs font-bold px-2 py-1 inline-block mb-3">
-            LIVRARE ACTIVĂ #1039
-          </div>
-
-          <h2 className="font-bebas text-2xl uppercase text-[#332420] mb-2">
-            Adresă Client
-          </h2>
-          <p className="font-nunito font-bold text-base text-[#332420] mb-4">
-            Bulevardul Unirii 45, Bl. E3, Ap. 14, Sector 3
-          </p>
-
-          <div className="border-t-2 border-[#332420] pt-3 font-mono text-xs space-y-1 mb-6">
-            <p><span className="font-bold">Client:</span> Ion Popescu</p>
-            <p><span className="font-bold">Telefon:</span> 0722 000 111</p>
-            <p><span className="font-bold">Notă:</span> Sună la interfon 14.</p>
-          </div>
-
-          <div className="space-y-2">
-            <button className="w-full bg-[#790D20] text-[#FFFFFF] font-mono font-bold py-3 text-sm border-2 border-[#332420] shadow-[3px_3px_0px_0px_#332420] uppercase">
-              Am Preluat Pachetul
-            </button>
-            <button className="w-full bg-[#332420] text-[#F5E6CC] font-mono font-bold py-3 text-sm border-2 border-[#332420] uppercase">
-              Marchează Livrat &check;
-            </button>
-          </div>
+      {(error || !isSupabaseConfigured) && (
+        <div role="alert" className="bg-[#790D20] text-[#F5E6CC] px-4 py-3 font-nunito font-bold">
+          {error ?? "Supabase nu este configurat."}
         </div>
+      )}
 
-        {/* History / Summary */}
-        <div className="border-2 border-[#332420] bg-[#FFFFFF] p-4 font-mono text-xs">
-          <h3 className="font-bold text-[#790D20] uppercase mb-2">
-            Sumar Tură Astăzi
-          </h3>
-          <div className="flex justify-between border-b border-[#332420] py-1">
-            <span>Comenzi Livrate:</span>
-            <span className="font-bold">8</span>
+      {!rider ? (
+        <main className="flex-1 p-4 flex flex-col gap-4">
+          <h1 className="font-bebas text-4xl tracking-wide">CINE EȘTI?</h1>
+          <div className="flex flex-col gap-3">
+            {RIDERS.map((name) => (
+              <button
+                key={name}
+                type="button"
+                onClick={() => choose(name)}
+                className="min-h-16 border-2 border-[#332420] bg-transparent font-bebas text-3xl tracking-wide shadow-[4px_4px_0_0_#332420] active:translate-x-0.5 active:translate-y-0.5"
+              >
+                {name}
+              </button>
+            ))}
           </div>
-          <div className="flex justify-between py-1">
-            <span>Castig Estimat:</span>
-            <span className="font-bold">160 LEI</span>
+        </main>
+      ) : (
+        <main className="flex-1 p-3 flex flex-col gap-4 pb-28">
+          <div className="flex items-baseline justify-between gap-2">
+            <h1 className="font-bebas text-3xl tracking-wide">
+              {rider} · {list.length} {list.length === 1 ? "COMANDĂ" : "COMENZI"}
+            </h1>
+            <button
+              type="button"
+              onClick={() => choose(null)}
+              className="min-h-11 px-1 font-nunito text-sm font-semibold underline"
+            >
+              nu sunt eu
+            </button>
           </div>
+
+          {!loaded && <p className="font-nunito py-8 text-center opacity-70">Se încarcă…</p>}
+          {loaded && list.length === 0 && (
+            <p className="font-nunito py-8 text-center text-lg opacity-70">Nicio livrare acum.</p>
+          )}
+
+          {list.map((order) => (
+            <RiderCard key={order.id} order={order} onDelivered={deliver} />
+          ))}
+        </main>
+      )}
+
+      {undo && (
+        <div
+          role="status"
+          className="fixed bottom-0 inset-x-0 bg-[#332420] text-[#F5E6CC] px-4 py-3 flex items-center justify-between gap-3"
+        >
+          <span className="font-nunito font-bold">{undo.order_number} livrat</span>
+          <button
+            type="button"
+            onClick={undoDeliver}
+            className="min-h-11 px-5 border-2 border-[#F5E6CC] font-bebas text-xl tracking-wide"
+          >
+            ANULEAZĂ
+          </button>
         </div>
-      </main>
+      )}
     </div>
+  );
+}
+
+function RiderCard({ order, onDelivered }: { order: Order; onDelivered: (order: Order) => void }) {
+  const pay = collect(order);
+  const mapsHref = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(order.delivery_address ?? "")}`;
+
+  return (
+    <article className="bg-[#F5E6CC] border-2 border-[#332420] shadow-[4px_4px_0_0_#332420]">
+      <header className="px-4 pt-3 pb-2 border-b-2 border-[#332420] flex items-baseline justify-between gap-2">
+        <span className="font-bebas text-3xl tracking-wide leading-none">{order.order_number}</span>
+        <span className="font-nunito font-extrabold text-lg">{order.customer_name}</span>
+      </header>
+
+      <div className="px-4 py-3 font-nunito flex flex-col gap-1 border-b-2 border-[#332420]">
+        <p className="text-xl font-extrabold leading-tight">{order.delivery_address}</p>
+        {order.delivery_details && <p className="text-base font-semibold">{order.delivery_details}</p>}
+        {order.order_note && <p className="text-base font-bold text-[#790D20]">Notă: {order.order_note}</p>}
+      </div>
+
+      <div
+        className={`px-4 py-3 flex items-baseline justify-between gap-2 border-b-2 border-[#332420] ${
+          pay.due ? "bg-[#790D20] text-[#F5E6CC]" : ""
+        }`}
+      >
+        <span className="font-mono text-sm font-bold">{pay.label}</span>
+        <span className="font-bebas text-4xl tracking-wide leading-none">{money(order.total_amount)}</span>
+      </div>
+
+      <div className="p-3 grid grid-cols-2 gap-2">
+        <a
+          href={`tel:${order.customer_phone}`}
+          className="min-h-16 border-2 border-[#332420] flex items-center justify-center font-bebas text-3xl tracking-wide"
+        >
+          SUNĂ
+        </a>
+        <a
+          href={mapsHref}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="min-h-16 border-2 border-[#332420] flex items-center justify-center font-bebas text-3xl tracking-wide"
+        >
+          HARTĂ
+        </a>
+        <button
+          type="button"
+          onClick={() => onDelivered(order)}
+          className="col-span-2 min-h-16 bg-[#790D20] text-[#F5E6CC] font-bebas text-3xl tracking-wide"
+        >
+          LIVRAT ✓
+        </button>
+      </div>
+    </article>
   );
 }
