@@ -17,9 +17,10 @@ Nothing here is built yet. Do not set `NEXT_PUBLIC_ORDERING_ENABLED=true` in Pro
      `[DE COMPLETAT]`, owner must fill before launch); footer links + SAL/SOL; required terms checkbox at checkout,
      validated server-side (`terms_accepted`). Texts are a draft: have a lawyer review before launch.
 3. [ ] **B.3 Delivery radius** (see L.4): 1 km from the shop. Shop coordinates pending from the owner.
-   - Public map section above the footer showing the radius (OpenStreetMap tiles).
-   - Radius preview slider in /admin (preview only).
-   - Address check at checkout (and server-side in `/api/orders`) against the radius.
+   - [x] Public map section above the footer showing the radius. DONE + locked (owner OK 2026-11-20): MapLibre GL +
+     OpenFreeMap tiles, GeoJSON circle, `SITE_COORDS` + `DELIVERY_RADIUS_KM = 1` in `src/lib/site.ts`. Do not restyle.
+   - [ ] Radius preview slider in /admin (preview only).
+   - [ ] Address check at checkout (and server-side in `/api/orders`) against the radius.
 4. [ ] **B.4 Netopia payment: card only, paid online via NETOPIA Payments.** Replaces the `card_on_delivery` default; no cash option.
    - Owner has no Netopia account yet: build and test against the Netopia sandbox first.
    - Depends on B.2 (site review). Design task: use Opus (security, payment flow, order state before/after payment).
@@ -199,7 +200,8 @@ High priority, not a launch gate by itself: **Ebriza integration** (E.1-E.5, L.2
   - Part A done (code): migration `20261119000000_order_public_token.sql` (YOU must run it in Supabase before deploying), `/comanda/[token]` server page (service_role lookup, no phone/address/rider shown, noindex, auto-refresh 20s), `public_token` returned by `/api/orders`. Part B done: "URMĂREȘTE COMANDA" button on the cart success screen, last order saved in localStorage (`src/lib/last-order.ts`), small "COMANDA TA" link in SiteHeader until the order is delivered/canceled (status page clears it).
 - [ ] L.4 Delivery zone (check address before accepting delivery orders). Decided: 1 km radius, see B.3
 - [x] L.5 Legal pages: terms, GDPR privacy, ANPC links, company details. Pre-launch blocker, see B.2
-- [ ] L.6 Cart upsell (fries, sauces, drinks)
+- [x] L.6 Cart upsell (fries, sauces, drinks). "MERGE LÂNGĂ" block in the cart (`CartUpsell.tsx`, logic in `src/lib/upsell.ts` + tests):
+      only with a burger/chicken in the cart, one tap per missing group (side, sauce, drink), first product not sold out.
 
 ## Parallel track - Ebriza (no code)
 - [ ] E.1 Message Ebriza support (see questions below)

@@ -13,6 +13,7 @@ import { closedCartNotice } from "@/lib/hours";
 import { saveLastOrder } from "@/lib/last-order";
 import { X, Trash2, Plus, Minus, ShoppingBag, ArrowRight, CheckCircle2 } from "lucide-react";
 import { Display } from "@/components/Display";
+import CartUpsell from "@/components/storefront/CartUpsell";
 import { HONEYPOT_FIELD } from "@/lib/bot-check";
 import { PRIVACY_PATH, TERMS_PATH } from "@/lib/legal";
 import { ORDER_LIMITS, RATE_LIMITED_MESSAGE, TERMS_ERROR } from "@/lib/order-input";
@@ -308,6 +309,8 @@ export default function CartDrawer() {
                         </div>
                       </div>
                     ))}
+
+                    <CartUpsell soldOutIds={soldOutIds} />
 
                     {/* Extras: Cutlery & Tip */}
                     <div className="bg-white border-2 border-brand-dark rounded-lg p-4 space-y-4 mt-6 shadow-[3px_3px_0px_0px_#121212]">
