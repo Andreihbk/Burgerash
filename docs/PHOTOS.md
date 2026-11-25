@@ -24,7 +24,7 @@ They are **mood photos, not the menu**. Menu data, product cards and stickers do
 | Spare | 55_1 motion blur, 56 bacon burger, 56_1 hand + fries, 57_1, 57_3, 57_5 | - |
 
 ## Files
-- Web versions are made from the originals with sharp: max 1600 px wide, JPG q82, metadata stripped. Originals are not in the repo.
+- Web versions are made from the originals with sharp: max 1600 px wide, JPG q82, metadata stripped. Sources: `docs/brand/PHOTO-2026-11-25-*.jpg`.
 - The current files are WhatsApp copies (853x1280). When the photographer's originals arrive, re-export with the same names: no code change.
 
 ## Check before going live
