@@ -3,6 +3,7 @@ import { Roboto_Mono, Nunito } from "next/font/google";
 import "./globals.css";
 import localFont from "next/font/local";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_TITLE, SITE_URL } from "@/lib/site";
+import SiteAnalytics from "@/components/SiteAnalytics";
 
 // Small mono accents (codes, prices meta)
 const robotoMono = Roboto_Mono({
@@ -40,7 +41,7 @@ export const metadata: Metadata = {
   }),
   openGraph: {
     title: SITE_TITLE,
-    description: "Burgeri făcuți pe loc, în Sector 6. Comandă direct, fără comisioane.",
+    description: "Burgeri din carne proaspătă, făcuți pe loc în Sector 6. Comandă direct, fără comisioane.",
     url: "/",
     siteName: SITE_NAME,
     locale: "ro_RO",
@@ -62,6 +63,7 @@ export default function RootLayout({
     <html lang="ro">
       <body className={`${robotoMono.variable} ${nunito.variable} ${eatvetica.variable} antialiased font-nunito`}>
         {children}
+        <SiteAnalytics />
       </body>
     </html>
   );

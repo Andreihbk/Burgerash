@@ -12,7 +12,7 @@ export const SITE_URL = resolveSiteUrl();
 export const SITE_NAME = "Burgerash";
 export const SITE_TAGLINE = "Nu facem medium. Facem crustă.";
 export const SITE_DESCRIPTION =
-  "Burgerash: burgeri făcuți pe loc în Sector 6, București (Strada Porumbacu 48). Comandă online pentru ridicare sau livrare, fără comisioane.";
+  "Burgerash: burgeri din carne proaspătă, făcuți pe loc în Sector 6, București (Strada Porumbacu 48). Comandă online pentru ridicare sau livrare, fără comisioane.";
 
 /** Default <title> for the homepage: brand first (ranks for "burgerash"), then what + where (local searches). */
 export const SITE_TITLE = `${SITE_NAME} | Burgeri în Sector 6, București`;
