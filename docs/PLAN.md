@@ -97,8 +97,8 @@ High priority, not a launch gate by itself: **Ebriza integration** (E.1-E.5, L.2
 - [x] P.5 SEO round 2: homepage title/description with brand + "burgeri Sector 6, București"; JSON-LD `@graph` with WebSite
       (name + alternateName, for the "burgerash" search) + Restaurant (`@id`, logo, image, hasMap, `sameAs` from
       `SOCIAL_LINKS`); share image = top-view photo + logo; `manifest.ts`; optional `GOOGLE_SITE_VERIFICATION` env.
-      TODO(owner): phone in `CONTACT` (hours.ts), real profile URLs in `SOCIAL_LINKS` (site.ts), Search Console + Google
-      Business Profile (off-site).
+      `sameAs` = Instagram + the Google Maps link. TODO(owner): phone in `CONTACT` (hours.ts), Facebook/Glovo URLs in
+      `SOCIAL_LINKS` (site.ts) when they exist, Search Console + claim the Google Business Profile (off-site).
 
 ## Phase 1 - Ebriza adapter (works in mock mode, no credentials needed)
 - [x] 1.1 Fix `src/types/ebriza.ts` against `.claude/skills/ebriza-api/reference.md`.

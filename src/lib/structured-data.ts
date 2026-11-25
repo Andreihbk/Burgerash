@@ -66,7 +66,7 @@ export function restaurantJsonLd() {
     // Mood photos only (allowed in mood sections, docs/PHOTOS.md); the menu items below carry no images.
     image: [`${SITE_URL}/images/marketing/hero-tray-fries.jpg`, `${SITE_URL}/opengraph-image`],
     hasMap: GOOGLE_MAPS_URL,
-    ...(SOCIAL_LINKS.length && { sameAs: [...SOCIAL_LINKS] }),
+    sameAs: [...SOCIAL_LINKS, GOOGLE_MAPS_URL],
     description: SITE_DESCRIPTION,
     servesCuisine: ["Burgeri", "Burgers", "Fast food"],
     ...(burgerPrices.length && {
