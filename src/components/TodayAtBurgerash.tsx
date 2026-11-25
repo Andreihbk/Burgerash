@@ -1,5 +1,5 @@
 import { Clock, MapPin, Phone } from "lucide-react";
-import { CONTACT, PREP_TEXT, statusLabel, type OpeningStatus } from "@/lib/hours";
+import { CONTACT, PREP_TEXT, SELL_OUT_NOTE, statusLabel, type OpeningStatus } from "@/lib/hours";
 import { Display } from "@/components/Display";
 
 export default function TodayAtBurgerash({ status }: { status: OpeningStatus | null }) {
@@ -16,7 +16,7 @@ export default function TodayAtBurgerash({ status }: { status: OpeningStatus | n
           <Display>{status ? statusLabel(status).toUpperCase() : " "}</Display>
         </h2>
         <p className="font-nunito font-bold text-sm mt-2">
-          {status ? `Program azi: ${status.todayHours}` : " "}
+          {status ? `Program azi: ${status.todayHours}, ${SELL_OUT_NOTE}` : " "}
         </p>
       </div>
 

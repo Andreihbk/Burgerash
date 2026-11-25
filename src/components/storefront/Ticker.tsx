@@ -4,7 +4,7 @@ import { Display } from "@/components/Display";
 const ITEMS = [
   "YOUR LOCAL BURGER SPOT",
   "HANDCRAFTED BURGERS",
-  "PROASPĂT PE PLITĂ",
+  "CARNE PROASPĂTĂ, ZILNIC",
   "LIVRARE PROPRIE",
   "RIDICARE ÎN 15 MIN",
   "PLATA ONLINE CU CARDUL",

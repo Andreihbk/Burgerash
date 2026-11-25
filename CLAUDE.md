@@ -20,12 +20,13 @@ Staff apps must keep working if Ebriza is slow or down.
   classic #0B391C, hot-boy #B50711, double #6D050A, crispy #063640, hot-honey #650329,
   crispy-bacon #EE9E23 (wine text). Drink stickers (same rule): cola #E61A27, fanta #F58220,
   sprite #008B47, water #2E7DBA. These + the 3 brand tokens are the ONLY allowed colors.
+  Exception: Glovo #FFC244 and Wolt #009DE0, ONLY on the two small partner-app buttons (PartnerApps.tsx).
 - Fonts: Eatvetica for display/headings (designer's written permission), Nunito for body and all digits,
   Roboto Mono for small accents. No other fonts. Eatvetica has no Romanian diacritics: keep stripDiacritics
   on display text and digits in Nunito (`<Display>`).
 - Product visuals are SVG stickers (BurgerStamp.tsx), not photos.
 - Marketing photos (public/images/marketing, sources in docs/brand/PHOTO-*.jpg) are allowed in mood sections only
-  (hero, photo strip, location), never on product cards or as menu data. Rules: docs/PHOTOS.md.
+  (hero, photo strip, about, location, Instagram strip), never on product cards or as menu data. Rules: docs/PHOTOS.md.
 - Product names follow the stickers, in Romanian, everywhere (catalog, cards, cart, stickers):
   CLASIC, HOT BOY, DOUBLE, CRISPY, HOT HONEY, CRISPY BACON. Fries, Chips, Nuggets, Sauces and drinks
   (Coca-Cola, Fanta, Sprite, Water) keep their names. The physical menu board is the source of truth

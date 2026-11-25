@@ -5,6 +5,9 @@ import OrderingBanner from "@/components/storefront/OrderingBanner";
 import TodayStatus from "@/components/storefront/TodayStatus";
 import MenuSections from "@/components/storefront/MenuSections";
 import LocationSection from "@/components/storefront/LocationSection";
+import AboutSection from "@/components/storefront/AboutSection";
+import FaqSection from "@/components/storefront/FaqSection";
+import InstagramStrip from "@/components/storefront/InstagramStrip";
 import SiteFooter from "@/components/storefront/SiteFooter";
 import AddedToast from "@/components/storefront/AddedToast";
 import MobileCartBar from "@/components/storefront/MobileCartBar";
@@ -36,10 +39,14 @@ export default function Home() {
             <h2 className="font-bebas text-4xl sm:text-5xl text-[#332420] leading-none">
               <Display>MENIU</Display>
             </h2>
+            <p className="mt-2 font-nunito font-semibold text-base text-[#332420]/70">Pregătim zilnic. Când se termină, se termină.</p>
           </div>
 
           <MenuSections />
+          <AboutSection />
           <LocationSection />
+          <FaqSection />
+          <InstagramStrip />
         </main>
 
         <CustomizeModalHost />
