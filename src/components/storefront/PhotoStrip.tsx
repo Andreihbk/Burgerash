@@ -14,14 +14,14 @@ import { Display } from "@/components/Display";
 import { prefersReducedMotion } from "./layout";
 
 // Mood photos only (see docs/PHOTOS.md): never product images, never text on top.
-const SLIDES: { src: StaticImageData; alt: string; line: string }[] = [
-  { src: burgerCut, alt: "Burger dublu tăiat în două, pe faianța roșie", line: "Nu facem medium. Facem crustă." },
-  { src: handFries, alt: "Mână care ia cartofi prăjiți de pe tava cu burger", line: "Cartofii vin mereu alături." },
-  { src: crispyChicken, alt: "Burger cu pui crocant și cheddar pe hârtia burgerash", line: "Pui crocant, prăjit pe loc." },
-  { src: topviewThree, alt: "Trei burgeri văzuți de sus, pe hârtia burgerash", line: "Unul singur nu ajunge." },
-  { src: friesChips, alt: "Cartofi prăjiți și chips în boluri de inox", line: "Cartofi și chips, din belșug." },
-  { src: chickenFries, alt: "Burger cu pui crocant și un bol de cartofi prăjiți", line: "Mare. Crocant. Cald." },
-  { src: wrapped, alt: "Burger împachetat în hârtie cu sticker burgerash", line: "Împachetat, gata de drum." },
+const SLIDES: { src: StaticImageData; alt: string }[] = [
+  { src: burgerCut, alt: "Burger dublu tăiat în două, pe faianța roșie" },
+  { src: handFries, alt: "Mână care ia cartofi prăjiți de pe tava cu burger" },
+  { src: crispyChicken, alt: "Burger cu pui crocant și cheddar pe hârtia burgerash" },
+  { src: topviewThree, alt: "Trei burgeri văzuți de sus, pe hârtia burgerash" },
+  { src: friesChips, alt: "Cartofi prăjiți și chips în boluri de inox" },
+  { src: chickenFries, alt: "Burger cu pui crocant și un bol de cartofi prăjiți" },
+  { src: wrapped, alt: "Burger împachetat în hârtie cu sticker burgerash" },
 ];
 
 const pad = (n: number) => String(n).padStart(2, "0");
@@ -92,23 +92,17 @@ export default function PhotoStrip() {
         className="mt-6 -mx-4 px-4 sm:-mx-6 sm:px-6 pb-3 flex gap-4 md:gap-6 overflow-x-auto snap-x snap-mandatory scroll-px-4 sm:scroll-px-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         {SLIDES.map((s, i) => (
-          <li key={s.line} className="snap-start shrink-0 w-[78%] sm:w-[45%] md:w-[31%]" aria-label={`${i + 1} din ${SLIDES.length}`}>
-            <figure>
-              <div className="relative aspect-[4/5] overflow-hidden rounded-2xl border-2 border-[#332420] shadow-[6px_6px_0px_0px_#332420]">
-                <Image
-                  src={s.src}
-                  alt={s.alt}
-                  fill
-                  placeholder="blur"
-                  sizes="(min-width: 1152px) 340px, (min-width: 768px) 31vw, (min-width: 640px) 45vw, 78vw"
-                  className="object-cover"
-                />
-              </div>
-              <figcaption className="mt-3 flex gap-2 items-baseline">
-                <span className="font-mono text-xs font-bold tracking-widest text-[#790D20]">{pad(i + 1)}</span>
-                <span className="font-nunito font-extrabold text-base text-[#332420]">{s.line}</span>
-              </figcaption>
-            </figure>
+          <li key={s.alt} className="snap-start shrink-0 w-[78%] sm:w-[45%] md:w-[31%]" aria-label={`${i + 1} din ${SLIDES.length}`}>
+            <div className="relative aspect-[4/5] overflow-hidden rounded-2xl border-2 border-[#332420] shadow-[6px_6px_0px_0px_#332420]">
+              <Image
+                src={s.src}
+                alt={s.alt}
+                fill
+                placeholder="blur"
+                sizes="(min-width: 1152px) 340px, (min-width: 768px) 31vw, (min-width: 640px) 45vw, 78vw"
+                className="object-cover"
+              />
+            </div>
           </li>
         ))}
       </ul>
