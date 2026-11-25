@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { BrandLogo } from "../BrandLogo";
 import { GOOGLE_MAPS_URL, INSTAGRAM_URL, SITE_ADDRESS } from "@/lib/site";
-import { scheduleLines } from "@/lib/hours";
+import { SELL_OUT_NOTE, scheduleLines } from "@/lib/hours";
 import { ANPC_SAL_URL, ANPC_SOL_URL, LEGAL_LINKS } from "@/lib/legal";
 
 const BADGE =
@@ -21,7 +21,7 @@ export default function SiteFooter() {
               </a>
             </p>
             <p className="mt-1">
-              {scheduleLines().map((l) => `${l.label} ${l.hours}`).join(" · ")} ·{" "}
+              {scheduleLines().map((l) => `${l.label} ${l.hours}`).join(" · ")} ({SELL_OUT_NOTE}) ·{" "}
               <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-[#790D20]">
                 Instagram
               </a>

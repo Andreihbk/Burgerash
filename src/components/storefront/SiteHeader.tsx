@@ -2,7 +2,7 @@
 
 import { ShoppingBag } from "lucide-react";
 import { BrandLogo } from "../BrandLogo";
-import { shortStatusLabel, statusLabel } from "@/lib/hours";
+import { SELL_OUT_NOTE, shortStatusLabel, statusLabel } from "@/lib/hours";
 import { useCartStore } from "@/store/cartStore";
 import { useUiStore } from "@/store/uiStore";
 import { HEADER_HEIGHT } from "./layout";
@@ -58,7 +58,10 @@ export default function SiteHeader() {
               aria-hidden
               className={`w-2 h-2 rounded-full ${status.open ? "bg-[#F5E6CC]" : "border border-[#F5E6CC]"}`}
             />
-            <span>{statusLabel(status)}</span>
+            <span>
+              {statusLabel(status)}
+              {status.open && <span className="opacity-70">, {SELL_OUT_NOTE}</span>}
+            </span>
           </div>
         )}
 

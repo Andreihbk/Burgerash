@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { MapPin } from "lucide-react";
 import trayHand from "../../../public/images/marketing/location-tray-hand.jpg";
-import { scheduleLines } from "@/lib/hours";
+import { SELL_OUT_NOTE, scheduleLines } from "@/lib/hours";
 import { DELIVERY_RADIUS_KM, GOOGLE_MAPS_URL, SITE_ADDRESS } from "@/lib/site";
 import OpenCartButton from "./OpenCartButton";
 import PartnerApps from "./PartnerApps";
@@ -41,6 +41,7 @@ export default function LocationSection() {
                 {l.label}: {l.hours}
               </p>
             ))}
+            <p className="text-[#F5E6CC]/60">...{SELL_OUT_NOTE}.</p>
           </div>
         </div>
 

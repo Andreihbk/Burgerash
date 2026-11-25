@@ -10,7 +10,7 @@ const hours = scheduleLines()
 
 // Only facts the site already guarantees (hours, zone, fees, card payment). Keep answers to one or two lines.
 const FAQ: { q: string; a: string }[] = [
-  { q: "Când sunteți deschiși?", a: `${hours}.` },
+  { q: "Când sunteți deschiși?", a: `${hours}. Sau până se termină, în serile bune.` },
   {
     q: "Unde livrați?",
     a: `În raza de ${DELIVERY_RADIUS_KM} km de ${SITE_ADDRESS.street}. Livrarea costă ${DELIVERY_FEE_STANDARD} lei și e gratuită peste ${FREE_DELIVERY_THRESHOLD} lei.`,
