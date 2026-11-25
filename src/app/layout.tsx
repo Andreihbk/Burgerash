@@ -41,7 +41,7 @@ export const metadata: Metadata = {
   }),
   openGraph: {
     title: SITE_TITLE,
-    description: "Burgeri făcuți pe loc, în Sector 6. Comandă direct, fără comisioane.",
+    description: "Burgeri din carne proaspătă, făcuți pe loc în Sector 6. Comandă direct, fără comisioane.",
     url: "/",
     siteName: SITE_NAME,
     locale: "ro_RO",
