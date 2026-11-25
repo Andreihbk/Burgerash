@@ -4,6 +4,9 @@
 
 export const ORDERING_CLOSED_BANNER = "Deschidem în curând! Comenzile online pornesc la lansare.";
 
+/** Shown instead of the live open/closed status until launch (boss note 2026-11-25). Same switch as ordering. */
+export const OPENING_SOON = "Opening soon";
+
 export function isOrderingEnabled(): boolean {
   return process.env.NEXT_PUBLIC_ORDERING_ENABLED === "true";
 }

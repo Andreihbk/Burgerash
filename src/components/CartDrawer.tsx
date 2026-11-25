@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useCartStore } from "@/store/cartStore";
 import { normalizeRoPhone, PHONE_ERROR } from "@/lib/phone";
-import { isOrderingEnabled, ORDERING_CLOSED_BANNER } from "@/lib/ordering";
+import { isOrderingEnabled, OPENING_SOON, ORDERING_CLOSED_BANNER } from "@/lib/ordering";
 import { useOpeningStatus } from "@/lib/useOpeningStatus";
 import { useSoldOutIds } from "@/lib/useSoldOut";
 import { useCartHydrated } from "@/store/useCartHydrated";
@@ -508,8 +508,13 @@ export default function CartDrawer() {
                   disabled={isSubmitting || orderingOff || isClosed || hasSoldOut}
                   className="w-full bg-brand-red text-white font-bebas text-2xl py-4 rounded-lg shadow-[4px_4px_0px_0px_#332420] hover:bg-brand-dark transition-all mt-6 disabled:opacity-50"
                 >
-                  <Display>{orderingOff ? "Comenzile pornesc la lansare" : isClosed ? "Suntem închiși acum" : hasSoldOut ? "Produs epuizat în coș" : isSubmitting ? "SE TRIMITE..." : `PLASEAZĂ COMANDA · ${formatLei(grandTotal)}`}</Display>
+                  <Display>{orderingOff ? OPENING_SOON.toUpperCase() : isClosed ? "Suntem închiși acum" : hasSoldOut ? "Produs epuizat în coș" : isSubmitting ? "SE TRIMITE..." : `PLASEAZĂ COMANDA · ${formatLei(grandTotal)}`}</Display>
                 </button>
+                {orderingOff && (
+                  <p className="mt-3 text-center font-nunito text-sm font-bold text-brand-dark/70">
+                    Comenzile online pornesc la lansare. Până atunci nu se trimite nimic.
+                  </p>
+                )}
               </form>
             )}
           </div>
@@ -546,7 +551,7 @@ export default function CartDrawer() {
                   setStep("checkout");
                   setCheckoutOpenedAt(Date.now());
                 }}
-                disabled={hasSoldOut || orderingOff}
+                disabled={hasSoldOut}
                 className="w-full disabled:opacity-50 bg-brand-dark text-brand-paper font-bebas text-2xl py-4 rounded-lg shadow-[4px_4px_0px_0px_#790D20] hover:bg-brand-red transition-all flex items-center justify-center gap-2 mt-4"
               >
                 <span><Display>CONTINUĂ LA CHECKOUT</Display></span>
