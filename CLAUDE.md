@@ -26,7 +26,7 @@ Staff apps must keep working if Ebriza is slow or down.
   on display text and digits in Nunito (`<Display>`).
 - Product visuals are SVG stickers (BurgerStamp.tsx), not photos.
 - Marketing photos (public/images/marketing, sources in docs/brand/PHOTO-*.jpg) are allowed in mood sections only
-  (hero, photo strip, location), never on product cards or as menu data. Rules: docs/PHOTOS.md.
+  (hero, photo strip, about, location, Instagram strip), never on product cards or as menu data. Rules: docs/PHOTOS.md.
 - Product names follow the stickers, in Romanian, everywhere (catalog, cards, cart, stickers):
   CLASIC, HOT BOY, DOUBLE, CRISPY, HOT HONEY, CRISPY BACON. Fries, Chips, Nuggets, Sauces and drinks
   (Coca-Cola, Fanta, Sprite, Water) keep their names. The physical menu board is the source of truth

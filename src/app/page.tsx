@@ -5,6 +5,9 @@ import OrderingBanner from "@/components/storefront/OrderingBanner";
 import TodayStatus from "@/components/storefront/TodayStatus";
 import MenuSections from "@/components/storefront/MenuSections";
 import LocationSection from "@/components/storefront/LocationSection";
+import AboutSection from "@/components/storefront/AboutSection";
+import FaqSection from "@/components/storefront/FaqSection";
+import InstagramStrip from "@/components/storefront/InstagramStrip";
 import SiteFooter from "@/components/storefront/SiteFooter";
 import AddedToast from "@/components/storefront/AddedToast";
 import MobileCartBar from "@/components/storefront/MobileCartBar";
@@ -40,7 +43,10 @@ export default function Home() {
           </div>
 
           <MenuSections />
+          <AboutSection />
           <LocationSection />
+          <FaqSection />
+          <InstagramStrip />
         </main>
 
         <CustomizeModalHost />

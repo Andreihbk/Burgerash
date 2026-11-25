@@ -21,7 +21,8 @@ export const SITE_TITLE = `${SITE_NAME} | Burgeri în Sector 6, București`;
  * Official profiles (Instagram, Facebook, Google Maps / Business Profile, Glovo...). Used as JSON-LD `sameAs`, which
  * helps Google tie them to this site. Add Facebook/Glovo/TikTok here when they exist.
  */
-export const SOCIAL_LINKS: readonly string[] = ["https://www.instagram.com/burgerash/"];
+export const INSTAGRAM_URL = "https://www.instagram.com/burgerash/";
+export const SOCIAL_LINKS: readonly string[] = [INSTAGRAM_URL];
 
 /** Staff/internal routes: never indexed. */
 export const PRIVATE_PATHS = ["/kitchen", "/dispatch", "/rider", "/admin", "/staff/", "/comanda/", "/api/"];

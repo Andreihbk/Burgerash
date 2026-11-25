@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { BrandLogo } from "../BrandLogo";
-import { GOOGLE_MAPS_URL, SITE_ADDRESS } from "@/lib/site";
+import { GOOGLE_MAPS_URL, INSTAGRAM_URL, SITE_ADDRESS } from "@/lib/site";
+import { scheduleLines } from "@/lib/hours";
 import { ANPC_SAL_URL, ANPC_SOL_URL, LEGAL_LINKS } from "@/lib/legal";
 
 const BADGE =
@@ -17,6 +18,12 @@ export default function SiteFooter() {
             <p className="mt-1">
               <a href={GOOGLE_MAPS_URL} target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-[#790D20]">
                 {SITE_ADDRESS.line}
+              </a>
+            </p>
+            <p className="mt-1">
+              {scheduleLines().map((l) => `${l.label} ${l.hours}`).join(" · ")} ·{" "}
+              <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-[#790D20]">
+                Instagram
               </a>
             </p>
             <p className="mt-1">© 2026 Burgerash. Toate drepturile rezervate.</p>

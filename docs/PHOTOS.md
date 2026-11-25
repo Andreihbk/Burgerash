@@ -19,8 +19,9 @@ They are **mood photos, not the menu**. Menu data, product cards and stickers do
 | Hero (right column desktop, under COMANDĂ on mobile) + 3 stickers on its corner | 56_4 burger + fries on tray, red tiles | `hero-tray-fries.jpg` |
 | "FĂCUT PE LOC." carousel under the ticker (7 slides, swipe + arrows, no autoplay) | 56_3, 56_1, 57_4, 56_2, 57_2, 57_3, 57 | `strip-*.jpg`, `carousel-*.jpg` |
 | Location section, next to "LIVRARE PROPRIE & PICKUP" | 55 hand holding the tray | `location-tray-hand.jpg` |
+| "DIN CARTIER." (Despre noi) | 56 bacon burger | `about-bacon.jpg` |
+| Instagram strip (4 square tiles, link to profile) | 55_1, 57_1, 57_5 + 57 | `ig-motion.jpg`, `ig-crispy.jpg`, `ig-topview.jpg`, `carousel-wrapped.jpg` |
 | Later: share image (Facebook/WhatsApp) | 57_5 top view, burger + fries | - |
-| Spare | 55_1 motion blur, 56 bacon burger, 57_1 | - |
 
 ## Files
 - Web versions are made from the originals with sharp: max 1600 px wide, JPG q82, metadata stripped. Sources: `docs/brand/PHOTO-2026-11-25-*.jpg`.
