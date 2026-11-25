@@ -1,4 +1,4 @@
-# Marketing photos - placement guideline (DRAFT, waiting for OK)
+# Marketing photos - placement guideline
 
 13 photos from the shoot (Nov 2026): smash burgers, fries, chips, red tiles, branded paper.
 They are **mood photos, not the menu**. Menu data, product cards and stickers do not change.
@@ -12,21 +12,20 @@ They are **mood photos, not the menu**. Menu data, product cards and stickers do
 6. Always `next/image` with `sizes`. Only the hero photo gets `priority`; all others lazy-load.
 7. Alt text in short Romanian ("Smash burger cu cheddar pe tavă").
 
-## Where each photo goes (numbers = order in the Gmail email, left to right, top to bottom)
+## Where each photo goes (file names = WhatsApp export from the shoot)
 
-| Spot | Photo | Why |
+| Spot | Source photo | File in public/images/marketing |
 |---|---|---|
-| Hero, right column (desktop) | #9 burger cut in half on red tiles (or #3) | Red tiles = the shop's wall, warm, matches wine. Sticker fan overlaps its bottom-left corner. Mobile keeps the stickers only. |
-| Under the ticker, where the menu board was: "FĂCUT PE PLITĂ" strip | #7 two smash burgers, #4 fries drop, #8 chips | 3 photos: burger, fries, chips. 3 columns on desktop, swipe (scroll-snap) on mobile. |
-| Location section ("Vino să-l iei cald") | #5 hand holding the tray | Human, local, pick-up feeling. |
-| Order confirmation page (later) | #1 burger wrapped in branded paper | "Your order is packed" feeling. |
-| Social share image / Instagram (later, separate task) | #13 top view, fries + burger on branded paper | Square crop works. |
-| Spare / not used now | #2, #11, #12 (near-duplicates, mostly tiles), #6 motion blur, #10 | Keep in the folder only if used; otherwise leave them out of the repo. |
+| Hero (right column desktop, under COMANDĂ on mobile) + 3 stickers on its corner | 56_4 burger + fries on tray, red tiles | `hero-tray-fries.jpg` |
+| "FĂCUT PE LOC." strip under the ticker (where the menu board was) | 56_3 cut double smash / 57_4 crispy chicken / 57_2 fries + chips | `strip-smash-cut.jpg`, `strip-crispy-chicken.jpg`, `strip-fries-chips.jpg` |
+| Location section, next to "LIVRARE PROPRIE & PICKUP" | 55 hand holding the tray | `location-tray-hand.jpg` |
+| Later: order confirmation page | 57 wrapped burger | - |
+| Later: share image (Facebook/WhatsApp) | 56_2 top view, 3 burgers on branded paper | - |
+| Spare | 55_1 motion blur, 56 bacon burger, 56_1 hand + fries, 57_1, 57_3, 57_5 | - |
 
 ## Files
-- Folder: `public/images/marketing/` (see the README there).
-- Names: `hero-burger-tiles.jpg`, `strip-two-burgers.jpg`, `strip-fries-drop.jpg`, `strip-chips.jpg`, `location-tray-hand.jpg`, `packed-burger.jpg`, `share-topview.jpg`.
-- Before commit: longest side max 2400 px, JPG ~80, under ~600 KB, EXIF/GPS stripped.
+- Web versions are made from the originals with sharp: max 1600 px wide, JPG q82, metadata stripped. Originals are not in the repo.
+- The current files are WhatsApp copies (853x1280). When the photographer's originals arrive, re-export with the same names: no code change.
 
 ## Check before going live
 - The photographer/boss agrees the photos can be used on the website (written OK is enough).

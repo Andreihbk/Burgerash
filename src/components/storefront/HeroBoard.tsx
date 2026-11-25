@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
+import heroPhoto from "../../../public/images/marketing/hero-tray-fries.jpg";
 import { INITIAL_PRODUCTS } from "@/lib/catalog";
 import { heroStatusLine } from "@/lib/hours";
 import { useUiStore } from "@/store/uiStore";
@@ -10,20 +12,19 @@ import { ALL_TAB, prefersReducedMotion, scrollToTab } from "./layout";
 import { useStorefrontStatus } from "./useStorefrontStatus";
 import { Display } from "@/components/Display";
 import Ticker from "./Ticker";
+import PhotoStrip from "./PhotoStrip";
 
-// Hero fan: 5 stickers (CRISPY BACON is on the board and cards, not in the fan).
-const HERO_PRODUCTS = ["prod-classic", "prod-double", "prod-hot-boy", "prod-hot-honey", "prod-crispy"]
+// Hero: 3 stickers overlapping the photo's bottom-left corner.
+const HERO_PRODUCTS = ["prod-classic", "prod-hot-boy", "prod-crispy"]
   .map((id) => INITIAL_PRODUCTS.find((p) => p.id === id))
   .filter((p): p is Product => !!p && p.is_available && p.price > 0);
 
 // Fan layout per stack position (0 = top). Offsets are % of the sticker's own size,
 // so the same layout works at any sticker size.
 const STICKER_SLOTS = [
-  { x: 84, y: 30, r: -3, z: 50, s: 1 },
-  { x: 0, y: 8, r: -10, z: 40, s: 0.95 },
-  { x: 168, y: 20, r: 9, z: 30, s: 0.9 },
-  { x: 42, y: 0, r: 6, z: 20, s: 0.88 },
-  { x: 126, y: 2, r: -7, z: 10, s: 0.86 },
+  { x: 52, y: 14, r: -4, z: 30, s: 1 },
+  { x: 0, y: 0, r: -10, z: 20, s: 0.9 },
+  { x: 104, y: 2, r: 8, z: 10, s: 0.88 },
 ];
 
 // Fanned round stickers (tap = customize). `order` lists product ids, top first.
@@ -41,7 +42,7 @@ function HeroStickers({
   return (
     <div
       className="relative"
-      style={{ width: size * 2.68, height: size * 1.3 }}
+      style={{ width: size * 2.04, height: size * 1.16 }}
       onMouseEnter={() => onPause(true)}
       onMouseLeave={() => onPause(false)}
       onFocus={() => onPause(true)}
@@ -107,11 +108,6 @@ export default function HeroBoard() {
             Burgeri făcuți pe loc, în Sector 6. Comanzi direct de aici, fără aplicații și fără comisioane.
           </p>
 
-          {/* Mobile: sticker stack goes under the headline (pure SVG, no cart state) */}
-          <div className="self-center my-6 md:hidden">
-            <StickerStack size={100} modalOpen={!!customizing} onPick={openCustomize} />
-          </div>
-
           <button
             type="button"
             onClick={() => scrollToTab(ALL_TAB)}
@@ -150,17 +146,28 @@ export default function HeroBoard() {
           </p>
         </div>
 
-        {/* md+: big sticker fan fills the right column */}
-        <div className="hidden md:flex items-center justify-center">
-          <div className="origin-center md:scale-[0.62] lg:scale-[0.9] xl:scale-100">
-            <StickerStack size={190} modalOpen={!!customizing} onPick={openCustomize} />
+        {/* Photo + stickers: right column on md+, under the COMANDĂ block on mobile (ordering stays above the fold). */}
+        <div className="relative w-full max-w-md md:max-w-[30rem] mx-auto mb-14 md:mb-10">
+          <div className="relative aspect-square md:aspect-[4/5] overflow-hidden rounded-2xl border-2 border-[#332420] shadow-[6px_6px_0px_0px_#332420]">
+            <Image
+              src={heroPhoto}
+              alt="Smash burger cu cartofi prăjiți pe tavă, în fața faianței roșii burgerash"
+              fill
+              priority
+              placeholder="blur"
+              sizes="(min-width: 1152px) 480px, (min-width: 768px) 45vw, 100vw"
+              className="object-cover object-[50%_60%]"
+            />
+          </div>
+          <div className="absolute -left-3 -bottom-14 md:-left-8 md:-bottom-12">
+            <div className="md:hidden"><StickerStack size={88} modalOpen={!!customizing} onPick={openCustomize} /></div>
+            <div className="hidden md:block"><StickerStack size={120} modalOpen={!!customizing} onPick={openCustomize} /></div>
           </div>
         </div>
       </section>
 
       <Ticker />
-
-      <div className="h-6 lg:h-10" />
+      <PhotoStrip />
       <div aria-hidden className="max-w-6xl mx-auto px-4 sm:px-6">
         <div className="h-3 border-y-[3px] border-[#790D20] rounded-tr-3xl rounded-bl-3xl" />
       </div>
