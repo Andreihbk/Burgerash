@@ -14,6 +14,8 @@ import { saveLastOrder } from "@/lib/last-order";
 import { X, Trash2, Plus, Minus, ShoppingBag, ArrowRight, CheckCircle2 } from "lucide-react";
 import { Display } from "@/components/Display";
 import CartUpsell from "@/components/storefront/CartUpsell";
+import PickupTimePicker from "@/components/storefront/PickupTimePicker";
+import FreeDeliveryBar from "@/components/storefront/FreeDeliveryBar";
 import { HONEYPOT_FIELD } from "@/lib/bot-check";
 import { PRIVACY_PATH, TERMS_PATH } from "@/lib/legal";
 import { ORDER_LIMITS, RATE_LIMITED_MESSAGE, TERMS_ERROR } from "@/lib/order-input";
@@ -33,6 +35,7 @@ export default function CartDrawer() {
     closeCart,
     fulfillmentType,
     setFulfillmentType,
+    pickupTime,
     cutlerySets,
     setCutlerySets,
     tipAmount,
@@ -109,7 +112,8 @@ export default function CartDrawer() {
         customer_email: email || null,
         delivery_address: fulfillmentType === "delivery" ? formData.address : "Ridicare personală din restaurant",
         delivery_details: formData.details || null,
-        order_note: formData.note || null,
+        // Pickup slot travels in the note until the backend has its own field.
+        order_note: [fulfillmentType === "pickup" && pickupTime ? `Ridicare la ${pickupTime}` : null, formData.note || null].filter(Boolean).join(" · ") || null,
         subtotal,
         delivery_fee: deliveryFee,
         tip_amount: tipAmount,
@@ -178,7 +182,7 @@ export default function CartDrawer() {
           <div className="brand-scroll flex-1 overflow-y-auto overflow-x-hidden p-4 sm:p-6">
             {step === "success" ? (
               <div className="text-center py-12 space-y-4">
-                <CheckCircle2 className="w-16 h-16 text-emerald-600 mx-auto" />
+                <CheckCircle2 className="w-16 h-16 text-[#790D20] mx-auto" />
                 <h3 className="font-bebas text-4xl text-brand-dark"><Display>COMANDĂ PLASATĂ!</Display></h3>
                 <p className="font-mono text-lg font-bold bg-brand-dark text-brand-paper py-2 px-4 inline-block rounded">
                   Număr bon: {orderNumber}
@@ -201,7 +205,7 @@ export default function CartDrawer() {
                     setStep("cart");
                     closeCart();
                   }}
-                  className="mt-4 bg-brand-red text-white font-bebas text-xl px-6 py-3 rounded shadow-[3px_3px_0px_0px_#121212]"
+                  className="mt-4 bg-brand-red text-white font-bebas text-xl px-6 py-3 rounded shadow-[3px_3px_0px_0px_#332420]"
                 >
                   <Display>ÎNAPOI LA MENIU</Display>
                 </button>
@@ -230,7 +234,7 @@ export default function CartDrawer() {
                     onClick={() => setFulfillmentType("delivery")}
                     className={`font-bebas text-lg py-2 rounded transition-all ${
                       fulfillmentType === "delivery"
-                        ? "bg-brand-red text-white shadow-[2px_2px_0px_0px_#121212]"
+                        ? "bg-brand-red text-white shadow-[2px_2px_0px_0px_#332420]"
                         : "text-brand-dark hover:bg-brand-dark/5"
                     }`}
                   >
@@ -240,13 +244,15 @@ export default function CartDrawer() {
                     onClick={() => setFulfillmentType("pickup")}
                     className={`font-bebas text-lg py-2 rounded transition-all ${
                       fulfillmentType === "pickup"
-                        ? "bg-brand-red text-white shadow-[2px_2px_0px_0px_#121212]"
+                        ? "bg-brand-red text-white shadow-[2px_2px_0px_0px_#332420]"
                         : "text-brand-dark hover:bg-brand-dark/5"
                     }`}
                   >
                     <Display>RIDICARE DIN RESTAURANT</Display>
                   </button>
                 </div>
+
+                {fulfillmentType === "pickup" && items.length > 0 && <PickupTimePicker />}
 
                 {items.length === 0 ? (
                   <div className="text-center py-16 text-brand-dark/60 font-nunito font-bold">
@@ -258,7 +264,7 @@ export default function CartDrawer() {
                     {items.map((item) => (
                       <div
                         key={item.cartItemId}
-                        className="bg-white border-2 border-brand-dark rounded-lg p-4 shadow-[3px_3px_0px_0px_#121212] flex flex-col gap-2"
+                        className="bg-white border-2 border-brand-dark rounded-lg p-4 shadow-[3px_3px_0px_0px_#332420] flex flex-col gap-2"
                       >
                         <div className="flex justify-between items-start">
                           <div>
@@ -313,7 +319,7 @@ export default function CartDrawer() {
                     <CartUpsell soldOutIds={soldOutIds} />
 
                     {/* Extras: Cutlery & Tip */}
-                    <div className="bg-white border-2 border-brand-dark rounded-lg p-4 space-y-4 mt-6 shadow-[3px_3px_0px_0px_#121212]">
+                    <div className="bg-white border-2 border-brand-dark rounded-lg p-4 space-y-4 mt-6 shadow-[3px_3px_0px_0px_#332420]">
                       <div className="flex justify-between items-center">
                         <span className="font-bebas text-lg"><Display>SETURI TACĂMURI (Gratis)</Display></span>
                         <div className="flex items-center gap-2 border-2 border-brand-dark rounded px-2 py-0.5 bg-brand-paper">
@@ -473,7 +479,7 @@ export default function CartDrawer() {
                 <div>
                   <label className="block font-nunito font-extrabold tracking-wide text-sm mb-1">OBSERVAȚII COMANDĂ</label>
                   <textarea
-                    maxLength={ORDER_LIMITS.orderNote}
+                    maxLength={ORDER_LIMITS.orderNote - 24} // room for the "Ridicare la HH:MM · " prefix
                     value={formData.note}
                     onChange={(e) => setFormData({ ...formData, note: e.target.value })}
                     className="w-full border-2 border-brand-dark p-2.5 rounded font-nunito font-semibold bg-white h-20"
@@ -500,7 +506,7 @@ export default function CartDrawer() {
                 <button
                   type="submit"
                   disabled={isSubmitting || orderingOff || isClosed || hasSoldOut}
-                  className="w-full bg-brand-red text-white font-bebas text-2xl py-4 rounded-lg shadow-[4px_4px_0px_0px_#121212] hover:bg-brand-dark transition-all mt-6 disabled:opacity-50"
+                  className="w-full bg-brand-red text-white font-bebas text-2xl py-4 rounded-lg shadow-[4px_4px_0px_0px_#332420] hover:bg-brand-dark transition-all mt-6 disabled:opacity-50"
                 >
                   <Display>{orderingOff ? "Comenzile pornesc la lansare" : isClosed ? "Suntem închiși acum" : hasSoldOut ? "Produs epuizat în coș" : isSubmitting ? "SE TRIMITE..." : `PLASEAZĂ COMANDA · ${formatLei(grandTotal)}`}</Display>
                 </button>
@@ -521,9 +527,7 @@ export default function CartDrawer() {
                     <span>Taxă livrare:</span>
                     <span>{deliveryFee === 0 ? "GRATUIT" : formatLei(deliveryFee)}</span>
                   </div>
-                  {subtotal < 120 && (
-                    <p className="font-nunito text-xs text-[#332420]/70">Livrare gratuită de la 120 LEI</p>
-                  )}
+                  <FreeDeliveryBar subtotal={subtotal} />
                 </>
               )}
               {tipAmount > 0 && (
@@ -543,7 +547,7 @@ export default function CartDrawer() {
                   setCheckoutOpenedAt(Date.now());
                 }}
                 disabled={hasSoldOut || orderingOff}
-                className="w-full disabled:opacity-50 bg-brand-dark text-brand-paper font-bebas text-2xl py-4 rounded-lg shadow-[4px_4px_0px_0px_#C5081F] hover:bg-brand-red transition-all flex items-center justify-center gap-2 mt-4"
+                className="w-full disabled:opacity-50 bg-brand-dark text-brand-paper font-bebas text-2xl py-4 rounded-lg shadow-[4px_4px_0px_0px_#790D20] hover:bg-brand-red transition-all flex items-center justify-center gap-2 mt-4"
               >
                 <span><Display>CONTINUĂ LA CHECKOUT</Display></span>
                 <ArrowRight className="w-5 h-5" />

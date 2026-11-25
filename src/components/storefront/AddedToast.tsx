@@ -22,7 +22,7 @@ export default function AddedToast() {
     <div
       role="status"
       aria-live="polite"
-      className="fixed z-50 left-4 right-4 bottom-24 md:left-auto md:right-6 md:bottom-6 pointer-events-none flex justify-center md:justify-end"
+      className="fixed z-50 left-4 right-4 bottom-40 md:left-auto md:right-6 md:bottom-6 pointer-events-none flex justify-center md:justify-end"
     >
       {lastAdded && (
         <div

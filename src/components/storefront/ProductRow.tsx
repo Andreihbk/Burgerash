@@ -4,7 +4,6 @@ import { Plus } from "lucide-react";
 import { BurgerStamp } from "../BurgerStamp";
 import { useCartStore } from "@/store/cartStore";
 import { useUiStore } from "@/store/uiStore";
-import { isOrderingEnabled } from "@/lib/ordering";
 import { useIsSoldOut } from "@/lib/useSoldOut";
 import type { Product } from "@/types/database";
 import { Display } from "@/components/Display";
@@ -15,7 +14,6 @@ export default function ProductRow({ product }: { product: Product }) {
   const notifyAdded = useUiStore((s) => s.notifyAdded);
   const openCustomize = useUiStore((s) => s.openCustomize);
   const soldOut = useIsSoldOut(product.id);
-  const orderingOff = !isOrderingEnabled();
 
   return (
     <li className={`flex items-center gap-3 bg-[#F5E6CC] border-2 border-[#332420] rounded-xl p-2.5 pr-3 shadow-[3px_3px_0px_0px_#332420] ${soldOut ? "opacity-60" : ""}`}>
@@ -50,11 +48,9 @@ export default function ProductRow({ product }: { product: Product }) {
         <button
           type="button"
           onClick={() => {
-            if (orderingOff) return;
             addItem(product);
             notifyAdded(product.name);
           }}
-          disabled={orderingOff}
           aria-label={`Adaugă ${product.name} în coș`}
           className="shrink-0 grid place-items-center w-11 h-11 rounded-full bg-[#790D20] text-[#F5E6CC] border-2 border-[#332420] shadow-[2px_2px_0px_0px_#332420] active:translate-y-px disabled:opacity-50 disabled:pointer-events-none"
         >

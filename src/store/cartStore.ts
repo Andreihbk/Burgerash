@@ -17,12 +17,15 @@ interface CartState {
   items: CartLineItem[];
   isOpen: boolean;
   fulfillmentType: FulfillmentType;
+  /** Pickup slot "HH:MM"; null = as soon as possible. Not persisted (slots go stale). */
+  pickupTime: string | null;
   cutlerySets: number;
   tipAmount: number;
   openCart: () => void;
   closeCart: () => void;
   toggleCart: () => void;
   setFulfillmentType: (type: FulfillmentType) => void;
+  setPickupTime: (time: string | null) => void;
   setCutlerySets: (sets: number) => void;
   setTipAmount: (tip: number) => void;
   addItem: (product: Product, modifiers?: OrderItemModifier[], note?: string, quantity?: number) => void;
@@ -51,6 +54,7 @@ export const useCartStore = create<CartState>()(
       items: [],
       isOpen: false,
       fulfillmentType: "delivery",
+      pickupTime: null,
       cutlerySets: 0,
       tipAmount: 0,
 
@@ -59,6 +63,7 @@ export const useCartStore = create<CartState>()(
       toggleCart: () => set((state) => ({ isOpen: !state.isOpen })),
 
       setFulfillmentType: (type) => set({ fulfillmentType: type }),
+      setPickupTime: (time) => set({ pickupTime: time }),
       setCutlerySets: (sets) => set({ cutlerySets: Math.max(0, sets) }),
       setTipAmount: (tip) => set({ tipAmount: Math.max(0, tip) }),
 

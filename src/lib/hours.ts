@@ -123,3 +123,20 @@ export function scheduleLines(): { label: string; hours: string }[] {
 }
 
 export const CLOSED_ORDER_ERROR = "Suntem închiși acum. Comenzile se pot plasa în programul de funcționare.";
+
+/**
+ * Pickup time slots for today: every 15 min, from ~20 min from now (rounded up) until 15 min before closing,
+ * at most `max` slots. Empty when closed for the rest of the day. Before opening, slots start at opening + 15.
+ */
+export function pickupSlots(now: Date = new Date(), max = 8): string[] {
+  const { day, minutes } = bucharestNow(now);
+  const today = HOURS[day];
+  const earliest = Math.max(minutes + 20, today.open + 15);
+  let t = Math.ceil(earliest / 15) * 15;
+  const slots: string[] = [];
+  while (t <= today.close - 15 && slots.length < max) {
+    slots.push(formatTime(t));
+    t += 15;
+  }
+  return slots;
+}
