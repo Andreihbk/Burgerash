@@ -42,3 +42,12 @@ export const SITE_COORDS = { lat: 44.4563518, lng: 26.0509441 } as const;
 export const DELIVERY_RADIUS_KM = 1;
 
 export const GOOGLE_MAPS_URL = "https://maps.app.goo.gl/oqvQu7YiSKh3umCD6";
+
+/**
+ * Delivery-app store pages. Secondary to our own ordering (no commission for us, cheaper for the customer).
+ * null = not live yet: the button shows "în curând" and links nowhere. Paste the real store URL to switch it on.
+ */
+export const PARTNER_APPS: readonly { name: "Glovo" | "Wolt"; url: string | null }[] = [
+  { name: "Glovo", url: null },
+  { name: "Wolt", url: null },
+];

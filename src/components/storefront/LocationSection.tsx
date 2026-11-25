@@ -4,6 +4,7 @@ import trayHand from "../../../public/images/marketing/location-tray-hand.jpg";
 import { scheduleLines } from "@/lib/hours";
 import { DELIVERY_RADIUS_KM, GOOGLE_MAPS_URL, SITE_ADDRESS } from "@/lib/site";
 import OpenCartButton from "./OpenCartButton";
+import PartnerApps from "./PartnerApps";
 import LocationMapLoader from "./LocationMapLoader";
 import { Display } from "@/components/Display";
 
@@ -65,9 +66,12 @@ export default function LocationSection() {
             Comandă direct de pe site fără comisioane ascunse. Livrare gratuită în cartier la comenzi de peste 120 LEI sau ridicare direct de la geam în 15 minute.
           </p>
         </div>
-        <OpenCartButton className="self-start shrink-0 bg-[#790D20] text-[#F5E6CC] font-bebas text-2xl px-8 py-3.5 rounded-lg border-2 border-[#332420] shadow-[4px_4px_0px_0px_#332420] hover:bg-[#332420] transition-all">
-          <Display>DESCHIDE COȘUL DE COMANDĂ</Display>
-        </OpenCartButton>
+        <div className="self-start shrink-0 flex flex-col gap-4">
+          <OpenCartButton className="bg-[#790D20] text-[#F5E6CC] font-bebas text-2xl px-8 py-3.5 rounded-lg border-2 border-[#332420] shadow-[4px_4px_0px_0px_#332420] hover:bg-[#332420] transition-all">
+            <Display>DESCHIDE COȘUL DE COMANDĂ</Display>
+          </OpenCartButton>
+          <PartnerApps />
+        </div>
       </div>
     </section>
   );
