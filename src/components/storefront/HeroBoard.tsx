@@ -6,6 +6,8 @@ import heroPhoto from "../../../public/images/marketing/hero-tray-fries.jpg";
 import { INITIAL_PRODUCTS } from "@/lib/catalog";
 import { heroStatusLine } from "@/lib/hours";
 import { useUiStore } from "@/store/uiStore";
+import { useCartStore } from "@/store/cartStore";
+import { Bike, ShoppingBag } from "lucide-react";
 import type { Product } from "@/types/database";
 import { BurgerStamp } from "../BurgerStamp";
 import { ALL_TAB, prefersReducedMotion, scrollToTab } from "./layout";
@@ -92,6 +94,7 @@ export default function HeroBoard() {
   const status = useStorefrontStatus();
   const customizing = useUiStore((s) => s.customizing);
   const openCustomize = useUiStore((s) => s.openCustomize);
+  const setFulfillmentType = useCartStore((s) => s.setFulfillmentType);
 
   return (
     <>
@@ -108,10 +111,32 @@ export default function HeroBoard() {
             Burgeri făcuți pe loc, în Sector 6. Comanzi direct de aici, fără aplicații și fără comisioane.
           </p>
 
+          {/* Phones: pick the order type first (owner's app concept), then the menu. */}
+          <div className="md:hidden mt-6 grid w-full grid-cols-2 gap-3">
+            {([
+              { type: "pickup", label: "PICK UP", sub: "Ridici din restaurant", Icon: ShoppingBag },
+              { type: "delivery", label: "DELIVERY", sub: "Livrare la adresă", Icon: Bike },
+            ] as const).map(({ type, label, sub, Icon }) => (
+              <button
+                key={type}
+                type="button"
+                onClick={() => {
+                  setFulfillmentType(type);
+                  scrollToTab(ALL_TAB);
+                }}
+                className="flex flex-col items-start gap-2 rounded-xl bg-[#790D20] text-[#F5E6CC] border-2 border-[#332420] p-4 text-left shadow-[4px_4px_0px_0px_#332420] active:translate-x-px active:translate-y-px active:shadow-[2px_2px_0px_0px_#332420]"
+              >
+                <Icon className="w-7 h-7" aria-hidden />
+                <span className="font-bebas text-2xl leading-none tracking-wide"><Display>{label}</Display></span>
+                <span className="font-nunito font-bold text-xs text-[#F5E6CC]/80">{sub}</span>
+              </button>
+            ))}
+          </div>
+
           <button
             type="button"
             onClick={() => scrollToTab(ALL_TAB)}
-            className="mt-2 md:mt-8 min-h-[60px] bg-[#790D20] text-[#F5E6CC] font-bebas text-3xl tracking-wider px-12 py-4 rounded-lg border-2 border-[#332420] shadow-[6px_6px_0px_0px_#332420] hover:bg-[#332420] active:translate-x-px active:translate-y-px active:shadow-[3px_3px_0px_0px_#332420] transition-colors duration-200"
+            className="hidden md:block mt-2 md:mt-8 min-h-[60px] bg-[#790D20] text-[#F5E6CC] font-bebas text-3xl tracking-wider px-12 py-4 rounded-lg border-2 border-[#332420] shadow-[6px_6px_0px_0px_#332420] hover:bg-[#332420] active:translate-x-px active:translate-y-px active:shadow-[3px_3px_0px_0px_#332420] transition-colors duration-200"
           >
             <Display>COMANDĂ</Display>
           </button>
@@ -151,7 +176,7 @@ export default function HeroBoard() {
           <div className="relative aspect-square md:aspect-[4/5] overflow-hidden rounded-2xl border-2 border-[#332420] shadow-[6px_6px_0px_0px_#332420]">
             <Image
               src={heroPhoto}
-              alt="Smash burger cu cartofi prăjiți pe tavă, în fața faianței roșii burgerash"
+              alt="Burger cu cartofi prăjiți pe tavă, în fața faianței roșii burgerash"
               fill
               priority
               placeholder="blur"

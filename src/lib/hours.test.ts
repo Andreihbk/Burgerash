@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { getStatus, nextScheduleStart, statusLabel } from "./hours";
+import { getStatus, nextScheduleStart, pickupSlots, statusLabel } from "./hours";
 
 describe("nextScheduleStart (Ebriza snooze end)", () => {
   it("is the next day's opening when snoozed during the day", () => {
@@ -57,5 +57,20 @@ describe("getStatus", () => {
   it("uses Bucharest time in summer (UTC+3)", () => {
     expect(getStatus(new Date("2026-07-15T07:00:00Z")).open).toBe(true); // 10:00 local
     expect(getStatus(new Date("2026-07-15T06:59:00Z")).open).toBe(false);
+  });
+});
+
+describe("pickupSlots", () => {
+  it("starts ~20 min from now, rounded up to 15, max 8 (Wed 15:20 Bucharest)", () => {
+    const slots = pickupSlots(new Date("2026-11-18T13:20:00Z"));
+    expect(slots[0]).toBe("15:45");
+    expect(slots).toHaveLength(8);
+    expect(slots[7]).toBe("17:30");
+  });
+  it("before opening starts at opening + 15 (Wed 08:00 Bucharest)", () => {
+    expect(pickupSlots(new Date("2026-11-18T06:00:00Z"))[0]).toBe("10:15");
+  });
+  it("is empty when the last slot has passed (Wed 21:40 Bucharest)", () => {
+    expect(pickupSlots(new Date("2026-11-18T19:40:00Z"))).toEqual([]);
   });
 });

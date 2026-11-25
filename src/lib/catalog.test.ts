@@ -76,7 +76,7 @@ describe("modifier -> product mapping", () => {
         cartItemId: "x",
         product: { id: "prod-sauces" } as never,
         quantity: 1,
-        modifiers: [{ id: "mod-extra-patty", name: "Extra Chiftea Smash", price: 12, ebriza_sku: null }],
+        modifiers: [{ id: "mod-extra-patty", name: "Extra Chiftea", price: 12, ebriza_sku: null }],
         note: "",
         unitPriceWithModifiers: 17,
       },

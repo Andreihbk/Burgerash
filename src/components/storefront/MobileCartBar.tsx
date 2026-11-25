@@ -5,9 +5,10 @@ import { formatLei } from "@/lib/format";
 import { useCartStore } from "@/store/cartStore";
 import { useUiStore } from "@/store/uiStore";
 import { useCartSummary } from "./useCartSummary";
+import { BOTTOM_NAV_HEIGHT } from "./BottomNav";
 import { Display } from "@/components/Display";
 
-/** Sticky bottom cart bar, mobile only (<768px). */
+/** Cart bar, mobile only (<768px): sits right above the bottom tab bar. */
 export default function MobileCartBar() {
   const openCart = useCartStore((s) => s.openCart);
   const addedSeq = useUiStore((s) => s.addedSeq);
@@ -17,8 +18,8 @@ export default function MobileCartBar() {
 
   return (
     <div
-      className="md:hidden fixed inset-x-0 bottom-0 z-40 bg-[#F5E6CC] border-t-2 border-[#332420] px-4 pt-3"
-      style={{ paddingBottom: "max(0.75rem, env(safe-area-inset-bottom))" }}
+      className="md:hidden fixed inset-x-0 z-40 bg-[#F5E6CC] border-t-2 border-[#332420] px-4 py-3"
+      style={{ bottom: `calc(${BOTTOM_NAV_HEIGHT}px + env(safe-area-inset-bottom))` }}
     >
       <button
         type="button"

@@ -36,7 +36,7 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
   openGraph: {
     title: `${SITE_NAME} | ${SITE_TAGLINE}`,
-    description: "Smash burgeri din Sector 6. Comandă direct, fără comisioane.",
+    description: "Burgeri făcuți pe loc, în Sector 6. Comandă direct, fără comisioane.",
     url: "/",
     siteName: SITE_NAME,
     locale: "ro_RO",

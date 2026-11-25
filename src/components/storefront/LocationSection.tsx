@@ -52,7 +52,7 @@ export default function LocationSection() {
         <div className="relative w-32 sm:w-40 shrink-0 aspect-[4/5] overflow-hidden rounded-2xl border-2 border-[#332420] shadow-[4px_4px_0px_0px_#332420]">
           <Image
             src={trayHand}
-            alt="Smash burger cu cheddar servit pe tavă"
+            alt="Burger cu cheddar servit pe tavă"
             fill
             placeholder="blur"
             sizes="160px"

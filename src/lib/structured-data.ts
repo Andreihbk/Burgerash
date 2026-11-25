@@ -40,7 +40,7 @@ export function restaurantJsonLd() {
     url: `${SITE_URL}/`,
     image: `${SITE_URL}/opengraph-image`,
     description: SITE_DESCRIPTION,
-    servesCuisine: ["Burgeri", "Smash burgers", "Fast food"],
+    servesCuisine: ["Burgeri", "Burgers", "Fast food"],
     ...(burgerPrices.length && {
       priceRange: `${Math.min(...burgerPrices)}-${Math.max(...burgerPrices)} RON`,
     }),

@@ -8,6 +8,7 @@ import LocationSection from "@/components/storefront/LocationSection";
 import SiteFooter from "@/components/storefront/SiteFooter";
 import AddedToast from "@/components/storefront/AddedToast";
 import MobileCartBar from "@/components/storefront/MobileCartBar";
+import BottomNav from "@/components/storefront/BottomNav";
 import CustomizeModalHost from "@/components/storefront/CustomizeModalHost";
 import CartDrawerHost from "@/components/storefront/CartDrawerHost";
 import { MENU_TOP_ID } from "@/components/storefront/layout";
@@ -21,7 +22,7 @@ export default function Home() {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd }} />
-      <div className="min-h-screen bg-[#F5E6CC] text-[#332420] font-nunito pb-24 overflow-x-clip">
+      <div className="min-h-screen bg-[#F5E6CC] text-[#332420] font-nunito pb-40 md:pb-24 overflow-x-clip">
         <SiteHeader />
         <HeroBoard />
         <CategoryBar />
@@ -45,6 +46,7 @@ export default function Home() {
         <SiteFooter />
         <AddedToast />
         <MobileCartBar />
+        <BottomNav />
         <CartDrawerHost />
       </div>
     </>

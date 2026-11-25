@@ -13,7 +13,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     category_id: "cat-burgers",
     name: "CLASIC",
     slug: "clasic",
-    description: "Vită smash, cheddar, sos burgerash, salată, ceapă, pikels",
+    description: "Vită, cheddar, sos burgerash, salată, ceapă, pikels",
     price: 36,
     weight_grams: 280,
     weight_label: "280g",
@@ -33,7 +33,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     category_id: "cat-burgers",
     name: "HOT BOY",
     slug: "hot-boy",
-    description: "Vită smash, cheddar, bacon, sos spicy, salată, ceapă, pikels",
+    description: "Vită, cheddar, bacon, sos spicy, salată, ceapă, pikels",
     price: 39,
     weight_grams: 290,
     weight_label: "290g",
@@ -53,7 +53,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     category_id: "cat-burgers",
     name: "DOUBLE",
     slug: "double",
-    description: "Dublă, vită smash, cheddar, Gouda, sos burgerash, salată, ceapă, pikels",
+    description: "Dublă, vită, cheddar, Gouda, sos burgerash, salată, ceapă, pikels",
     price: 46,
     weight_grams: 370,
     weight_label: "370g",
@@ -291,7 +291,7 @@ export const INITIAL_PRODUCTS: Product[] = [
 ];
 
 export const INITIAL_MODIFIERS: Modifier[] = [
-{ id: "mod-extra-patty", name: "Extra Chiftea Smash", group_name: "extra", price: 12, ebriza_sku: "mod-extra-patty", category_ids: ["cat-burgers"], is_available: true, position: 1 },
+{ id: "mod-extra-patty", name: "Extra Chiftea", group_name: "extra", price: 12, ebriza_sku: "mod-extra-patty", category_ids: ["cat-burgers"], is_available: true, position: 1 },
 { id: "mod-extra-cheddar", name: "Extra American Cheddar", group_name: "extra", price: 5, ebriza_sku: "mod-extra-cheddar", category_ids: ["cat-burgers"], is_available: true, position: 2 },
 { id: "mod-extra-bacon", name: "Extra Crispy Bacon", group_name: "extra", price: 6, ebriza_sku: "mod-extra-bacon", category_ids: ["cat-burgers"], is_available: true, position: 3 },
 { id: "mod-extra-jalapeno", name: "Extra Jalapeño", group_name: "extra", price: 4, ebriza_sku: "mod-extra-jalapeno", category_ids: ["cat-burgers"], is_available: true, position: 4 },
