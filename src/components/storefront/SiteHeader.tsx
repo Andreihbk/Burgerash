@@ -8,6 +8,7 @@ import { useUiStore } from "@/store/uiStore";
 import { HEADER_HEIGHT } from "./layout";
 import { useCartSummary } from "./useCartSummary";
 import { useStorefrontStatus } from "./useStorefrontStatus";
+import { isOrderingEnabled, OPENING_SOON } from "@/lib/ordering";
 import LastOrderLink from "./LastOrderLink";
 import { Display } from "@/components/Display";
 
@@ -42,7 +43,12 @@ export default function SiteHeader() {
 
         <LastOrderLink />
 
-        {status && (
+        {!isOrderingEnabled() ? (
+          <div className="flex items-center gap-1.5 lg:gap-2 text-xs font-nunito font-bold" aria-label="Program">
+            <span aria-hidden className="w-2 h-2 rounded-full border border-[#F5E6CC]" />
+            <span className="whitespace-nowrap">{OPENING_SOON}</span>
+          </div>
+        ) : status && (
           <div className="flex lg:hidden items-center gap-1.5 text-xs font-nunito font-bold" aria-label="Program">
             <span
               aria-hidden
@@ -52,7 +58,7 @@ export default function SiteHeader() {
           </div>
         )}
 
-        {status && (
+        {isOrderingEnabled() && status && (
           <div className="hidden lg:flex items-center gap-2 text-xs font-nunito font-bold" aria-label="Program">
             <span
               aria-hidden

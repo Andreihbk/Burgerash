@@ -1,8 +1,10 @@
 import { Clock, MapPin, Phone } from "lucide-react";
 import { CONTACT, PREP_TEXT, SELL_OUT_NOTE, statusLabel, type OpeningStatus } from "@/lib/hours";
 import { Display } from "@/components/Display";
+import { isOrderingEnabled, OPENING_SOON } from "@/lib/ordering";
 
 export default function TodayAtBurgerash({ status }: { status: OpeningStatus | null }) {
+  const soon = !isOrderingEnabled();
   const phoneHref = CONTACT.phone ? `tel:${CONTACT.phone.replace(/[^\d+]/g, "")}` : null;
 
   return (
@@ -13,15 +15,15 @@ export default function TodayAtBurgerash({ status }: { status: OpeningStatus | n
       <div>
         <p className="font-mono text-xs font-bold tracking-widest text-[#790D20]">AZI LA BURGERASH</p>
         <h2 id="azi-title" className="font-bebas text-3xl sm:text-4xl tracking-wide leading-none mt-1">
-          <Display>{status ? statusLabel(status).toUpperCase() : " "}</Display>
+          <Display>{soon ? OPENING_SOON.toUpperCase() : status ? statusLabel(status).toUpperCase() : " "}</Display>
         </h2>
         <p className="font-nunito font-bold text-sm mt-2">
-          {status ? `Program azi: ${status.todayHours}, ${SELL_OUT_NOTE}` : " "}
+          {status ? `${soon ? "Program" : "Program azi"}: ${status.todayHours}, ${SELL_OUT_NOTE}` : " "}
         </p>
       </div>
 
       <ul className="font-nunito font-bold text-sm space-y-2 sm:justify-self-end">
-        {status?.open && (
+        {!soon && status?.open && (
           <li className="flex items-center gap-2">
             <Clock className="w-4 h-4 text-[#790D20]" aria-hidden />
             <span>{PREP_TEXT}</span>

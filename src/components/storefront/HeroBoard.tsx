@@ -5,6 +5,7 @@ import Image from "next/image";
 import heroPhoto from "../../../public/images/marketing/hero-tray-fries.jpg";
 import { INITIAL_PRODUCTS } from "@/lib/catalog";
 import { heroStatusLine } from "@/lib/hours";
+import { isOrderingEnabled, OPENING_SOON } from "@/lib/ordering";
 import { useUiStore } from "@/store/uiStore";
 import { useCartStore } from "@/store/cartStore";
 import { Bike, ShoppingBag } from "lucide-react";
@@ -157,7 +158,12 @@ export default function HeroBoard() {
             className="mt-4 min-h-8 flex items-center gap-2 font-nunito font-bold text-sm sm:text-base text-[#332420]"
             aria-live="polite"
           >
-            {status && (
+            {!isOrderingEnabled() ? (
+              <>
+                <span aria-hidden className="w-3 h-3 rounded-full shrink-0 border-2 border-[#790D20] opacity-50" />
+                {OPENING_SOON}
+              </>
+            ) : status && (
               <>
                 <span
                   aria-hidden
