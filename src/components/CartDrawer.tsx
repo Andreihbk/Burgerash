@@ -257,7 +257,7 @@ export default function CartDrawer() {
                 {items.length === 0 ? (
                   <div className="text-center py-16 text-brand-dark/60 font-nunito font-bold">
                     <p className="text-lg mb-2">Coșul tău este gol momentan.</p>
-                    <p className="text-sm">Adaugă un burger cinstit ca să pornim focul!</p>
+                    <p className="text-sm">Carnea e proaspătă, plita e caldă. Alege ceva.</p>
                   </div>
                 ) : (
                   <div className="space-y-4">

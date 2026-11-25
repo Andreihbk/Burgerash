@@ -26,7 +26,7 @@ const SLIDES: { src: StaticImageData; alt: string }[] = [
 
 const pad = (n: number) => String(n).padStart(2, "0");
 
-/** "FĂCUT PE LOC." swipeable photo carousel: snap scrolling, arrows + counter. No autoplay. */
+/** "PROASPĂT. PE LOC." swipeable photo carousel: snap scrolling; arrows + counter from sm up (phones swipe). No autoplay. */
 export default function PhotoStrip() {
   const scroller = useRef<HTMLUListElement>(null);
   const [index, setIndex] = useState(0);
@@ -72,9 +72,9 @@ export default function PhotoStrip() {
     <section aria-labelledby="facut-pe-loc" aria-roledescription="carusel" className="max-w-6xl mx-auto px-4 sm:px-6 py-10 lg:py-14">
       <div className="flex items-end justify-between gap-4">
         <h2 id="facut-pe-loc" className="font-bebas text-3xl sm:text-5xl leading-none whitespace-nowrap text-[#332420]">
-          <Display>FĂCUT PE LOC.</Display>
+          <Display>PROASPĂT. PE LOC.</Display>
         </h2>
-        <div className="flex items-center gap-3">
+        <div className="hidden sm:flex shrink-0 items-center gap-3">
           <span className="hidden sm:inline font-mono text-xs font-bold tracking-widest whitespace-nowrap text-[#790D20]" aria-live="polite">
             {pad(index + 1)} / {pad(SLIDES.length)}
           </span>
