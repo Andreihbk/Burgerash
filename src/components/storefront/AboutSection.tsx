@@ -24,7 +24,7 @@ export default function AboutSection() {
         </h2>
         <div className="space-y-3 font-nunito font-semibold text-lg text-[#332420]/90 max-w-md">
           <p>Un burger spot mic din {SITE_ADDRESS.sector}, fix lângă liceu.</p>
-          <p>Puține lucruri pe meniu, făcute bine. Fiecare burger se face când îl comanzi.</p>
+          <p>Carne proaspătă, puține lucruri pe meniu, făcute bine. Fiecare burger se face când îl comanzi.</p>
           <p>Treci pe la geam sau comandă de aici. Ne vedem.</p>
         </div>
       </div>

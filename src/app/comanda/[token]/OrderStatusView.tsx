@@ -34,7 +34,7 @@ function stepNote(status: OrderStatus, type: FulfillmentType): string {
     case "pending":
       return "Am primit comanda.";
     case "preparing":
-      return "E pe plită chiar acum.";
+      return "Carne proaspătă, pe plită chiar acum.";
     case "ready_for_packing":
       return type === "pickup" ? "Te așteptăm la geam." : "O împachetăm cald.";
     case "out_for_delivery":

@@ -17,7 +17,7 @@ They are **mood photos, not the menu**. Menu data, product cards and stickers do
 | Spot | Source photo | File in public/images/marketing |
 |---|---|---|
 | Hero (right column desktop, under COMANDĂ on mobile) + 3 stickers on its corner | 56_4 burger + fries on tray, red tiles | `hero-tray-fries.jpg` |
-| "FĂCUT PE LOC." carousel under the ticker (7 slides, swipe + arrows, no autoplay) | 56_3, 56_1, 57_4, 56_2, 57_2, 57_3, 57 | `strip-*.jpg`, `carousel-*.jpg` |
+| "PROASPĂT. PE LOC." carousel under the ticker (7 slides, swipe + arrows, no autoplay) | 56_3, 56_1, 57_4, 56_2, 57_2, 57_3, 57 | `strip-*.jpg`, `carousel-*.jpg` |
 | Location section, next to "LIVRARE PROPRIE & PICKUP" | 55 hand holding the tray | `location-tray-hand.jpg` |
 | "DIN CARTIER." (Despre noi) | 56 bacon burger | `about-bacon.jpg` |
 | Instagram strip (4 square tiles, link to profile) | 55_1, 57_1, 57_5 + 57 | `ig-motion.jpg`, `ig-crispy.jpg`, `ig-topview.jpg`, `carousel-wrapped.jpg` |

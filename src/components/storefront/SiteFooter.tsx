@@ -15,6 +15,7 @@ export default function SiteFooter() {
           <BrandLogo variant="horizontal" tone="wine" className="h-10 w-auto shrink-0" />
           <div>
             <p className="font-bold text-[#332420]">GOOD BURGERS /// GOOD PEOPLE /// ALWAYS</p>
+            <p className="mt-1">Carne proaspătă, zilnic.</p>
             <p className="mt-1">
               <a href={GOOGLE_MAPS_URL} target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-[#790D20]">
                 {SITE_ADDRESS.line}
