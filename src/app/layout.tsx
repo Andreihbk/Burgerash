@@ -3,6 +3,7 @@ import { Roboto_Mono, Nunito } from "next/font/google";
 import "./globals.css";
 import localFont from "next/font/local";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_TITLE, SITE_URL } from "@/lib/site";
+import SiteAnalytics from "@/components/SiteAnalytics";
 
 // Small mono accents (codes, prices meta)
 const robotoMono = Roboto_Mono({
@@ -62,6 +63,7 @@ export default function RootLayout({
     <html lang="ro">
       <body className={`${robotoMono.variable} ${nunito.variable} ${eatvetica.variable} antialiased font-nunito`}>
         {children}
+        <SiteAnalytics />
       </body>
     </html>
   );
