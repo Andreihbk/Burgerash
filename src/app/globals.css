@@ -99,7 +99,6 @@ body {
   to { transform: translateX(-50%); }
 }
 .ticker-track { animation: ticker-scroll 40s linear infinite; }
-.ticker-reverse { animation-direction: reverse; }
 .ticker:hover .ticker-track { animation-play-state: paused; }
 @media (prefers-reduced-motion: reduce) {
   .ticker { overflow-x: auto; }

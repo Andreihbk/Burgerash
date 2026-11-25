@@ -4,7 +4,7 @@ import { Display } from "@/components/Display";
 const ITEMS = [
   "YOUR LOCAL BURGER SPOT",
   "HANDCRAFTED BURGERS",
-  "SMASH PE PLITĂ",
+  "PROASPĂT PE PLITĂ",
   "LIVRARE PROPRIE",
   "RIDICARE ÎN 15 MIN",
   "PLATA ONLINE CU CARDUL",
@@ -27,10 +27,10 @@ function Loop() {
   );
 }
 
-function Strip({ reverse = false, className = "" }: { reverse?: boolean; className?: string }) {
+function Strip({ className = "" }: { className?: string }) {
   return (
     <div className={`ticker overflow-hidden bg-[#790D20] text-[#F5E6CC] py-3 border-y-[3px] border-[#332420] ${className}`}>
-      <div className={`ticker-track flex w-max ${reverse ? "ticker-reverse" : ""}`}>
+      <div className="ticker-track flex w-max">
         <Loop />
         <Loop />
       </div>
@@ -38,13 +38,12 @@ function Strip({ reverse = false, className = "" }: { reverse?: boolean; classNa
   );
 }
 
-/** Full-width marquee under the hero: a straight strip plus a tilted, opposite-direction sticker strip. */
+/** Full-width marquee under the hero: one slightly tilted strip. */
 export default function Ticker() {
   return (
     <div className="relative py-6 overflow-x-clip">
       <p className="sr-only">{ITEMS.join(" · ")}</p>
-      <Strip />
-      <Strip reverse className="-mx-[4%] w-[108%] -rotate-2 mt-3 shadow-[0_4px_0_0_#332420]" />
+      <Strip className="-mx-[4%] w-[108%] -rotate-1 shadow-[0_4px_0_0_#332420]" />
     </div>
   );
 }
