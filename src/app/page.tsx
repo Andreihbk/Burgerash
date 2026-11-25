@@ -12,11 +12,11 @@ import BottomNav from "@/components/storefront/BottomNav";
 import CustomizeModalHost from "@/components/storefront/CustomizeModalHost";
 import CartDrawerHost from "@/components/storefront/CartDrawerHost";
 import { MENU_TOP_ID } from "@/components/storefront/layout";
-import { restaurantJsonLd } from "@/lib/structured-data";
+import { homeJsonLd } from "@/lib/structured-data";
 import { Display } from "@/components/Display";
 
 // `<` is escaped so catalog text can never close the script tag.
-const jsonLd = JSON.stringify(restaurantJsonLd()).replace(/</g, "\\u003c");
+const jsonLd = JSON.stringify(homeJsonLd()).replace(/</g, "\\u003c");
 
 export default function Home() {
   return (

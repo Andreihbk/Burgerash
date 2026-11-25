@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Roboto_Mono, Nunito } from "next/font/google";
 import "./globals.css";
 import localFont from "next/font/local";
-import { SITE_DESCRIPTION, SITE_NAME, SITE_TAGLINE, SITE_URL } from "@/lib/site";
+import { SITE_DESCRIPTION, SITE_NAME, SITE_TITLE, SITE_URL } from "@/lib/site";
 
 // Small mono accents (codes, prices meta)
 const robotoMono = Roboto_Mono({
@@ -29,13 +29,17 @@ const eatvetica = localFont({
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: { default: `${SITE_NAME} | ${SITE_TAGLINE}`, template: `%s | ${SITE_NAME}` },
+  title: { default: SITE_TITLE, template: `%s | ${SITE_NAME}` },
   description: SITE_DESCRIPTION,
   applicationName: SITE_NAME,
   alternates: { canonical: "/" },
-  robots: { index: true, follow: true },
+  robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large" } },
+  // Google Search Console "HTML tag" method: set GOOGLE_SITE_VERIFICATION in Vercel (the code from content="...").
+  ...(process.env.GOOGLE_SITE_VERIFICATION && {
+    verification: { google: process.env.GOOGLE_SITE_VERIFICATION },
+  }),
   openGraph: {
-    title: `${SITE_NAME} | ${SITE_TAGLINE}`,
+    title: SITE_TITLE,
     description: "Burgeri făcuți pe loc, în Sector 6. Comandă direct, fără comisioane.",
     url: "/",
     siteName: SITE_NAME,
