@@ -108,7 +108,7 @@ export default function HeroBoard() {
             <span className="block w-fit -skew-x-6 origin-bottom-left text-[#790D20]"><Display>BURGER SPOT.</Display></span>
           </h1>
           <p className="font-nunito font-semibold text-xl sm:text-2xl text-[#332420] mt-6 max-w-lg">
-            Burgeri făcuți pe loc, în Sector 6. Comanzi direct de aici, fără aplicații și fără comisioane.
+            Burgeri din carne proaspătă, făcuți pe loc în Sector 6. Comanzi direct de aici, fără comisioane.
           </p>
 
           {/* Phones: pick the order type first (owner's app concept), then the menu. */}

@@ -36,6 +36,7 @@ export default function Home() {
             <h2 className="font-bebas text-4xl sm:text-5xl text-[#332420] leading-none">
               <Display>MENIU</Display>
             </h2>
+            <p className="mt-2 font-nunito font-semibold text-base text-[#332420]/70">Pregătim zilnic. Când se termină, se termină.</p>
           </div>
 
           <MenuSections />
