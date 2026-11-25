@@ -94,6 +94,11 @@ High priority, not a launch gate by itself: **Ebriza integration** (E.1-E.5, L.2
       open (stays mounted after); `TodayStatus` client wrapper; StoreFront.tsx deleted, `page.tsx` composes the islands.
       Result (`/`, production build): 10 scripts, 592 KB raw / 182 KB gzip JS (baseline 607 / 185), 6 fonts. Small gain: most
       of the JS is shared framework + zustand + lucide. Lighthouse not run (no browser here); run it on the Vercel preview.
+- [x] P.5 SEO round 2: homepage title/description with brand + "burgeri Sector 6, București"; JSON-LD `@graph` with WebSite
+      (name + alternateName, for the "burgerash" search) + Restaurant (`@id`, logo, image, hasMap, `sameAs` from
+      `SOCIAL_LINKS`); share image = top-view photo + logo; `manifest.ts`; optional `GOOGLE_SITE_VERIFICATION` env.
+      TODO(owner): phone in `CONTACT` (hours.ts), real profile URLs in `SOCIAL_LINKS` (site.ts), Search Console + Google
+      Business Profile (off-site).
 
 ## Phase 1 - Ebriza adapter (works in mock mode, no credentials needed)
 - [x] 1.1 Fix `src/types/ebriza.ts` against `.claude/skills/ebriza-api/reference.md`.

@@ -12,7 +12,19 @@ export const SITE_URL = resolveSiteUrl();
 export const SITE_NAME = "Burgerash";
 export const SITE_TAGLINE = "Nu facem medium. Facem crustă.";
 export const SITE_DESCRIPTION =
-  "Nu facem medium. Facem crustă. Burgeri făcuți pe loc în Sector 6, comandă direct, fără comisioane.";
+  "Burgerash: burgeri făcuți pe loc în Sector 6, București (Strada Porumbacu 48). Comandă online pentru ridicare sau livrare, fără comisioane.";
+
+/** Default <title> for the homepage: brand first (ranks for "burgerash"), then what + where (local searches). */
+export const SITE_TITLE = `${SITE_NAME} | Burgeri în Sector 6, București`;
+
+/**
+ * Official profiles (Instagram, Facebook, Google Business Profile, Glovo...). Used as JSON-LD `sameAs`, which helps
+ * Google tie them to this site. TODO(owner): fill in the real URLs; empty entries are skipped.
+ */
+export const SOCIAL_LINKS: readonly string[] = [
+  // "https://www.instagram.com/burgerash/",
+  // "https://www.facebook.com/burgerash",
+];
 
 /** Staff/internal routes: never indexed. */
 export const PRIVATE_PATHS = ["/kitchen", "/dispatch", "/rider", "/admin", "/staff/", "/comanda/", "/api/"];

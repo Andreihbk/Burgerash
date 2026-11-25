@@ -1,7 +1,7 @@
 // schema.org Restaurant JSON-LD for the storefront, built from catalog.ts and hours.ts (no hand-kept copy).
 import { MENU_SECTIONS } from "./catalog";
 import { CONTACT, HOURS, formatTime } from "./hours";
-import { SITE_ADDRESS, SITE_COORDS, SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "./site";
+import { GOOGLE_MAPS_URL, SITE_ADDRESS, SITE_COORDS, SITE_DESCRIPTION, SITE_NAME, SITE_URL, SOCIAL_LINKS } from "./site";
 
 const MAIN_CATEGORIES = ["cat-burgers", "cat-chicken"];
 const DAY_NAMES = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -27,6 +27,29 @@ function openingHours() {
   }));
 }
 
+const RESTAURANT_ID = `${SITE_URL}/#restaurant`;
+const WEBSITE_ID = `${SITE_URL}/#website`;
+
+/** Homepage JSON-LD: WebSite (brand name for the "burgerash" search) + Restaurant (local search, hours, menu). */
+export function homeJsonLd() {
+  const { "@context": context, ...restaurant } = restaurantJsonLd();
+  return {
+    "@context": context,
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": WEBSITE_ID,
+        url: `${SITE_URL}/`,
+        name: SITE_NAME,
+        alternateName: ["Burger Ash", "burgerash.ro"],
+        inLanguage: "ro-RO",
+        publisher: { "@id": RESTAURANT_ID },
+      },
+      restaurant,
+    ],
+  };
+}
+
 export function restaurantJsonLd() {
   // Price range = the mains (burgers + chicken), not drinks/sauces.
   const burgerPrices = MENU_SECTIONS.filter((s) => MAIN_CATEGORIES.includes(s.category.id))
@@ -36,9 +59,14 @@ export function restaurantJsonLd() {
   return {
     "@context": "https://schema.org",
     "@type": "Restaurant",
+    "@id": RESTAURANT_ID,
     name: SITE_NAME,
     url: `${SITE_URL}/`,
-    image: `${SITE_URL}/opengraph-image`,
+    logo: `${SITE_URL}/apple-icon.png`,
+    // Mood photos only (allowed in mood sections, docs/PHOTOS.md); the menu items below carry no images.
+    image: [`${SITE_URL}/images/marketing/hero-tray-fries.jpg`, `${SITE_URL}/opengraph-image`],
+    hasMap: GOOGLE_MAPS_URL,
+    ...(SOCIAL_LINKS.length && { sameAs: [...SOCIAL_LINKS] }),
     description: SITE_DESCRIPTION,
     servesCuisine: ["Burgeri", "Burgers", "Fast food"],
     ...(burgerPrices.length && {
