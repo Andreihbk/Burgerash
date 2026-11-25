@@ -18,8 +18,9 @@ export const CONTACT: { phone: string | null; address: string | null } = {
 
 type DayHours = { open: number; close: number }; // minutes from midnight; close 1440 = midnight
 
-const WEEKDAY: DayHours = { open: 10 * 60, close: 22 * 60 };
-const WEEKEND: DayHours = { open: 12 * 60, close: 24 * 60 };
+// Since 2026-11-25: every day 12:00 - 23:00. Keep WEEKDAY/WEEKEND split so different weekend hours stay a one-line change.
+const WEEKDAY: DayHours = { open: 12 * 60, close: 23 * 60 };
+const WEEKEND: DayHours = { open: 12 * 60, close: 23 * 60 };
 
 /** Index 0 = Sunday ... 6 = Saturday. */
 export const HOURS: readonly DayHours[] = [WEEKEND, WEEKDAY, WEEKDAY, WEEKDAY, WEEKDAY, WEEKDAY, WEEKEND];
@@ -33,11 +34,11 @@ export const formatTime = (minutes: number) => {
 
 export type OpeningStatus = {
   open: boolean;
-  /** Today's hours, e.g. "10:00 - 22:00". */
+  /** Today's hours, e.g. "12:00 - 23:00". */
   todayHours: string;
-  /** When open: closing time, e.g. "22:00". */
+  /** When open: closing time, e.g. "23:00". */
   closesAt: string | null;
-  /** When closed: next opening, e.g. { when: "mâine", time: "10:00" }. */
+  /** When closed: next opening, e.g. { when: "mâine", time: "12:00" }. */
   next: { when: string; time: string } | null;
 };
 
@@ -113,9 +114,10 @@ export function closedCartNotice(status: OpeningStatus): string {
   return `Suntem închiși acum · deschidem ${status.next?.when} la ${status.next?.time}. Poți pregăti coșul.`;
 }
 
-/** Weekly schedule grouped for display, e.g. [{ label: "Luni - Vineri", hours: "10:00 - 22:00" }, ...]. */
+/** Weekly schedule for display: one "Zilnic" line when every day has the same hours, else weekdays + weekend. */
 export function scheduleLines(): { label: string; hours: string }[] {
   const fmt = (h: DayHours) => `${formatTime(h.open)} - ${formatTime(h.close)}`;
+  if (fmt(WEEKDAY) === fmt(WEEKEND)) return [{ label: "Zilnic", hours: fmt(WEEKDAY) }];
   return [
     { label: "Luni - Vineri", hours: fmt(WEEKDAY) },
     { label: "Sâmbătă - Duminică", hours: fmt(WEEKEND) },
