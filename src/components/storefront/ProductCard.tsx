@@ -6,10 +6,10 @@ import { Display } from "@/components/Display";
 
 export default function ProductCard({ product }: { product: Product }) {
   return (
-    <div className="bg-white border-2 border-[#332420] rounded-xl p-5 flex flex-col justify-between shadow-[5px_5px_0px_0px_#332420] hover:translate-y-[-3px] transition-all relative group">
+    <div className="bg-[#F5E6CC] border-2 border-[#332420] rounded-xl p-5 flex flex-col justify-between shadow-[5px_5px_0px_0px_#332420] hover:translate-y-[-3px] transition-all relative group">
       <div>
         {/* Sticker instead of photo (photos kept in public/images/menu for later) */}
-        <div className="w-full h-52 mb-4 flex items-center justify-center bg-[#F5E6CC]/50 rounded-lg border border-[#332420]/15">
+        <div className="w-full h-52 mb-4 flex items-center justify-center bg-[#790D20]/10 rounded-lg border border-[#790D20]/20">
           <BurgerStamp
             product={product}
             className="h-44 w-44 rotate-[-6deg] group-hover:rotate-0 transition-transform duration-300 drop-shadow-[4px_4px_0px_rgba(51,36,32,0.25)]"

@@ -12,7 +12,7 @@ export const SITE_URL = resolveSiteUrl();
 export const SITE_NAME = "Burgerash";
 export const SITE_TAGLINE = "Nu facem medium. Facem crustă.";
 export const SITE_DESCRIPTION =
-  "Nu facem medium. Facem crustă. Smash burgeri din Sector 6, comandă direct, fără comisioane.";
+  "Nu facem medium. Facem crustă. Burgeri făcuți pe loc în Sector 6, comandă direct, fără comisioane.";
 
 /** Staff/internal routes: never indexed. */
 export const PRIVATE_PATHS = ["/kitchen", "/dispatch", "/rider", "/admin", "/staff/", "/comanda/", "/api/"];

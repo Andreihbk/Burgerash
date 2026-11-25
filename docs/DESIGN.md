@@ -37,7 +37,7 @@ No generic marketing lines.
 
 ## Later ideas
 - Receipt-style cart.
-- "Cum se face un smash" in 5 steps.
+- "Cum se face un burger" in 5 steps.
 - House rules.
 - Short FAQ.
 - Sticker loyalty card.

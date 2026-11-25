@@ -151,7 +151,7 @@ export default function HeroBoard() {
           <div className="relative aspect-square md:aspect-[4/5] overflow-hidden rounded-2xl border-2 border-[#332420] shadow-[6px_6px_0px_0px_#332420]">
             <Image
               src={heroPhoto}
-              alt="Smash burger cu cartofi prăjiți pe tavă, în fața faianței roșii burgerash"
+              alt="Burger cu cartofi prăjiți pe tavă, în fața faianței roșii burgerash"
               fill
               priority
               placeholder="blur"

@@ -173,7 +173,7 @@ Rules: lowercase, hyphenated, unique, ASCII, stable once in use (SKU matching is
 ### Modifiers (create in the POS as modifier items; sent with `isMod: true`)
 | Catalog id | Modifier | SKU | Status | Price RON |
 |---|---|---|---|---|
-| mod-extra-patty | Extra Chiftea Smash | `mod-extra-patty` | existing | 12 |
+| mod-extra-patty | Extra Chiftea | `mod-extra-patty` | existing | 12 |
 | mod-extra-cheddar | Extra American Cheddar | `mod-extra-cheddar` | existing | 5 |
 | mod-extra-bacon | Extra Crispy Bacon | `mod-extra-bacon` | existing | 6 |
 | mod-extra-jalapeno | Extra Jalapeño | `mod-extra-jalapeno` | existing | 4 |

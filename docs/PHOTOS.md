@@ -1,6 +1,6 @@
 # Marketing photos - placement guideline
 
-13 photos from the shoot (Nov 2026): smash burgers, fries, chips, red tiles, branded paper.
+13 photos from the shoot (Nov 2026): burgers, fries, chips, red tiles, branded paper.
 They are **mood photos, not the menu**. Menu data, product cards and stickers do not change.
 
 ## The rules
@@ -10,7 +10,7 @@ They are **mood photos, not the menu**. Menu data, product cards and stickers do
 4. Photo frame = same style as the buttons: rounded-2xl, 2px charcoal border, hard charcoal offset shadow. No gradients, no filters.
 5. Colors in the UI stay the 3 brand tokens + sticker colors. The photos' yellow/orange never becomes a UI color.
 6. Always `next/image` with `sizes`. Only the hero photo gets `priority`; all others lazy-load.
-7. Alt text in short Romanian ("Smash burger cu cheddar pe tavă").
+7. Alt text in short Romanian ("Burger cu cheddar pe tavă").
 
 ## Where each photo goes (file names = WhatsApp export from the shoot)
 

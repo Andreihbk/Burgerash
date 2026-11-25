@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image, { type StaticImageData } from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import smashCut from "../../../public/images/marketing/strip-smash-cut.jpg";
+import burgerCut from "../../../public/images/marketing/strip-burger-cut.jpg";
 import handFries from "../../../public/images/marketing/carousel-hand-fries.jpg";
 import crispyChicken from "../../../public/images/marketing/strip-crispy-chicken.jpg";
 import topviewThree from "../../../public/images/marketing/carousel-topview-three.jpg";
@@ -15,7 +15,7 @@ import { prefersReducedMotion } from "./layout";
 
 // Mood photos only (see docs/PHOTOS.md): never product images, never text on top.
 const SLIDES: { src: StaticImageData; alt: string; line: string }[] = [
-  { src: smashCut, alt: "Burger dublu tăiat în două, pe faianța roșie", line: "Nu facem medium. Facem crustă." },
+  { src: burgerCut, alt: "Burger dublu tăiat în două, pe faianța roșie", line: "Nu facem medium. Facem crustă." },
   { src: handFries, alt: "Mână care ia cartofi prăjiți de pe tava cu burger", line: "Cartofii vin mereu alături." },
   { src: crispyChicken, alt: "Burger cu pui crocant și cheddar pe hârtia burgerash", line: "Pui crocant, prăjit pe loc." },
   { src: topviewThree, alt: "Trei burgeri văzuți de sus, pe hârtia burgerash", line: "Unul singur nu ajunge." },

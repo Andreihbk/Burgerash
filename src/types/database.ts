@@ -30,7 +30,7 @@ export interface Product {
   weight_grams: number | null;
   weight_label: string | null;     // Display text from the menu board: "280g", "330ml", "6 buc (aprox. 180g)"
   image_url: string | null;
-  label_text: string | null;       // Ex: "BESTSELLER", "DOUBLE SMASH", "SPICY"
+  label_text: string | null;       // Ex: "BESTSELLER", "DOUBLE", "SPICY"
   label_variant: "burgundy" | "charcoal" | "cream" | null;
   ebriza_sku: string | null;
   ebriza_id: string | null;
