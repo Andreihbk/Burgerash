@@ -1,5 +1,10 @@
 # Burgerash - Design direction
 
+## Reference sites (inspiration only, never copy)
+- https://www.le-smash.com/
+- https://maijard.com/
+- https://www.skinnylouie.com/
+
 ## Feel
 Clean, retro, confident. Not loud. The ordering site comes first: ordering is always 1-2 taps away.
 

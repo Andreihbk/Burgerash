@@ -5,7 +5,7 @@ They are **mood photos, not the menu**. Menu data, product cards and stickers do
 
 ## The rules
 1. Photos set the mood; stickers sell the product. Never use a photo as a product card image.
-2. One photo idea per section. Max ~6 photos on the homepage (fast on 4G).
+2. One photo idea per section. Carousel photos lazy-load, so only what is on screen is downloaded.
 3. No text on top of a photo. Text sits on sand next to it (contrast + Eatvetica stays readable).
 4. Photo frame = same style as the buttons: rounded-2xl, 2px charcoal border, hard charcoal offset shadow. No gradients, no filters.
 5. Colors in the UI stay the 3 brand tokens + sticker colors. The photos' yellow/orange never becomes a UI color.
@@ -17,11 +17,10 @@ They are **mood photos, not the menu**. Menu data, product cards and stickers do
 | Spot | Source photo | File in public/images/marketing |
 |---|---|---|
 | Hero (right column desktop, under COMANDĂ on mobile) + 3 stickers on its corner | 56_4 burger + fries on tray, red tiles | `hero-tray-fries.jpg` |
-| "FĂCUT PE LOC." strip under the ticker (where the menu board was) | 56_3 cut double smash / 57_4 crispy chicken / 57_2 fries + chips | `strip-smash-cut.jpg`, `strip-crispy-chicken.jpg`, `strip-fries-chips.jpg` |
+| "FĂCUT PE LOC." carousel under the ticker (7 slides, swipe + arrows, no autoplay) | 56_3, 56_1, 57_4, 56_2, 57_2, 57_3, 57 | `strip-*.jpg`, `carousel-*.jpg` |
 | Location section, next to "LIVRARE PROPRIE & PICKUP" | 55 hand holding the tray | `location-tray-hand.jpg` |
-| Later: order confirmation page | 57 wrapped burger | - |
-| Later: share image (Facebook/WhatsApp) | 56_2 top view, 3 burgers on branded paper | - |
-| Spare | 55_1 motion blur, 56 bacon burger, 56_1 hand + fries, 57_1, 57_3, 57_5 | - |
+| Later: share image (Facebook/WhatsApp) | 57_5 top view, burger + fries | - |
+| Spare | 55_1 motion blur, 56 bacon burger, 57_1 | - |
 
 ## Files
 - Web versions are made from the originals with sharp: max 1600 px wide, JPG q82, metadata stripped. Sources: `docs/brand/PHOTO-2026-11-25-*.jpg`.
