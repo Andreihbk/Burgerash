@@ -1,41 +1,30 @@
 "use client";
 
-import { forwardRef, memo, useCallback, useEffect, useImperativeHandle, useRef, useState } from "react";
+import { useEffect, useState } from "react";
+import Image from "next/image";
+import heroPhoto from "../../../public/images/marketing/hero-tray-fries.jpg";
 import { INITIAL_PRODUCTS } from "@/lib/catalog";
 import { heroStatusLine } from "@/lib/hours";
 import { useUiStore } from "@/store/uiStore";
 import type { Product } from "@/types/database";
 import { BurgerStamp } from "../BurgerStamp";
-import MenuBoardBase from "../MenuBoard";
 import { ALL_TAB, prefersReducedMotion, scrollToTab } from "./layout";
 import { useStorefrontStatus } from "./useStorefrontStatus";
 import { Display } from "@/components/Display";
 import Ticker from "./Ticker";
+import PhotoStrip from "./PhotoStrip";
 
-// Hero fan: 5 stickers (CRISPY BACON is on the board and cards, not in the fan).
-const HERO_PRODUCTS = ["prod-classic", "prod-double", "prod-hot-boy", "prod-hot-honey", "prod-crispy"]
+// Hero: 3 stickers overlapping the photo's bottom-left corner.
+const HERO_PRODUCTS = ["prod-classic", "prod-hot-boy", "prod-crispy"]
   .map((id) => INITIAL_PRODUCTS.find((p) => p.id === id))
   .filter((p): p is Product => !!p && p.is_available && p.price > 0);
-
-const PRODUCT_BY_NAME = new Map(INITIAL_PRODUCTS.map((p) => [p.name, p]));
-
-// Menu board line name -> hero sticker product id.
-const BOARD_LINE_TO_ID: Record<string, string> = {
-  CLASIC: "prod-classic",
-  "HOT BOY": "prod-hot-boy",
-  DOUBLE: "prod-double",
-  "HOT HONEY": "prod-hot-honey",
-  CRISPY: "prod-crispy",
-};
 
 // Fan layout per stack position (0 = top). Offsets are % of the sticker's own size,
 // so the same layout works at any sticker size.
 const STICKER_SLOTS = [
-  { x: 84, y: 30, r: -3, z: 50, s: 1 },
-  { x: 0, y: 8, r: -10, z: 40, s: 0.95 },
-  { x: 168, y: 20, r: 9, z: 30, s: 0.9 },
-  { x: 42, y: 0, r: 6, z: 20, s: 0.88 },
-  { x: 126, y: 2, r: -7, z: 10, s: 0.86 },
+  { x: 52, y: 14, r: -4, z: 30, s: 1 },
+  { x: 0, y: 0, r: -10, z: 20, s: 0.9 },
+  { x: 104, y: 2, r: 8, z: 10, s: 0.88 },
 ];
 
 // Fanned round stickers (tap = customize). `order` lists product ids, top first.
@@ -53,7 +42,7 @@ function HeroStickers({
   return (
     <div
       className="relative"
-      style={{ width: size * 2.68, height: size * 1.3 }}
+      style={{ width: size * 2.04, height: size * 1.16 }}
       onMouseEnter={() => onPause(true)}
       onMouseLeave={() => onPause(false)}
       onFocus={() => onPause(true)}
@@ -83,136 +72,41 @@ function HeroStickers({
   );
 }
 
+// Owns the shuffle state so a 4s tick re-renders only the stickers, never the page.
+function StickerStack({ size, modalOpen, onPick }: { size: number; modalOpen: boolean; onPick: (p: Product) => void }) {
+  const [order, setOrder] = useState<string[]>(() => HERO_PRODUCTS.map((p) => p.id));
+  const [paused, setPaused] = useState(false);
 
-// Board is memoized: nothing in the storefront's own state can re-render it. Only `lit` changes it.
-const MenuBoard = memo(MenuBoardBase);
-const BOARD_LINKED_NAMES = Object.keys(BOARD_LINE_TO_ID);
-
-export interface StickerStackHandle {
-  /** Board line hovered/focused: pause the shuffle and bring that product's sticker to the top. */
-  hover: (productId: string | null, active: boolean) => void;
-}
-
-// Owns the shuffle state so a 4s tick re-renders only the stickers, never the board or the page.
-const StickerStack = forwardRef<StickerStackHandle, { size: number; modalOpen: boolean; onPick: (p: Product) => void }>(
-  function StickerStack({ size, modalOpen, onPick }, ref) {
-    const [order, setOrder] = useState<string[]>(() => HERO_PRODUCTS.map((p) => p.id));
-    const [paused, setPaused] = useState(false);
-
-    useImperativeHandle(ref, () => ({
-      hover: (id, active) => {
-        setPaused(active);
-        if (id) setOrder((prev) => [id, ...prev.filter((x) => x !== id)]);
-      },
-    }), []);
-
-    // Every ~4s the top sticker goes to the back. Off with reduced motion, while hovering/focusing, and while the modal is open.
-    useEffect(() => {
-      if (paused || modalOpen || prefersReducedMotion()) return;
-      const id = setInterval(() => setOrder(([top, ...rest]) => [...rest, top]), 4000);
-      return () => clearInterval(id);
-    }, [paused, modalOpen]);
-
-    return <HeroStickers order={order} size={size} onPick={onPick} onPause={setPaused} />;
-  },
-);
-
-/** "YOUR LOCAL BURGER SPOT" pill: wobbles with scroll speed and springs back to rest. Static under reduced motion. */
-function WobbleBadge() {
-  const ref = useRef<HTMLSpanElement>(null);
-
+  // Every ~4s the top sticker goes to the back. Off with reduced motion, while hovering/focusing, and while the modal is open.
   useEffect(() => {
-    const el = ref.current;
-    if (!el || prefersReducedMotion()) return;
-    let lastY = window.scrollY;
-    let angle = 0; // degrees
-    let velocity = 0;
-    let raf = 0;
+    if (paused || modalOpen || prefersReducedMotion()) return;
+    const id = setInterval(() => setOrder(([top, ...rest]) => [...rest, top]), 4000);
+    return () => clearInterval(id);
+  }, [paused, modalOpen]);
 
-    const tick = () => {
-      // Damped spring toward 0.
-      velocity += -0.12 * angle;
-      velocity *= 0.86;
-      angle += velocity;
-      if (Math.abs(angle) < 0.01 && Math.abs(velocity) < 0.01) {
-        angle = 0;
-        velocity = 0;
-        el.style.transform = "";
-        raf = 0;
-        return;
-      }
-      const clamped = Math.max(-3, Math.min(3, angle));
-      el.style.transform = `rotate(${clamped}deg) scale(${1 + Math.abs(clamped) * 0.01})`;
-      raf = requestAnimationFrame(tick);
-    };
-
-    const onScroll = () => {
-      const y = window.scrollY;
-      const delta = y - lastY;
-      lastY = y;
-      // Scroll speed kicks the spring; the cap keeps a fast flick at a small wobble.
-      velocity += Math.max(-1.5, Math.min(1.5, delta * 0.05));
-      if (!raf) raf = requestAnimationFrame(tick);
-    };
-
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      if (raf) cancelAnimationFrame(raf);
-    };
-  }, []);
-
-  return (
-    <span className="inline-block -skew-x-6">
-      <span
-        ref={ref}
-        className="font-bebas inline-block will-change-transform bg-[#790D20] text-[#F5E6CC] text-sm sm:text-base tracking-wider px-4 py-2 rounded-full border-2 border-[#332420] shadow-[3px_3px_0px_0px_#332420]"
-      >
-        <Display>YOUR LOCAL BURGER SPOT</Display>
-      </span>
-    </span>
-  );
+  return <HeroStickers order={order} size={size} onPick={onPick} onPause={setPaused} />;
 }
 
-/** Hero: title + stickers + COMANDĂ; the lightbox menu board sits on the right (below on mobile), then the stripe. */
+/** Hero: headline + stickers + COMANDĂ, then the ticker and the stripe. The old menu board is archived in components/archive. */
 export default function HeroBoard() {
   const status = useStorefrontStatus();
   const customizing = useUiStore((s) => s.customizing);
   const openCustomize = useUiStore((s) => s.openCustomize);
-  const stickersRef = useRef<StickerStackHandle>(null);
-
-  const handleBoardSelect = useCallback(
-    (name: string) => {
-      const product = PRODUCT_BY_NAME.get(name);
-      if (product) openCustomize(product);
-    },
-    [openCustomize],
-  );
-
-  const handleBoardLine = useCallback((name: string | null) => {
-    stickersRef.current?.hover(name ? BOARD_LINE_TO_ID[name] ?? null : null, name !== null);
-  }, []);
 
   return (
     <>
       <section className="max-w-6xl mx-auto px-4 sm:px-6 pt-6 pb-8 md:pt-14 lg:pt-16 grid grid-cols-1 md:grid-cols-2 md:items-center gap-6 md:gap-8 lg:gap-12 md:min-h-[min(calc(100svh-9rem),52rem)]">
         <div className="flex flex-col items-start">
-          <WobbleBadge />
           {/* Each line is skewed on its own from its bottom-left corner, so all lines start on the same left edge. */}
-          <h1 className="font-bebas mt-5 text-[clamp(3.5rem,8.5vw,6.5rem)] leading-[0.88] text-[#332420]">
-            {["CARNE.", "FOC.", "CHIFLĂ."].map((line) => (
+          <h1 className="font-bebas text-[clamp(3.5rem,8.5vw,6.5rem)] leading-[0.88] text-[#332420]">
+            {["YOUR", "LOCAL"].map((line) => (
               <span key={line} className="block w-fit -skew-x-6 origin-bottom-left"><Display>{line}</Display></span>
             ))}
-            <span className="block w-fit -skew-x-6 origin-bottom-left text-[#790D20]"><Display>ATÂT.</Display></span>
+            <span className="block w-fit -skew-x-6 origin-bottom-left text-[#790D20]"><Display>BURGER SPOT.</Display></span>
           </h1>
           <p className="font-nunito font-semibold text-xl sm:text-2xl text-[#332420] mt-6 max-w-lg">
             Burgeri făcuți pe loc, în Sector 6. Comanzi direct de aici, fără aplicații și fără comisioane.
           </p>
-
-          {/* Mobile: sticker stack goes under the headline (pure SVG, no cart state) */}
-          <div className="self-center my-6 md:hidden">
-            <StickerStack size={100}modalOpen={!!customizing} onPick={openCustomize} />
-          </div>
 
           <button
             type="button"
@@ -252,20 +146,28 @@ export default function HeroBoard() {
           </p>
         </div>
 
-        {/* md+: big sticker fan fills the right column */}
-        <div className="hidden md:flex items-center justify-center">
-          <div className="origin-center md:scale-[0.62] lg:scale-[0.9] xl:scale-100">
-            <StickerStack ref={stickersRef} size={190} modalOpen={!!customizing} onPick={openCustomize} />
+        {/* Photo + stickers: right column on md+, under the COMANDĂ block on mobile (ordering stays above the fold). */}
+        <div className="relative w-full max-w-md md:max-w-[30rem] mx-auto mb-14 md:mb-10">
+          <div className="relative aspect-square md:aspect-[4/5] overflow-hidden rounded-2xl border-2 border-[#332420] shadow-[6px_6px_0px_0px_#332420]">
+            <Image
+              src={heroPhoto}
+              alt="Smash burger cu cartofi prăjiți pe tavă, în fața faianței roșii burgerash"
+              fill
+              priority
+              placeholder="blur"
+              sizes="(min-width: 1152px) 480px, (min-width: 768px) 45vw, 100vw"
+              className="object-cover object-[50%_60%]"
+            />
+          </div>
+          <div className="absolute -left-3 -bottom-14 md:-left-8 md:-bottom-12">
+            <div className="md:hidden"><StickerStack size={88} modalOpen={!!customizing} onPick={openCustomize} /></div>
+            <div className="hidden md:block"><StickerStack size={120} modalOpen={!!customizing} onPick={openCustomize} /></div>
           </div>
         </div>
       </section>
 
       <Ticker />
-
-      {/* Menu board: its own section below the hero */}
-      <section aria-label="Meniu" className="max-w-3xl mx-auto px-4 sm:px-6 py-10 lg:py-14">
-        <MenuBoard lit={status ? status.open : false} linkedNames={BOARD_LINKED_NAMES} onLineActive={handleBoardLine} onSelect={handleBoardSelect} />
-      </section>
+      <PhotoStrip />
       <div aria-hidden className="max-w-6xl mx-auto px-4 sm:px-6">
         <div className="h-3 border-y-[3px] border-[#790D20] rounded-tr-3xl rounded-bl-3xl" />
       </div>

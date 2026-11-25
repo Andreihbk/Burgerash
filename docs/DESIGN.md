@@ -4,7 +4,7 @@
 Clean, retro, confident. Not loud. The ordering site comes first: ordering is always 1-2 taps away.
 
 ## Signature elements (the only "personality" pieces)
-- The lightbox menu board.
+- The hero headline: YOUR LOCAL BURGER SPOT. (the lightbox menu board is archived: docs/archive/)
 - The round stickers (BurgerStamp).
 - The curved double red stripe from the board - the only divider style.
 - The receipt (bon) look for the cart.
@@ -27,6 +27,7 @@ No generic marketing lines.
 - Tap targets >= 44px.
 - Readable contrast on sand.
 - No video.
+- Marketing photos: mood only, never as product images. Rules in docs/PHOTOS.md.
 - Mobile-first (375px).
 
 ## Later ideas

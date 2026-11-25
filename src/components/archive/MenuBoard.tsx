@@ -3,7 +3,7 @@
 import { MENU_SECTIONS } from "@/lib/catalog";
 import { useSoldOutIds } from "@/lib/useSoldOut";
 import type { Product } from "@/types/database";
-import { BrandLogo } from "./BrandLogo";
+import { BrandLogo } from "@/components/BrandLogo";
 import { Display } from "@/components/Display";
 
 const WINE = "#790D20";

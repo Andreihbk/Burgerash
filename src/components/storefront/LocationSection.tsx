@@ -1,4 +1,6 @@
+import Image from "next/image";
 import { MapPin } from "lucide-react";
+import trayHand from "../../../public/images/marketing/location-tray-hand.jpg";
 import { scheduleLines } from "@/lib/hours";
 import { DELIVERY_RADIUS_KM, GOOGLE_MAPS_URL, SITE_ADDRESS } from "@/lib/site";
 import OpenCartButton from "./OpenCartButton";
@@ -47,7 +49,17 @@ export default function LocationSection() {
       </div>
 
       <div className="bg-[#F5E6CC] text-[#332420] p-8 md:p-10 flex flex-col sm:flex-row sm:items-center justify-between gap-6 border-t-4 border-[#332420]">
-        <div>
+        <div className="relative w-32 sm:w-40 shrink-0 aspect-[4/5] overflow-hidden rounded-2xl border-2 border-[#332420] shadow-[4px_4px_0px_0px_#332420]">
+          <Image
+            src={trayHand}
+            alt="Smash burger cu cheddar servit pe tavă"
+            fill
+            placeholder="blur"
+            sizes="160px"
+            className="object-cover"
+          />
+        </div>
+        <div className="sm:flex-1">
           <h3 className="font-bebas text-4xl sm:text-5xl mb-4"><Display>LIVRARE PROPRIE & PICKUP</Display></h3>
           <p className="font-nunito font-bold text-base text-[#332420]/90 max-w-2xl">
             Comandă direct de pe site fără comisioane ascunse. Livrare gratuită în cartier la comenzi de peste 120 LEI sau ridicare direct de la geam în 15 minute.

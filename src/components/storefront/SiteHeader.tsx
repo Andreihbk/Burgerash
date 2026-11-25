@@ -28,10 +28,10 @@ export default function SiteHeader() {
 
       <div className="flex items-center gap-4">
         <a
-          href="#lightboard"
+          href="#meniu"
           className="hidden md:inline-block font-bebas text-lg tracking-wider text-[#F5E6CC]/80 hover:text-[#F5E6CC] transition-colors"
         >
-          <Display>PANOU MENIU</Display>
+          <Display>MENIU</Display>
         </a>
         <a
           href="#locatie"
