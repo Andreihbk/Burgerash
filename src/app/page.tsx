@@ -36,7 +36,7 @@ export default function Home() {
           <TodayStatus />
 
           <div id={MENU_TOP_ID} className="mb-8">
-            <p className="font-mono text-xs font-bold tracking-widest text-[#790D20]">COMANDĂ ONLINE</p>
+            <p className="font-mono text-xs font-bold tracking-widest text-[#790D20]">01 · COMANDĂ ONLINE</p>
             <h2 data-reveal className="font-bebas text-4xl sm:text-5xl text-[#332420] leading-none">
               <Display>MENIU</Display>
             </h2>

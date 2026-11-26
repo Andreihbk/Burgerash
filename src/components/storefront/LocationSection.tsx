@@ -1,8 +1,8 @@
 import Image from "next/image";
-import { MapPin } from "lucide-react";
+import { MapPin, Navigation } from "lucide-react";
 import trayHand from "../../../public/images/marketing/location-tray-hand.jpg";
 import { SELL_OUT_NOTE, scheduleLines } from "@/lib/hours";
-import { DELIVERY_RADIUS_KM, GOOGLE_MAPS_URL, SITE_ADDRESS } from "@/lib/site";
+import { DELIVERY_RADIUS_KM, GOOGLE_DIRECTIONS_URL, GOOGLE_MAPS_URL, SITE_ADDRESS } from "@/lib/site";
 import OpenCartButton from "./OpenCartButton";
 import PartnerApps from "./PartnerApps";
 import LocationMapLoader from "./LocationMapLoader";
@@ -18,7 +18,7 @@ export default function LocationSection() {
         <div className="bg-[#790D20] text-[#F5E6CC] p-8 md:p-10">
           <div className="inline-flex items-center gap-2 text-[#F5E6CC] font-mono text-xs font-bold mb-2">
             <MapPin className="w-4 h-4" />
-            <span>CARTIERUL CRUSTEI</span>
+            <span>02 · CARTIERUL CRUSTEI</span>
           </div>
           <h3 data-reveal className="font-bebas text-4xl sm:text-5xl mb-4 text-[#F5E6CC]"><Display>UNDE GĂSEȘTI CRUSTA</Display></h3>
           <p className="font-nunito font-bold text-base text-[#F5E6CC]/80 mb-6">
@@ -26,14 +26,25 @@ export default function LocationSection() {
           </p>
           <address className="not-italic font-nunito font-extrabold text-xl mb-1">{SITE_ADDRESS.line}</address>
           <p className="font-mono text-xs text-[#F5E6CC]/80 mb-4">Livrare în raza de {DELIVERY_RADIUS_KM} km</p>
-          <a
-            href={GOOGLE_MAPS_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-block mb-6 font-bebas text-xl tracking-wide px-5 py-2.5 rounded-lg bg-[#F5E6CC] text-[#790D20] border-2 border-[#332420] shadow-[3px_3px_0px_0px_#332420] hover:bg-white transition-colors"
-          >
-            <Display>DESCHIDE ÎN GOOGLE MAPS</Display>
-          </a>
+          <div className="mb-6 flex flex-wrap items-center gap-x-5 gap-y-3">
+            <a
+              href={GOOGLE_DIRECTIONS_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 font-bebas text-2xl tracking-wide px-6 py-3 rounded-lg bg-[#F5E6CC] text-[#790D20] border-2 border-[#332420] shadow-[3px_3px_0px_0px_#332420] hover:bg-[#332420] hover:text-[#F5E6CC] transition-colors"
+            >
+              <Navigation className="w-5 h-5" aria-hidden />
+              <Display>DU-MĂ ACOLO</Display>
+            </a>
+            <a
+              href={GOOGLE_MAPS_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-nunito font-bold text-sm underline underline-offset-4 text-[#F5E6CC]/80 hover:text-[#F5E6CC]"
+            >
+              Vezi pe Google Maps
+            </a>
+          </div>
           <div className="font-mono text-sm space-y-1.5 border-t border-[#F5E6CC]/20 pt-4">
             <p className="text-[#F5E6CC] font-bold">PROGRAMUL DE FOC:</p>
             {scheduleLines().map((l) => (
@@ -51,14 +62,14 @@ export default function LocationSection() {
       </div>
 
       <div className="bg-[#F5E6CC] text-[#332420] p-8 md:p-10 flex flex-col sm:flex-row sm:flex-wrap lg:flex-nowrap sm:items-center justify-between gap-6 border-t-4 border-[#332420]">
-        <div className="relative w-32 sm:w-40 shrink-0 aspect-[4/5] overflow-hidden rounded-2xl border-2 border-[#332420] shadow-[4px_4px_0px_0px_#332420]">
+        <div className="group relative w-32 sm:w-40 shrink-0 aspect-[4/5] overflow-hidden rounded-2xl border-2 border-[#332420] shadow-[4px_4px_0px_0px_#332420]">
           <Image
             src={trayHand}
             alt="Burger cu cheddar servit pe tavă"
             fill
             placeholder="blur"
             sizes="160px"
-            className="object-cover"
+            className="object-cover transition-transform duration-500 ease-out md:group-hover:scale-105 motion-reduce:transition-none"
           />
         </div>
         <div className="sm:flex-1 sm:min-w-[260px]">

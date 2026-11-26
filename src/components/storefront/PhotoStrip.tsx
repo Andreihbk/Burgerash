@@ -196,14 +196,14 @@ export default function PhotoStrip() {
             style={{ transitionDelay: `${Math.min(i, 3) * 90}ms` }}
             aria-label={`${i + 1} din ${SLIDES.length}`}
           >
-            <div className="relative aspect-[4/5] overflow-hidden rounded-2xl border-2 border-[#332420] shadow-[6px_6px_0px_0px_#332420]">
+            <div className="group relative aspect-[4/5] overflow-hidden rounded-2xl border-2 border-[#332420] shadow-[6px_6px_0px_0px_#332420]">
               <Image
                 src={s.src}
                 alt={s.alt}
                 fill
                 placeholder="blur"
                 sizes="(min-width: 1152px) 340px, (min-width: 768px) 31vw, (min-width: 640px) 45vw, 78vw"
-                className="object-cover"
+                className="object-cover transition-transform duration-500 ease-out md:group-hover:scale-105 motion-reduce:transition-none"
               />
             </div>
           </li>

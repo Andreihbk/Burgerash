@@ -90,6 +90,12 @@ export default function SiteHeader() {
           )}
         </button>
       </div>
+      {/* Page progress (ScrollEffects sets --page-progress). */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute left-0 right-0 -bottom-0.5 h-[3px] origin-left bg-[#F5E6CC]"
+        style={{ transform: "scaleX(var(--page-progress, 0))" }}
+      />
     </header>
   );
 }
