@@ -2,7 +2,7 @@
 
 import { ShoppingBag } from "lucide-react";
 import { BrandLogo } from "../BrandLogo";
-import { SELL_OUT_NOTE, shortStatusLabel, statusLabel } from "@/lib/hours";
+import { shortStatusLabel, statusLabel } from "@/lib/hours";
 import { useCartStore } from "@/store/cartStore";
 import { useUiStore } from "@/store/uiStore";
 import { HEADER_HEIGHT } from "./layout";
@@ -66,7 +66,6 @@ export default function SiteHeader() {
             />
             <span>
               {statusLabel(status)}
-              {status.open && <span className="opacity-70">, {SELL_OUT_NOTE}</span>}
             </span>
           </div>
         )}

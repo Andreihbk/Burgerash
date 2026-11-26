@@ -93,8 +93,8 @@ export function nextScheduleStart(now: Date = new Date()): Date {
   return result;
 }
 
-/** Said softly next to the closing time: we close at 23:00, or earlier if everything sells out. */
-export const SELL_OUT_NOTE = "sau până se termină";
+/** Shown once, in the location section next to the hours: we close at 23:00, or earlier if we sell out. */
+export const SELL_OUT_NOTE = "până la ultimul burger";
 
 export function statusLabel(status: OpeningStatus): string {
   if (status.open) return `Deschis până la ${status.closesAt}`;

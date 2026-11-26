@@ -50,9 +50,12 @@ export default function LocationSection() {
             {scheduleLines().map((l) => (
               <p key={l.label}>
                 {l.label}: {l.hours}
+                <span className="text-[#F5E6CC]/70">
+                  <span className="hidden sm:inline"> · </span>
+                  <span className="block sm:inline">{SELL_OUT_NOTE}</span>
+                </span>
               </p>
             ))}
-            <p className="text-[#F5E6CC]/60">...{SELL_OUT_NOTE}.</p>
           </div>
         </div>
 
