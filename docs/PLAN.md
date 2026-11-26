@@ -165,8 +165,8 @@ High priority, not a launch gate by itself: **Ebriza integration** (E.1-E.5, L.2
 - [ ] 4.3 End-to-end test: cart -> order -> POS -> status back
 
 ## Before launch
-- [ ] L.1 (see B.5: all products, from supplier labels) Get real allergens for new products from the owner (CRISPY, CRISPY BACON, Chips, Nuggets). Until then the
-      cards show "Alergeni: întreabă-ne" (`allergens: null` in catalog.ts). Also re-check allergens of CLASIC/HOT BOY/DOUBLE/HOT HONEY
+- [ ] L.1 (see B.5: all products, from supplier labels) Confirm allergens with the owner/kitchen. Since 2026-11-26 CRISPY, CRISPY BACON, Chips and Nuggets
+      show TYPICAL allergens (marked in catalog.ts), not confirmed yet. Also re-check allergens of CLASIC/HOT BOY/DOUBLE/HOT HONEY
       against the new menu board ingredients (Gouda, bacon, sos spicy, hot honey).
 - [x] L.2 `ebriza-sku-map.ts` filled with all 20 SKUs (EBRIZA_PLAN 5b). The same SKUs must be entered in the POS (E.5).
       SGR deposit flagged for the 4 drinks; sent only with `EBRIZA_SEND_SGR=true` (website does not charge it yet).
