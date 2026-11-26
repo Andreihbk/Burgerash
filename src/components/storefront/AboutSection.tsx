@@ -14,18 +14,18 @@ export default function AboutSection() {
       className="mt-20 scroll-mt-24 overflow-hidden rounded-xl border-4 border-[#332420] bg-[#790D20] text-[#F5E6CC] shadow-[6px_6px_0px_0px_#332420]"
     >
       <div className="grid md:grid-cols-[minmax(0,5fr)_minmax(0,6fr)]">
-        <div className="relative aspect-[4/5] md:aspect-auto md:min-h-[560px] border-b-4 md:border-b-0 md:border-r-4 border-[#332420]">
+        <div className="group relative overflow-hidden aspect-[4/5] md:aspect-auto md:min-h-[560px] border-b-4 md:border-b-0 md:border-r-4 border-[#332420]">
           <Image
             src={aboutBacon}
             alt="Burger cu bacon și cheddar pe faianța roșie"
             fill
             placeholder="blur"
             sizes="(min-width: 1152px) 500px, (min-width: 768px) 45vw, 100vw"
-            className="object-cover"
+            className="object-cover transition-transform duration-500 ease-out md:group-hover:scale-105 motion-reduce:transition-none"
           />
         </div>
         <div className="p-8 sm:p-10 md:p-14 flex flex-col justify-center">
-          <p className="font-mono text-xs font-bold tracking-widest text-[#F5E6CC]/80">DESPRE NOI</p>
+          <p className="font-mono text-xs font-bold tracking-widest text-[#F5E6CC]/80">04 · DESPRE NOI</p>
           <h2 id="despre-titlu" data-reveal className="font-bebas text-5xl sm:text-7xl leading-[0.9] mt-2 mb-8">
             <Display>DIN CARTIER.</Display>
           </h2>

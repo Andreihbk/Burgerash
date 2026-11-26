@@ -44,6 +44,9 @@ export const DELIVERY_RADIUS_KM = 1;
 
 export const GOOGLE_MAPS_URL = "https://maps.app.goo.gl/oqvQu7YiSKh3umCD6";
 
+/** Opens turn-by-turn directions to the shop (coordinates, so it works before the place is well known on Maps). */
+export const GOOGLE_DIRECTIONS_URL = `https://www.google.com/maps/dir/?api=1&destination=${SITE_COORDS.lat},${SITE_COORDS.lng}`;
+
 /**
  * Delivery-app store pages. Secondary to our own ordering (no commission for us, cheaper for the customer).
  * null = not live yet: the button shows "în curând" and links nowhere. Paste the real store URL to switch it on.

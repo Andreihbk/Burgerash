@@ -36,8 +36,27 @@ No generic marketing lines.
 - Mobile-first (375px).
 
 ## Later ideas
+Agreed with Andrei on 2026-11-26. Not built yet; pick from here. Rules above still apply (no fake data, no "smash", reduced motion, nothing that slows ordering).
+
+### Visual (need an asset or real data first)
+- "Burgerul vedetă": a floating cut-out burger in the hero. Needs a cut-out photo (transparent PNG) from the shoot.
+- Review strip: only with real Google reviews (quoted with name + link). Never invent reviews.
+- Call button next to "Du-mă acolo": as soon as the shop has a phone number (CONTACT.phone in src/lib/hours.ts).
+- Photo parallax inside the frames (about / location), desktop only.
+- Menu cards dropping in on scroll: left out on purpose, the menu must stay instantly tappable. Revisit only if it never delays ordering.
 - Receipt-style cart.
-- "Cum se face un burger" in 5 steps.
-- House rules.
-- Short FAQ.
-- Sticker loyalty card.
+- "Cum se face un burger" in 5 steps (photos or stickers).
+
+### Ordering and product (non-visual)
+- Pick Up / Delivery as the first step of checkout (before the form).
+- Live sold-out per product on the storefront (the admin stock toggles already exist; show it everywhere in real time).
+- Apple Pay / Google Pay through Netopia, once the Netopia account is active.
+- House rules (short, in our tone).
+- Sticker loyalty card (collect the 6 burger stickers).
+- UTM tags on the Glovo, Wolt and Instagram links, so Vercel Analytics shows which channel brings people.
+- Sticky "Comandă" button on phones: skipped for now because the bottom tab bar + cart bar already do this job; revisit at launch if people miss it.
+
+### Done (2026-11)
+- Short FAQ, Despre noi, Instagram strip, branded 404.
+- Scroll motion: pinned photo carousel, stickers roll in, ticker speeds up, headings rise in, about tags stamp in.
+- Page progress bar, numbered section labels, "Du-mă acolo" directions button, photo hover zoom (desktop).

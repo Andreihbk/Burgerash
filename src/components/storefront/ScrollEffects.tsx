@@ -28,9 +28,27 @@ export default function ScrollEffects() {
     );
     document.querySelectorAll<HTMLElement>("[data-reveal]").forEach((el) => io.observe(el));
 
+    // Thin page progress bar under the header (all screens).
+    let progressRaf = 0;
+    const onProgress = () => {
+      cancelAnimationFrame(progressRaf);
+      progressRaf = requestAnimationFrame(() => {
+        const max = document.documentElement.scrollHeight - window.innerHeight;
+        root.style.setProperty("--page-progress", String(max > 0 ? Math.min(1, window.scrollY / max) : 0));
+      });
+    };
+    window.addEventListener("scroll", onProgress, { passive: true });
+    onProgress();
+    const stopProgress = () => {
+      window.removeEventListener("scroll", onProgress);
+      cancelAnimationFrame(progressRaf);
+      root.style.removeProperty("--page-progress");
+    };
+
     if (!window.matchMedia("(min-width: 768px)").matches) {
       return () => {
         io.disconnect();
+        stopProgress();
         delete root.dataset.motion;
       };
     }
@@ -71,6 +89,7 @@ export default function ScrollEffects() {
 
     return () => {
       io.disconnect();
+      stopProgress();
       window.removeEventListener("scroll", onScroll);
       cancelAnimationFrame(raf);
       for (const a of tickers) a.playbackRate = 1;
