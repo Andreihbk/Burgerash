@@ -50,7 +50,7 @@ export default function LocationSection() {
         </div>
       </div>
 
-      <div className="bg-[#F5E6CC] text-[#332420] p-8 md:p-10 flex flex-col sm:flex-row sm:items-center justify-between gap-6 border-t-4 border-[#332420]">
+      <div className="bg-[#F5E6CC] text-[#332420] p-8 md:p-10 flex flex-col sm:flex-row sm:flex-wrap lg:flex-nowrap sm:items-center justify-between gap-6 border-t-4 border-[#332420]">
         <div className="relative w-32 sm:w-40 shrink-0 aspect-[4/5] overflow-hidden rounded-2xl border-2 border-[#332420] shadow-[4px_4px_0px_0px_#332420]">
           <Image
             src={trayHand}
@@ -61,14 +61,14 @@ export default function LocationSection() {
             className="object-cover"
           />
         </div>
-        <div className="sm:flex-1">
+        <div className="sm:flex-1 sm:min-w-[260px]">
           <h3 className="font-bebas text-4xl sm:text-5xl mb-4"><Display>LIVRARE PROPRIE & PICKUP</Display></h3>
           <p className="font-nunito font-bold text-base text-[#332420]/90 max-w-2xl">
             Comandă direct de pe site fără comisioane ascunse. Livrare gratuită în cartier la comenzi de peste 120 LEI sau ridicare direct de la geam în 15 minute.
           </p>
         </div>
-        <div className="self-start shrink-0 flex flex-col gap-4">
-          <OpenCartButton className="bg-[#790D20] text-[#F5E6CC] font-bebas text-2xl px-8 py-3.5 rounded-lg border-2 border-[#332420] shadow-[4px_4px_0px_0px_#332420] hover:bg-[#332420] transition-all">
+        <div className="self-start shrink-0 flex flex-col gap-4 w-full lg:w-[400px]">
+          <OpenCartButton className="w-full bg-[#790D20] text-[#F5E6CC] font-bebas text-2xl sm:text-3xl lg:text-4xl px-6 sm:px-8 py-5 rounded-lg border-2 border-[#332420] shadow-[4px_4px_0px_0px_#332420] hover:bg-[#332420] transition-all">
             <Display>DESCHIDE COȘUL DE COMANDĂ</Display>
           </OpenCartButton>
           <PartnerApps />

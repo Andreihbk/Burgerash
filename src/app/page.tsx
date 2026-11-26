@@ -43,9 +43,9 @@ export default function Home() {
           </div>
 
           <MenuSections />
-          <AboutSection />
           <LocationSection />
           <FaqSection />
+          <AboutSection />
           <InstagramStrip />
         </main>
 
