@@ -17,6 +17,7 @@ import CartDrawerHost from "@/components/storefront/CartDrawerHost";
 import { MENU_TOP_ID } from "@/components/storefront/layout";
 import { homeJsonLd } from "@/lib/structured-data";
 import { Display } from "@/components/Display";
+import ScrollEffects from "@/components/storefront/ScrollEffects";
 
 // `<` is escaped so catalog text can never close the script tag.
 const jsonLd = JSON.stringify(homeJsonLd()).replace(/</g, "\\u003c");
@@ -36,7 +37,7 @@ export default function Home() {
 
           <div id={MENU_TOP_ID} className="mb-8">
             <p className="font-mono text-xs font-bold tracking-widest text-[#790D20]">COMANDĂ ONLINE</p>
-            <h2 className="font-bebas text-4xl sm:text-5xl text-[#332420] leading-none">
+            <h2 data-reveal className="font-bebas text-4xl sm:text-5xl text-[#332420] leading-none">
               <Display>MENIU</Display>
             </h2>
             <p className="mt-2 font-nunito font-semibold text-base text-[#332420]/70">Pregătim zilnic. Când se termină, se termină.</p>
@@ -51,6 +52,7 @@ export default function Home() {
 
         <CustomizeModalHost />
         <SiteFooter />
+        <ScrollEffects />
         <AddedToast />
         <MobileCartBar />
         <BottomNav />

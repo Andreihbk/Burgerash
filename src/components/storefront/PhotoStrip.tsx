@@ -26,10 +26,56 @@ const SLIDES: { src: StaticImageData; alt: string }[] = [
 
 const pad = (n: number) => String(n).padStart(2, "0");
 
-/** "PROASPĂT. PE LOC." swipeable photo carousel: snap scrolling; arrows + counter from sm up (phones swipe). No autoplay. */
+/** "PROASPĂT. PE LOC." photo carousel: swipe + snap on phones; on desktop it slides in and follows the page scroll. No autoplay. */
 export default function PhotoStrip() {
   const scroller = useRef<HTMLUListElement>(null);
+  const section = useRef<HTMLElement>(null);
+  /** Desktop only: the page scroll drives the track until the visitor uses the arrows. */
+  const driven = useRef(false);
   const [index, setIndex] = useState(0);
+
+  // Desktop motion (md+, motion allowed): the section slides in once, then vertical page scroll moves the photos
+  // sideways. Only transform/opacity/scrollLeft change: no layout shift. Phones keep plain swipe + snap.
+  useEffect(() => {
+    const sec = section.current;
+    const el = scroller.current;
+    if (!sec || !el || prefersReducedMotion() || !window.matchMedia("(min-width: 768px)").matches) return;
+
+    sec.dataset.reveal = "out";
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        sec.dataset.reveal = "in";
+        io.disconnect();
+      },
+      { threshold: 0.15 },
+    );
+    io.observe(sec);
+
+    driven.current = true;
+    el.dataset.driven = "";
+    let raf = 0;
+    const onPageScroll = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        if (!driven.current) return;
+        const r = sec.getBoundingClientRect();
+        const vh = window.innerHeight;
+        // 0 when the section's top reaches 85% of the screen, 1 when its bottom reaches 15%.
+        const p = Math.min(1, Math.max(0, (vh * 0.85 - r.top) / (r.height + vh * 0.7)));
+        el.scrollLeft = p * (el.scrollWidth - el.clientWidth);
+      });
+    };
+    window.addEventListener("scroll", onPageScroll, { passive: true });
+    onPageScroll();
+    return () => {
+      io.disconnect();
+      window.removeEventListener("scroll", onPageScroll);
+      cancelAnimationFrame(raf);
+      delete sec.dataset.reveal;
+      delete el.dataset.driven;
+    };
+  }, []);
 
   // Current slide = the one whose left edge is closest to the scroller's left edge.
   useEffect(() => {
@@ -61,6 +107,9 @@ export default function PhotoStrip() {
     const el = scroller.current;
     const first = el?.children[0] as HTMLElement | undefined;
     if (!el || !first) return;
+    // The visitor takes over: stop following the page scroll, bring snapping back.
+    driven.current = false;
+    delete el.dataset.driven;
     const gap = parseFloat(getComputedStyle(el).columnGap) || 0;
     el.scrollBy({ left: dir * (first.offsetWidth + gap), behavior: prefersReducedMotion() ? "auto" : "smooth" });
   }, []);
@@ -69,7 +118,12 @@ export default function PhotoStrip() {
     "grid place-items-center w-11 h-11 rounded-full bg-[#790D20] text-[#F5E6CC] border-2 border-[#332420] shadow-[3px_3px_0px_0px_#332420] hover:bg-[#332420] disabled:opacity-40 disabled:hover:bg-[#790D20] transition-colors duration-200";
 
   return (
-    <section aria-labelledby="facut-pe-loc" aria-roledescription="carusel" className="max-w-6xl mx-auto px-4 sm:px-6 py-10 lg:py-14">
+    <section
+      ref={section}
+      aria-labelledby="facut-pe-loc"
+      aria-roledescription="carusel"
+      className="group/strip max-w-6xl mx-auto px-4 sm:px-6 py-10 lg:py-14 transition-[opacity,transform] duration-700 ease-out data-[reveal=out]:opacity-0 data-[reveal=out]:translate-y-12"
+    >
       <div className="flex items-end justify-between gap-4">
         <h2 id="facut-pe-loc" className="font-bebas text-3xl sm:text-5xl leading-none whitespace-nowrap text-[#332420]">
           <Display>PROASPĂT. PE LOC.</Display>
@@ -89,10 +143,15 @@ export default function PhotoStrip() {
 
       <ul
         ref={scroller}
-        className="mt-6 -mx-4 px-4 sm:-mx-6 sm:px-6 pb-3 flex gap-4 md:gap-6 overflow-x-auto snap-x snap-mandatory scroll-px-4 sm:scroll-px-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className="mt-6 -mx-4 px-4 sm:-mx-6 sm:px-6 pb-3 flex gap-4 md:gap-6 overflow-x-auto snap-x snap-mandatory data-[driven]:snap-none scroll-px-4 sm:scroll-px-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         {SLIDES.map((s, i) => (
-          <li key={s.alt} className="snap-start shrink-0 w-[78%] sm:w-[45%] md:w-[31%]" aria-label={`${i + 1} din ${SLIDES.length}`}>
+          <li
+            key={s.alt}
+            className="snap-start shrink-0 w-[78%] sm:w-[45%] md:w-[31%] transition-transform duration-700 ease-out group-data-[reveal=out]/strip:translate-x-24"
+            style={{ transitionDelay: `${Math.min(i, 3) * 90}ms` }}
+            aria-label={`${i + 1} din ${SLIDES.length}`}
+          >
             <div className="relative aspect-[4/5] overflow-hidden rounded-2xl border-2 border-[#332420] shadow-[6px_6px_0px_0px_#332420]">
               <Image
                 src={s.src}

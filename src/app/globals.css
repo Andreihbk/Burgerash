@@ -229,3 +229,22 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .status-led-on { animation: none; }
 }
+
+/* Scroll motion (ScrollEffects.tsx). Armed only once JS sets html[data-motion], never with reduced motion. */
+html[data-motion] [data-reveal] {
+  transition: opacity 0.6s ease-out, transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1.1);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+html[data-motion] [data-reveal]:not([data-shown]) { opacity: 0; transform: translateY(28px); }
+html[data-motion] [data-reveal="stamp"]:not([data-shown]) { opacity: 0; transform: scale(1.35) rotate(-6deg); }
+
+/* Hero stickers: roll in once on load; on desktop they turn slightly with the scroll (--sticker-spin). */
+@keyframes sticker-roll-in {
+  from { opacity: 0; transform: translateX(-40%) rotate(-160deg) scale(0.7); }
+  to { opacity: 1; transform: none; }
+}
+.sticker-roll-in { animation: sticker-roll-in 0.9s cubic-bezier(0.2, 0.9, 0.25, 1.1) both; }
+.sticker-spin { transform: rotate(var(--sticker-spin, 0deg)); }
+@media (prefers-reduced-motion: reduce) {
+  .sticker-roll-in { animation: none; }
+}
