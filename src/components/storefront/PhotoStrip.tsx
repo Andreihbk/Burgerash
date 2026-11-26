@@ -11,7 +11,7 @@ import friesChips from "../../../public/images/marketing/strip-fries-chips.jpg";
 import chickenFries from "../../../public/images/marketing/carousel-chicken-fries.jpg";
 import wrapped from "../../../public/images/marketing/carousel-wrapped.jpg";
 import { Display } from "@/components/Display";
-import { prefersReducedMotion } from "./layout";
+import { HEADER_HEIGHT, prefersReducedMotion } from "./layout";
 
 // Mood photos only (see docs/PHOTOS.md): never product images, never text on top.
 const SLIDES: { src: StaticImageData; alt: string }[] = [
@@ -26,20 +26,26 @@ const SLIDES: { src: StaticImageData; alt: string }[] = [
 
 const pad = (n: number) => String(n).padStart(2, "0");
 
-/** "PROASPĂT. PE LOC." photo carousel: swipe + snap on phones; on desktop it slides in and follows the page scroll. No autoplay. */
+/** "PROASPĂT. PE LOC." photo carousel: swipe + snap on phones; on desktop it pins while the page scroll moves the photos. No autoplay. */
 export default function PhotoStrip() {
   const scroller = useRef<HTMLUListElement>(null);
   const section = useRef<HTMLElement>(null);
-  /** Desktop only: the page scroll drives the track until the visitor uses the arrows. */
-  const driven = useRef(false);
+  const wrap = useRef<HTMLDivElement>(null);
+  /** Desktop only: the section is pinned and the page scroll moves the photos. Null when not pinned. */
+  const pin = useRef<{ top: number; max: number } | null>(null);
   const [index, setIndex] = useState(0);
 
-  // Desktop motion (md+, motion allowed): the section slides in once, then vertical page scroll moves the photos
-  // sideways. Only transform/opacity/scrollLeft change: no layout shift. Phones keep plain swipe + snap.
+  // Desktop (md+, motion allowed, screen tall enough): the section slides in, then sticks in view while the page
+  // scroll moves the photos sideways; after the last photo the page scrolls on. Built with position: sticky inside
+  // a taller wrapper (no scroll hijacking): the wrapper is exactly as much taller as the track is wide, so 1 px of
+  // page scroll = 1 px of photos and the visitor can never get stuck. Phones / reduced motion: plain swipe carousel.
   useEffect(() => {
     const sec = section.current;
     const el = scroller.current;
-    if (!sec || !el || prefersReducedMotion() || !window.matchMedia("(min-width: 768px)").matches) return;
+    const box = wrap.current;
+    if (!sec || !el || !box || prefersReducedMotion()) return;
+    const desktop = window.matchMedia("(min-width: 768px)");
+    if (!desktop.matches) return;
 
     sec.dataset.reveal = "out";
     const io = new IntersectionObserver(
@@ -52,28 +58,57 @@ export default function PhotoStrip() {
     );
     io.observe(sec);
 
-    driven.current = true;
-    el.dataset.driven = "";
+    const unpin = () => {
+      pin.current = null;
+      box.style.height = "";
+      sec.style.position = "";
+      sec.style.top = "";
+      delete el.dataset.driven;
+    };
+
+    const layout = () => {
+      unpin();
+      if (!desktop.matches) return;
+      el.dataset.driven = "";
+      const last = el.lastElementChild as HTMLElement | null;
+      const padRight = parseFloat(getComputedStyle(el).paddingRight) || 0;
+      // offsetLeft ignores the slide-in transforms, so this is the real track length.
+      const max = last ? Math.max(0, last.offsetLeft - el.offsetLeft + last.offsetWidth + padRight - el.clientWidth) : 0;
+      const offset = HEADER_HEIGHT; // the category bar sits below this section, so only the header covers it
+      const free = window.innerHeight - offset - sec.offsetHeight;
+      if (max < 1 || free < 0) {
+        delete el.dataset.driven; // screen too short to pin: keep the normal carousel
+        return;
+      }
+      const top = offset + free / 2; // centred in the space under the sticky header
+      box.style.height = `${sec.offsetHeight + max}px`;
+      sec.style.position = "sticky";
+      sec.style.top = `${top}px`;
+      pin.current = { top, max };
+      onPageScroll();
+    };
+
     let raf = 0;
     const onPageScroll = () => {
       cancelAnimationFrame(raf);
       raf = requestAnimationFrame(() => {
-        if (!driven.current) return;
-        const r = sec.getBoundingClientRect();
-        const vh = window.innerHeight;
-        // 0 when the section's top reaches 85% of the screen, 1 when its bottom reaches 15%.
-        const p = Math.min(1, Math.max(0, (vh * 0.85 - r.top) / (r.height + vh * 0.7)));
-        el.scrollLeft = p * (el.scrollWidth - el.clientWidth);
+        const p = pin.current;
+        if (!p) return;
+        const travelled = p.top - box.getBoundingClientRect().top;
+        el.scrollLeft = Math.min(p.max, Math.max(0, travelled));
       });
     };
+
+    layout();
     window.addEventListener("scroll", onPageScroll, { passive: true });
-    onPageScroll();
+    window.addEventListener("resize", layout);
     return () => {
       io.disconnect();
       window.removeEventListener("scroll", onPageScroll);
+      window.removeEventListener("resize", layout);
       cancelAnimationFrame(raf);
+      unpin();
       delete sec.dataset.reveal;
-      delete el.dataset.driven;
     };
   }, []);
 
@@ -107,17 +142,26 @@ export default function PhotoStrip() {
     const el = scroller.current;
     const first = el?.children[0] as HTMLElement | undefined;
     if (!el || !first) return;
-    // The visitor takes over: stop following the page scroll, bring snapping back.
-    driven.current = false;
-    delete el.dataset.driven;
     const gap = parseFloat(getComputedStyle(el).columnGap) || 0;
-    el.scrollBy({ left: dir * (first.offsetWidth + gap), behavior: prefersReducedMotion() ? "auto" : "smooth" });
+    const step = dir * (first.offsetWidth + gap);
+    const behavior = prefersReducedMotion() ? "auto" : "smooth";
+    const p = pin.current;
+    const box = wrap.current;
+    if (p && box) {
+      // Pinned: move the page instead, so photos and page scroll stay in sync.
+      const left = Math.min(p.max, Math.max(0, el.scrollLeft + step));
+      const boxTop = box.getBoundingClientRect().top + window.scrollY;
+      window.scrollTo({ top: boxTop - p.top + left, behavior });
+      return;
+    }
+    el.scrollBy({ left: step, behavior });
   }, []);
 
   const arrow =
     "grid place-items-center w-11 h-11 rounded-full bg-[#790D20] text-[#F5E6CC] border-2 border-[#332420] shadow-[3px_3px_0px_0px_#332420] hover:bg-[#332420] disabled:opacity-40 disabled:hover:bg-[#790D20] transition-colors duration-200";
 
   return (
+    <div ref={wrap}>
     <section
       ref={section}
       aria-labelledby="facut-pe-loc"
@@ -166,5 +210,6 @@ export default function PhotoStrip() {
         ))}
       </ul>
     </section>
+    </div>
   );
 }
