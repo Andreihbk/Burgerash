@@ -26,7 +26,7 @@ export default function FaqSection() {
   return (
     <section id="intrebari" aria-labelledby="faq-titlu" className="mt-20 scroll-mt-24">
       <p className="font-mono text-xs font-bold tracking-widest text-[#790D20]">PE SCURT</p>
-      <h2 id="faq-titlu" className="font-bebas text-4xl sm:text-5xl leading-none text-[#332420] mb-6">
+      <h2 id="faq-titlu" data-reveal className="font-bebas text-4xl sm:text-5xl leading-none text-[#332420] mb-6">
         <Display>ÎNTREBĂRI.</Display>
       </h2>
       <div className="divide-y-2 divide-[#332420] border-y-2 border-[#332420]">

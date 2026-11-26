@@ -51,7 +51,7 @@ function HeroStickers({
       onFocus={() => onPause(true)}
       onBlur={() => onPause(false)}
     >
-      {HERO_PRODUCTS.map((product) => {
+      {HERO_PRODUCTS.map((product, i) => {
         const slot = STICKER_SLOTS[Math.max(0, order.indexOf(product.id))];
         return (
           <button
@@ -67,7 +67,11 @@ function HeroStickers({
             }}
             className="absolute left-0 top-0 rounded-full drop-shadow-[4px_4px_0px_#332420] hero-sticker focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#790D20]"
           >
-            <BurgerStamp product={product} className="h-full w-full" />
+            <span className="sticker-spin block h-full w-full">
+              <span className="sticker-roll-in block h-full w-full" style={{ animationDelay: `${150 + i * 140}ms` }}>
+                <BurgerStamp product={product} className="h-full w-full" />
+              </span>
+            </span>
           </button>
         );
       })}

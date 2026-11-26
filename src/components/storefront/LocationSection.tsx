@@ -20,7 +20,7 @@ export default function LocationSection() {
             <MapPin className="w-4 h-4" />
             <span>CARTIERUL CRUSTEI</span>
           </div>
-          <h3 className="font-bebas text-4xl sm:text-5xl mb-4 text-[#F5E6CC]"><Display>UNDE GĂSEȘTI CRUSTA</Display></h3>
+          <h3 data-reveal className="font-bebas text-4xl sm:text-5xl mb-4 text-[#F5E6CC]"><Display>UNDE GĂSEȘTI CRUSTA</Display></h3>
           <p className="font-nunito font-bold text-base text-[#F5E6CC]/80 mb-6">
             Fix lângă liceu, în {SITE_ADDRESS.sector}, {SITE_ADDRESS.city}. Urmărește mirosul de vită Black Angus caramelizată pe plită.
           </p>

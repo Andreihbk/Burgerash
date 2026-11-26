@@ -18,7 +18,7 @@ export default function InstagramStrip() {
   return (
     <section aria-labelledby="ig-titlu" className="mt-20">
       <div className="flex items-end justify-between gap-4 mb-6">
-        <h2 id="ig-titlu" className="font-bebas text-3xl sm:text-5xl leading-none text-[#332420]">
+        <h2 id="ig-titlu" data-reveal className="font-bebas text-3xl sm:text-5xl leading-none text-[#332420]">
           <Display>@BURGERASH</Display>
         </h2>
         <a
