@@ -50,7 +50,7 @@ export default function MenuItem({ product }: { product: Product }) {
 
         <p className="md:hidden mt-1 font-nunito font-black text-base text-[#790D20]">
           {product.price} <span className="text-xs font-bold">LEI</span>
-          {product.weight_label && <span className="ml-2 font-mono text-[10px] font-normal text-[#332420]/60">{product.weight_label}</span>}
+          {product.weight_label && <span className="ml-2 font-mono text-[10px] font-normal text-[#332420]/80">{product.weight_label}</span>}
         </p>
 
         {product.allergens === null && (

@@ -31,9 +31,9 @@ export default function SiteFooter() {
           </div>
         </div>
 
-        <nav aria-label="Informații legale" className="flex flex-col items-center sm:items-end gap-1">
+        <nav aria-label="Informații legale" className="flex flex-col items-center sm:items-end">
           {LEGAL_LINKS.map((l) => (
-            <Link key={l.href} href={l.href} className="underline underline-offset-2 hover:text-[#790D20]">
+            <Link key={l.href} href={l.href} className="inline-flex min-h-6 items-center underline underline-offset-2 hover:text-[#790D20]">
               {l.label}
             </Link>
           ))}
