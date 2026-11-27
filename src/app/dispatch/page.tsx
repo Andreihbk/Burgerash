@@ -8,9 +8,12 @@
 import Link from "next/link";
 import { BrandLogo } from "@/components/BrandLogo";
 import SignOutButton from "@/components/SignOutButton";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { RIDERS } from "@/lib/riders";
-import { isSupabaseConfigured, supabase } from "@/lib/supabase";
+import { supabase } from "@/lib/supabase";
+import { formatAge, sortOldestFirst } from "@/lib/staff-format";
+import { useLiveOrders } from "@/lib/useLiveOrders";
+import { useStaffSound } from "@/lib/useStaffSound";
 import type { Order, OrderStatus } from "@/types/database";
 import { Display } from "@/components/Display";
 
@@ -24,159 +27,17 @@ const COLUMNS: { status: DispatchStatus; title: string }[] = [
 ];
 
 const LATE_AFTER_MIN = 20;
-const SELECT = "*, items:order_items(*)";
-
-function isDispatchStatus(s: string): s is DispatchStatus {
-  return (DISPATCH_STATUSES as string[]).includes(s);
-}
-
-function sortOldestFirst(list: Order[]): Order[] {
-  return [...list].sort((a, b) => a.created_at.localeCompare(b.created_at));
-}
-
-function formatAge(createdAt: string, now: number): { text: string; minutes: number } {
-  const secs = Math.max(0, Math.floor((now - new Date(createdAt).getTime()) / 1000));
-  const minutes = Math.floor(secs / 60);
-  if (minutes < 1) return { text: "acum", minutes };
-  if (minutes < 60) return { text: `${minutes} min`, minutes };
-  return { text: `${Math.floor(minutes / 60)} h ${minutes % 60} min`, minutes };
-}
-
 export default function DispatchPage() {
-  const [orders, setOrders] = useState<Order[]>([]);
-  const [loaded, setLoaded] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [connected, setConnected] = useState(false);
+  const { soundOn, toggleSound, beep } = useStaffSound(660);
+  const { orders, setOrders, loaded, error, setError, connected, fresh, clearFresh } = useLiveOrders({
+    channelName: "dispatch-orders",
+    statuses: DISPATCH_STATUSES,
+    freshStatus: "ready_for_packing",
+    refetchMissing: true,
+    onArrive: beep,
+  });
   const [now, setNow] = useState(() => Date.now());
   const [tab, setTab] = useState<DispatchStatus>("ready_for_packing");
-  const [fresh, setFresh] = useState<Set<string>>(new Set());
-  const [soundOn, setSoundOn] = useState(false);
-
-  const audioRef = useRef<AudioContext | null>(null);
-  const soundOnRef = useRef(false);
-  const knownIds = useRef<Set<string>>(new Set());
-  const firstLoad = useRef(true);
-
-  const beep = useCallback(() => {
-    const ctx = audioRef.current;
-    if (!soundOnRef.current || !ctx) return;
-    [0, 0.25].forEach((delay) => {
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.frequency.value = 660;
-      gain.gain.value = 0.2;
-      osc.connect(gain).connect(ctx.destination);
-      osc.start(ctx.currentTime + delay);
-      osc.stop(ctx.currentTime + delay + 0.15);
-    });
-  }, []);
-
-  const markFresh = useCallback(
-    (ids: string[]) => {
-      if (ids.length === 0) return;
-      setFresh((prev) => new Set([...prev, ...ids]));
-      beep();
-    },
-    [beep],
-  );
-
-  const clearFresh = useCallback((id: string) => {
-    setFresh((prev) => {
-      if (!prev.has(id)) return prev;
-      const next = new Set(prev);
-      next.delete(id);
-      return next;
-    });
-  }, []);
-
-  const load = useCallback(async () => {
-    const { data, error: err } = await supabase
-      .from("orders")
-      .select(SELECT)
-      .in("status", DISPATCH_STATUSES)
-      .order("created_at", { ascending: true });
-    if (err) {
-      setError("Nu pot încărca comenzile. Reîncerc la reconectare.");
-      return;
-    }
-    setError(null);
-    const list = (data ?? []) as Order[];
-    const newcomers = list.filter((o) => !knownIds.current.has(o.id) && o.status === "ready_for_packing");
-    list.forEach((o) => knownIds.current.add(o.id));
-    setOrders(list);
-    setLoaded(true);
-    if (!firstLoad.current) markFresh(newcomers.map((o) => o.id));
-    firstLoad.current = false;
-  }, [markFresh]);
-
-  // Initial load + Realtime subscription (unsubscribes on unmount).
-  useEffect(() => {
-    if (!isSupabaseConfigured) {
-      setError("Supabase nu este configurat.");
-      setLoaded(true);
-      return;
-    }
-    void load();
-
-    const channel = supabase
-      .channel("dispatch-orders")
-      .on("postgres_changes", { event: "*", schema: "public", table: "orders" }, async (payload) => {
-        if (payload.eventType === "DELETE") {
-          const id = (payload.old as { id?: string }).id;
-          if (id) setOrders((prev) => prev.filter((o) => o.id !== id));
-          return;
-        }
-        const row = payload.new as Order;
-        if (!isDispatchStatus(row.status)) {
-          setOrders((prev) => prev.filter((o) => o.id !== row.id));
-          return;
-        }
-        // Items are not in the orders payload: fetch the full order when it is new to this screen.
-        if (!knownIds.current.has(row.id) || payload.eventType === "INSERT") {
-          const { data } = await supabase.from("orders").select(SELECT).eq("id", row.id).single();
-          if (!data) return;
-          const full = data as Order;
-          const isNew = !knownIds.current.has(full.id);
-          knownIds.current.add(full.id);
-          setOrders((prev) => [...prev.filter((o) => o.id !== full.id), full]);
-          if (isNew && full.status === "ready_for_packing") markFresh([full.id]);
-          return;
-        }
-        // Known order: merge fields, keep the items we already have. If it just came back from the
-        // kitchen/other column and is not in state, fetch it again.
-        let missing = false;
-        setOrders((prev) => {
-          if (!prev.some((o) => o.id === row.id)) {
-            missing = true;
-            return prev;
-          }
-          return prev.map((o) => (o.id === row.id ? { ...o, ...row, items: o.items } : o));
-        });
-        if (missing) {
-          const { data } = await supabase.from("orders").select(SELECT).eq("id", row.id).single();
-          if (data) {
-            const full = data as Order;
-            setOrders((prev) => [...prev.filter((o) => o.id !== full.id), full]);
-            if (full.status === "ready_for_packing") markFresh([full.id]);
-          }
-        }
-      })
-      .subscribe((status) => {
-        const ok = status === "SUBSCRIBED";
-        setConnected(ok);
-        if (ok) void load(); // catch up on anything missed while offline
-      });
-
-    const onVisible = () => {
-      if (document.visibilityState === "visible") void load();
-    };
-    document.addEventListener("visibilitychange", onVisible);
-
-    return () => {
-      document.removeEventListener("visibilitychange", onVisible);
-      void supabase.removeChannel(channel);
-    };
-  }, [load, markFresh]);
 
   // Live age timer.
   useEffect(() => {
@@ -188,19 +49,6 @@ export default function DispatchPage() {
   useEffect(() => {
     document.title = readyCount > 0 ? `(${readyCount}) Dispecerat | Burgerash` : "Dispecerat | Burgerash";
   }, [readyCount]);
-
-  function toggleSound() {
-    if (!soundOn) {
-      audioRef.current ??= new AudioContext();
-      void audioRef.current.resume();
-      soundOnRef.current = true;
-      setSoundOn(true);
-      beep();
-    } else {
-      soundOnRef.current = false;
-      setSoundOn(false);
-    }
-  }
 
   async function moveTo(order: Order, status: OrderStatus) {
     const previous = order.status;

@@ -10,6 +10,7 @@ import SignOutButton from "@/components/SignOutButton";
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { RIDERS } from "@/lib/riders";
 import { isSupabaseConfigured, supabase } from "@/lib/supabase";
+import { sortOldestFirst } from "@/lib/staff-format";
 import type { Order } from "@/types/database";
 import { Display } from "@/components/Display";
 
@@ -31,10 +32,6 @@ function readRider(): string | null {
   }
 }
 const readRiderServer = () => null;
-
-function sortOldestFirst(list: Order[]): Order[] {
-  return [...list].sort((a, b) => a.created_at.localeCompare(b.created_at));
-}
 
 function money(n: number): string {
   return `${Number(n).toFixed(2).replace(".", ",")} RON`;

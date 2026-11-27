@@ -6,8 +6,11 @@
 import Link from "next/link";
 import { BrandLogo } from "@/components/BrandLogo";
 import SignOutButton from "@/components/SignOutButton";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { isSupabaseConfigured, supabase } from "@/lib/supabase";
+import { useEffect, useState } from "react";
+import { supabase } from "@/lib/supabase";
+import { formatAge, sortOldestFirst } from "@/lib/staff-format";
+import { useLiveOrders } from "@/lib/useLiveOrders";
+import { useStaffSound } from "@/lib/useStaffSound";
 import type { Order, OrderStatus } from "@/types/database";
 import { Display } from "@/components/Display";
 
@@ -28,138 +31,17 @@ const COLUMNS: {
 ];
 
 const LATE_AFTER_MIN = 10;
-const SELECT = "*, items:order_items(*)";
-
-function isKitchenStatus(s: string): s is KitchenStatus {
-  return (KITCHEN_STATUSES as string[]).includes(s);
-}
-
-function sortOldestFirst(list: Order[]): Order[] {
-  return [...list].sort((a, b) => a.created_at.localeCompare(b.created_at));
-}
-
-function formatAge(createdAt: string, now: number): { text: string; minutes: number } {
-  const secs = Math.max(0, Math.floor((now - new Date(createdAt).getTime()) / 1000));
-  const minutes = Math.floor(secs / 60);
-  if (minutes < 1) return { text: "acum", minutes };
-  if (minutes < 60) return { text: `${minutes} min`, minutes };
-  return { text: `${Math.floor(minutes / 60)} h ${minutes % 60} min`, minutes };
-}
-
 export default function KitchenPage() {
-  const [orders, setOrders] = useState<Order[]>([]);
-  const [loaded, setLoaded] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [connected, setConnected] = useState(false);
+  const { soundOn, toggleSound, beep } = useStaffSound(880);
+  const { orders, setOrders, loaded, error, setError, connected, fresh, clearFresh } = useLiveOrders({
+    channelName: "kitchen-orders",
+    statuses: KITCHEN_STATUSES,
+    freshStatus: "pending",
+    refetchMissing: false,
+    onArrive: beep,
+  });
   const [now, setNow] = useState(() => Date.now());
   const [tab, setTab] = useState<KitchenStatus>("pending");
-  const [fresh, setFresh] = useState<Set<string>>(new Set());
-  const [soundOn, setSoundOn] = useState(false);
-
-  const audioRef = useRef<AudioContext | null>(null);
-  const soundOnRef = useRef(false);
-  const knownIds = useRef<Set<string>>(new Set());
-  const firstLoad = useRef(true);
-
-  const beep = useCallback(() => {
-    const ctx = audioRef.current;
-    if (!soundOnRef.current || !ctx) return;
-    [0, 0.25].forEach((delay) => {
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.frequency.value = 880;
-      gain.gain.value = 0.2;
-      osc.connect(gain).connect(ctx.destination);
-      osc.start(ctx.currentTime + delay);
-      osc.stop(ctx.currentTime + delay + 0.15);
-    });
-  }, []);
-
-  const markFresh = useCallback(
-    (ids: string[]) => {
-      if (ids.length === 0) return;
-      setFresh((prev) => new Set([...prev, ...ids]));
-      beep();
-    },
-    [beep],
-  );
-
-  const load = useCallback(async () => {
-    const { data, error: err } = await supabase
-      .from("orders")
-      .select(SELECT)
-      .in("status", KITCHEN_STATUSES)
-      .order("created_at", { ascending: true });
-    if (err) {
-      setError("Nu pot încărca comenzile. Reîncerc la reconectare.");
-      return;
-    }
-    setError(null);
-    const list = (data ?? []) as Order[];
-    const newcomers = list.filter((o) => !knownIds.current.has(o.id) && o.status === "pending");
-    list.forEach((o) => knownIds.current.add(o.id));
-    setOrders(list);
-    setLoaded(true);
-    if (!firstLoad.current) markFresh(newcomers.map((o) => o.id));
-    firstLoad.current = false;
-  }, [markFresh]);
-
-  // Initial load + Realtime subscription (unsubscribes on unmount).
-  useEffect(() => {
-    if (!isSupabaseConfigured) {
-      setError("Supabase nu este configurat.");
-      setLoaded(true);
-      return;
-    }
-    void load();
-
-    const channel = supabase
-      .channel("kitchen-orders")
-      .on("postgres_changes", { event: "*", schema: "public", table: "orders" }, async (payload) => {
-        if (payload.eventType === "DELETE") {
-          const id = (payload.old as { id?: string }).id;
-          if (id) setOrders((prev) => prev.filter((o) => o.id !== id));
-          return;
-        }
-        const row = payload.new as Order;
-        if (!isKitchenStatus(row.status)) {
-          setOrders((prev) => prev.filter((o) => o.id !== row.id));
-          return;
-        }
-        if (payload.eventType === "INSERT" || !knownIds.current.has(row.id)) {
-          // Items are not in the orders payload: fetch the full order once.
-          const { data } = await supabase.from("orders").select(SELECT).eq("id", row.id).single();
-          if (!data) return;
-          const full = data as Order;
-          const isNew = !knownIds.current.has(full.id);
-          knownIds.current.add(full.id);
-          setOrders((prev) => [...prev.filter((o) => o.id !== full.id), full]);
-          if (isNew && full.status === "pending") markFresh([full.id]);
-          return;
-        }
-        // UPDATE of a known order: merge fields, keep the items we already have.
-        setOrders((prev) =>
-          prev.some((o) => o.id === row.id)
-            ? prev.map((o) => (o.id === row.id ? { ...o, ...row, items: o.items } : o))
-            : prev,
-        );
-      })
-      .subscribe((status) => {
-        const ok = status === "SUBSCRIBED";
-        setConnected(ok);
-        if (ok) void load(); // catch up on anything missed while offline
-      });
-
-    const onVisible = () => {
-      if (document.visibilityState === "visible") void load();
-    };
-    document.addEventListener("visibilitychange", onVisible);
-
-    return () => {
-      document.removeEventListener("visibilitychange", onVisible);
-      void supabase.removeChannel(channel);
-    };
-  }, [load, markFresh]);
 
   // Live age timer.
   useEffect(() => {
@@ -173,26 +55,9 @@ export default function KitchenPage() {
     document.title = pendingCount > 0 ? `(${pendingCount}) Bucătărie | Burgerash` : "Bucătărie | Burgerash";
   }, [pendingCount]);
 
-  function toggleSound() {
-    if (!soundOn) {
-      audioRef.current ??= new AudioContext();
-      void audioRef.current.resume();
-      soundOnRef.current = true;
-      setSoundOn(true);
-      beep();
-    } else {
-      soundOnRef.current = false;
-      setSoundOn(false);
-    }
-  }
-
   async function moveTo(order: Order, status: KitchenStatus) {
     const previous = order.status;
-    setFresh((prev) => {
-      const next = new Set(prev);
-      next.delete(order.id);
-      return next;
-    });
+    clearFresh(order.id);
     setOrders((prev) => prev.map((o) => (o.id === order.id ? { ...o, status } : o)));
     const { error: err } = await supabase.from("orders").update({ status }).eq("id", order.id);
     if (err) {
@@ -287,13 +152,7 @@ export default function KitchenPage() {
                     nextLabel={col.nextLabel}
                     prev={col.prev}
                     onMove={moveTo}
-                    onSeen={() =>
-                      setFresh((prev) => {
-                        const next = new Set(prev);
-                        next.delete(order.id);
-                        return next;
-                      })
-                    }
+                    onSeen={() => clearFresh(order.id)}
                   />
                 ))}
               </div>
