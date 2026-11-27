@@ -23,10 +23,12 @@ describe("menu board catalog", () => {
     expect(INITIAL_PRODUCTS.find((p) => p.id === "prod-nuggets")?.weight_label).toBe("6 buc (aprox. 180g)");
   });
 
-  it("leaves allergens unconfirmed (null) for the new products", () => {
-    for (const id of ["prod-crispy", "prod-crispy-bacon", "prod-chips", "prod-nuggets"]) {
-      expect(INITIAL_PRODUCTS.find((p) => p.id === id)?.allergens).toBeNull();
-    }
+  it("has typical allergens filled in for the new products (to be confirmed by the kitchen)", () => {
+    const allergens = (id: string) => INITIAL_PRODUCTS.find((p) => p.id === id)?.allergens;
+    expect(allergens("prod-crispy")).toEqual(["Gluten", "Lapte", "Ouă", "Muștar"]);
+    expect(allergens("prod-crispy-bacon")).toEqual(["Gluten", "Lapte", "Ouă", "Muștar"]);
+    expect(allergens("prod-chips")).toEqual([]);
+    expect(allergens("prod-nuggets")).toEqual(["Gluten", "Lapte", "Ouă"]);
   });
 });
 

@@ -82,8 +82,8 @@ export const INITIAL_PRODUCTS: Product[] = [
     label_variant: "cream",
     ebriza_sku: null,
     ebriza_id: null,
-    // null = not confirmed yet: the UI shows "Alergeni: întreabă-ne" (PLAN: get real allergens from the owner).
-    allergens: null,
+    // TYPICAL allergens (2026-11-26), NOT yet confirmed by the kitchen: check with the owner before launch (PLAN L.1).
+    allergens: ["Gluten", "Lapte", "Ouă", "Muștar"],
     is_available: true,
     is_featured: true,
     position: 1,
@@ -122,8 +122,8 @@ export const INITIAL_PRODUCTS: Product[] = [
     label_variant: "cream",
     ebriza_sku: null,
     ebriza_id: null,
-    // null = not confirmed yet: the UI shows "Alergeni: întreabă-ne" (PLAN: get real allergens from the owner).
-    allergens: null,
+    // TYPICAL allergens (2026-11-26), NOT yet confirmed by the kitchen: check with the owner before launch (PLAN L.1).
+    allergens: ["Gluten", "Lapte", "Ouă", "Muștar"],
     is_available: true,
     is_featured: true,
     position: 3,
@@ -162,8 +162,8 @@ export const INITIAL_PRODUCTS: Product[] = [
     label_variant: "cream",
     ebriza_sku: null,
     ebriza_id: null,
-    // null = not confirmed yet: the UI shows "Alergeni: întreabă-ne" (PLAN: get real allergens from the owner).
-    allergens: null,
+    // TYPICAL allergens (2026-11-26), NOT yet confirmed by the kitchen: check with the owner before launch (PLAN L.1).
+    allergens: [],
     is_available: true,
     is_featured: false,
     position: 2,
@@ -182,8 +182,8 @@ export const INITIAL_PRODUCTS: Product[] = [
     label_variant: "cream",
     ebriza_sku: null,
     ebriza_id: null,
-    // null = not confirmed yet: the UI shows "Alergeni: întreabă-ne" (PLAN: get real allergens from the owner).
-    allergens: null,
+    // TYPICAL allergens (2026-11-26), NOT yet confirmed by the kitchen: check with the owner before launch (PLAN L.1).
+    allergens: ["Gluten", "Lapte", "Ouă"],
     is_available: true,
     is_featured: false,
     position: 3,

@@ -10,7 +10,7 @@ const hours = scheduleLines()
 
 // Only facts the site already guarantees (hours, zone, fees, card payment). Keep answers to one or two lines.
 const FAQ: { q: string; a: string }[] = [
-  { q: "Când sunteți deschiși?", a: `${hours}. Sau până se termină, în serile bune.` },
+  { q: "Când sunteți deschiși?", a: `${hours}.` },
   { q: "Carnea e congelată?", a: "Nu. E proaspătă, în fiecare zi. De-asta uneori se termină înainte de 23." },
   {
     q: "Unde livrați?",

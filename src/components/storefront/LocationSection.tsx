@@ -2,7 +2,7 @@ import Image from "next/image";
 import { MapPin, Navigation } from "lucide-react";
 import trayHand from "../../../public/images/marketing/location-tray-hand.jpg";
 import { SELL_OUT_NOTE, scheduleLines } from "@/lib/hours";
-import { DELIVERY_RADIUS_KM, GOOGLE_DIRECTIONS_URL, GOOGLE_MAPS_URL, SITE_ADDRESS } from "@/lib/site";
+import { DELIVERY_RADIUS_KM, GOOGLE_MAPS_URL, SITE_ADDRESS } from "@/lib/site";
 import OpenCartButton from "./OpenCartButton";
 import PartnerApps from "./PartnerApps";
 import LocationMapLoader from "./LocationMapLoader";
@@ -28,7 +28,7 @@ export default function LocationSection() {
           <p className="font-mono text-xs text-[#F5E6CC]/80 mb-4">Livrare în raza de {DELIVERY_RADIUS_KM} km</p>
           <div className="mb-6 flex flex-wrap items-center gap-x-5 gap-y-3">
             <a
-              href={GOOGLE_DIRECTIONS_URL}
+              href={GOOGLE_MAPS_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 font-bebas text-2xl tracking-wide px-6 py-3 rounded-lg bg-[#F5E6CC] text-[#790D20] border-2 border-[#332420] shadow-[3px_3px_0px_0px_#332420] hover:bg-[#332420] hover:text-[#F5E6CC] transition-colors"
@@ -36,23 +36,18 @@ export default function LocationSection() {
               <Navigation className="w-5 h-5" aria-hidden />
               <Display>DU-MĂ ACOLO</Display>
             </a>
-            <a
-              href={GOOGLE_MAPS_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-nunito font-bold text-sm underline underline-offset-4 text-[#F5E6CC]/80 hover:text-[#F5E6CC]"
-            >
-              Vezi pe Google Maps
-            </a>
           </div>
           <div className="font-mono text-sm space-y-1.5 border-t border-[#F5E6CC]/20 pt-4">
             <p className="text-[#F5E6CC] font-bold">PROGRAMUL DE FOC:</p>
             {scheduleLines().map((l) => (
               <p key={l.label}>
                 {l.label}: {l.hours}
+                <span className="text-[#F5E6CC]/70">
+                  <span className="hidden sm:inline"> · </span>
+                  <span className="block sm:inline">{SELL_OUT_NOTE}</span>
+                </span>
               </p>
             ))}
-            <p className="text-[#F5E6CC]/60">...{SELL_OUT_NOTE}.</p>
           </div>
         </div>
 
