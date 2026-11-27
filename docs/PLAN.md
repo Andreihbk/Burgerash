@@ -104,7 +104,12 @@ High priority, not a launch gate by itself: **Ebriza integration** (E.1-E.5, L.2
 - [ ] R.1-R.15 Audit 2026-11-27 (SEO, speed, code): findings + ready prompts in `docs/AUDIT-2026-11-27.md`.
       Phase 1 first (R1 map on demand, R2 sold-out without supabase-js at load, R3 menu rendered once, R4 fonts, R5 SEO fixes).
   - [x] Phase 1 done (R1-R5, 2026-11-27): local mobile Lighthouse ~73 -> ~85, TBT ~700 -> ~220 ms, JS 534 -> 239 KB, DOM 1,736 -> 1,400.
-  - [ ] Phase 2 (R7, R8, R6) and Phase 3 (R9-R15): waiting for Andrei's go.
+  - [x] R7 security headers + R15 part 1 (old public/images/menu photos deleted): PR 18. Full CSP is report-only until Netopia.
+  - [x] R8 schema.sql is safe: guard stops it on a non-empty DB, no open "Public access" policies (2026-11-27).
+  - [ ] R6 AVIF + weight-label contrast + footer tap size.
+  - [ ] Phase 3: R9 hero on server, R10 ScrollEffects, R11a/b color tokens, R12 font-display, R13 staff hook,
+        R14 CartDrawer split, R15 rest (STATUS.md note, pre-push wording, LocationMap temp slider after B.3).
+        Status table: top of `docs/AUDIT-2026-11-27.md`.
       Baseline `/` mobile Lighthouse 63 (TBT 870 ms, LCP 4.6 s, 1,739 DOM nodes), desktop 98.
 
 ## Phase 1 - Ebriza adapter (works in mock mode, no credentials needed)
