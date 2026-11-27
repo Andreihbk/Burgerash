@@ -34,7 +34,7 @@ export default function BottomNav() {
   const behavior: ScrollBehavior = prefersReducedMotion() ? "auto" : "smooth";
   const item = (on: boolean) =>
     `relative flex flex-1 flex-col items-center justify-center gap-0.5 font-display text-[13px] tracking-wider transition-colors ${
-      on ? "text-sand" : "text-sand/60"
+      on ? "text-sand" : "text-sand/75"
     }`;
   const dot = (on: boolean) => (on ? <span aria-hidden className="absolute top-1.5 h-1 w-6 rounded-full bg-sand" /> : null);
 
