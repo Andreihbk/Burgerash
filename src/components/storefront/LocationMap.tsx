@@ -3,11 +3,11 @@
 import { useEffect, useRef, useState } from "react";
 import type { GeoJSONSource, Map as MapLibreMap } from "maplibre-gl";
 import { DELIVERY_RADIUS_KM, SITE_COORDS } from "@/lib/site";
+import { BRAND_MAP_STYLE } from "./mapStyle";
 
 // TEMPORARY: radius slider is only for tuning the circle locally (NEXT_PUBLIC_MAP_TUNING=true).
 const SHOW_SLIDER = process.env.NEXT_PUBLIC_MAP_TUNING === "true";
 
-const STYLE_URL = "https://tiles.openfreemap.org/styles/positron";
 const ATTRIBUTION = "© OpenFreeMap © OpenMapTiles © OpenStreetMap contributors";
 const CIRCLE_POINTS = 64;
 const BRAND = "#790D20";
@@ -56,28 +56,17 @@ export default function LocationMap() {
       const maplibregl = await import("maplibre-gl");
       maplibregl.setWorkerUrl("/maplibre-gl-worker.mjs");
       if (cancelled || !containerRef.current) return;
+      // A calm, static poster of the neighbourhood: brand colours, no zoom/drag (nothing to fight on a phone).
+      // "Du-mă acolo" next to it opens Google Maps for real navigation.
       const m = new maplibregl.Map({
         container: containerRef.current,
-        style: STYLE_URL,
+        style: BRAND_MAP_STYLE,
         center: [SITE_COORDS.lng, SITE_COORDS.lat],
         zoom: 15,
+        interactive: false,
         attributionControl: false,
-        scrollZoom: false,
-        dragRotate: false,
-        touchPitch: false,
-        cooperativeGestures: false,
       });
       map = m;
-      m.touchZoomRotate.disableRotation();
-      m.addControl(new maplibregl.AttributionControl({ compact: true, customAttribution: ATTRIBUTION }));
-      m.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right");
-
-      // Warm brand tint on the canvas only; the HTML pin marker stays unfiltered.
-      m.getCanvas().style.filter = "sepia(0.35) saturate(0.8) hue-rotate(-10deg)";
-
-      // No scroll hijack: wheel zoom turns on after a click on the map, off again when the pointer leaves.
-      m.on("click", () => m.scrollZoom.enable());
-      m.getCanvasContainer().addEventListener("mouseleave", () => m.scrollZoom.disable());
 
       const pin = document.createElement("div");
       pin.innerHTML = PIN_HTML;
@@ -89,8 +78,13 @@ export default function LocationMap() {
       m.on("load", () => {
         m.resize();
         m.addSource("delivery", { type: "geojson", data: circlePolygon(radiusRef.current) });
-        m.addLayer({ id: "delivery-fill", type: "fill", source: "delivery", paint: { "fill-color": BRAND, "fill-opacity": 0.15 } });
-        m.addLayer({ id: "delivery-line", type: "line", source: "delivery", paint: { "line-color": BRAND, "line-width": 2 } });
+        m.addLayer({ id: "delivery-fill", type: "fill", source: "delivery", paint: { "fill-color": BRAND, "fill-opacity": 0.1 } });
+        m.addLayer({
+          id: "delivery-line",
+          type: "line",
+          source: "delivery",
+          paint: { "line-color": BRAND, "line-width": 2.5, "line-dasharray": [2, 1.5] },
+        });
       });
       fitCircle(m, radiusRef.current, false);
       mapRef.current = m;
@@ -118,7 +112,11 @@ export default function LocationMap() {
 
   return (
     <div className="relative h-[320px] md:h-full md:min-h-[420px]">
-      <div ref={containerRef} className="h-full w-full" role="img" aria-label="Hartă: locația Burgerash și zona de livrare" />
+      <div ref={containerRef} className="h-full w-full" role="img" aria-label="Hartă: locația Burgerash și zona de livrare de 1 km" />
+      <span className="pointer-events-none absolute left-3 top-3 rounded-md border-2 border-[#332420] bg-[#790D20] px-2.5 py-1 font-nunito text-xs font-black tracking-wider text-[#F5E6CC] shadow-[2px_2px_0px_0px_#332420]">
+        LIVRARE {radiusKm.toLocaleString("ro-RO", { maximumFractionDigits: 1 })} KM
+      </span>
+      <span className="absolute bottom-1 right-2 font-mono text-[9px] text-[#332420]/60">{ATTRIBUTION}</span>
       {SHOW_SLIDER && (
         <label className="absolute bottom-6 left-3 right-3 sm:right-auto sm:w-64 z-10 bg-[#F5E6CC] border-2 border-[#332420] rounded-lg px-3 py-2 font-mono text-xs font-bold text-[#332420]">
           Rază livrare: {radiusKm.toFixed(1)} km

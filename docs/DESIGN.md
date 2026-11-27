@@ -49,7 +49,6 @@ Agreed with Andrei on 2026-11-26. Not built yet; pick from here. Rules above sti
 - "Burgerul vedetă": a floating cut-out burger in the hero. Needs a cut-out photo (transparent PNG) from the shoot.
 - Review strip: only with real Google reviews (quoted with name + link). Never invent reviews.
 - Call button next to "Du-mă acolo": as soon as the shop has a phone number (CONTACT.phone in src/lib/hours.ts).
-- Photo parallax inside the frames (about / location), desktop only.
 - Menu cards dropping in on scroll: left out on purpose, the menu must stay instantly tappable. Revisit only if it never delays ordering.
 - Receipt-style cart.
 - "Cum se face un burger" in 5 steps (photos or stickers).
@@ -60,10 +59,20 @@ Agreed with Andrei on 2026-11-26. Not built yet; pick from here. Rules above sti
 - Apple Pay / Google Pay through Netopia, once the Netopia account is active.
 - House rules (short, in our tone).
 - Sticker loyalty card (collect the 6 burger stickers).
-- UTM tags on the Glovo, Wolt and Instagram links, so Vercel Analytics shows which channel brings people.
+- UTM tags go on links that point TO our site (Instagram bio, Google profile, Glovo/Wolt profile text), not on our outgoing links:
+  e.g. `https://www.burgerash.ro/?utm_source=instagram&utm_medium=bio`. Andrei pastes them where those profiles allow a link.
 - Sticky "Comandă" button on phones: skipped for now because the bottom tab bar + cart bar already do this job; revisit at launch if people miss it.
+
+### New ideas (2026-11-27)
+- "Burgeri azi" counter from real orders (Supabase), only after launch. Never a made-up number.
+- "Burgerul săptămânii" banner, switched on/off from /admin (owner picks the product).
+- Sticker peel on menu cards (desktop hover): the sticker corner lifts a little.
+- Combo (burger + fries + drink) at a combo price: needs the owner's prices first.
+- Share image (Facebook/WhatsApp) from the new shoot (S7).
 
 ### Done (2026-11)
 - Short FAQ, Despre noi, Instagram strip, branded 404.
 - Scroll motion: pinned photo carousel, stickers roll in, ticker speeds up, headings rise in, about tags stamp in.
 - Page progress bar, numbered section labels, "Du-mă acolo" directions button, photo hover zoom (desktop).
+- Map in brand colours (static poster, no zoom/drag, "LIVRARE 1 KM" tag), parallax on the Despre noi photo (desktop),
+  sticker flies to the cart on "Adaugă" (off with reduced motion).

@@ -55,7 +55,7 @@ export default function BottomNav() {
           <UtensilsCrossed className="w-5 h-5" aria-hidden />
           <Display>MENIU</Display>
         </button>
-        <button type="button" className={item(false)} onClick={openCart} aria-label={`Coș, ${totalItems} produse`}>
+        <button type="button" className={item(false)} onClick={openCart} data-cart-target aria-label={`Coș, ${totalItems} produse`}>
           <span className="relative">
             <ShoppingBag className="w-5 h-5" aria-hidden />
             {totalItems > 0 && (

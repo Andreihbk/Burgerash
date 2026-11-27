@@ -15,14 +15,17 @@ export default function AboutSection() {
     >
       <div className="grid md:grid-cols-[minmax(0,5fr)_minmax(0,6fr)]">
         <div className="group relative overflow-hidden aspect-[4/5] md:aspect-auto md:min-h-[560px] border-b-4 md:border-b-0 md:border-r-4 border-[#332420]">
-          <Image
-            src={aboutBacon}
-            alt="Burger cu bacon și cheddar pe faianța roșie"
-            fill
-            placeholder="blur"
-            sizes="(min-width: 1152px) 500px, (min-width: 768px) 45vw, 100vw"
-            className="object-cover transition-transform duration-500 ease-out md:group-hover:scale-105 motion-reduce:transition-none"
-          />
+          {/* Desktop parallax: the photo drifts a little slower than the page (ScrollEffects sets --parallax). */}
+          <div data-parallax className="absolute inset-0 md:-inset-y-[8%] md:[transform:translate3d(0,var(--parallax,0px),0)]">
+            <Image
+              src={aboutBacon}
+              alt="Burger cu bacon și cheddar pe faianța roșie"
+              fill
+              placeholder="blur"
+              sizes="(min-width: 1152px) 500px, (min-width: 768px) 45vw, 100vw"
+              className="object-cover transition-transform duration-500 ease-out md:group-hover:scale-105 motion-reduce:transition-none"
+            />
+          </div>
         </div>
         <div className="p-8 sm:p-10 md:p-14 flex flex-col justify-center">
           <p className="font-mono text-xs font-bold tracking-widest text-[#F5E6CC]/80">04 · DESPRE NOI</p>

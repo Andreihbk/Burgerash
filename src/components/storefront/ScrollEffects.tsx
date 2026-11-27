@@ -6,7 +6,8 @@ import { prefersReducedMotion } from "./layout";
 /**
  * Light scroll motion for the storefront. Renders nothing.
  * - All screens: elements marked `data-reveal` rise in once (`data-reveal="stamp"` pops in like a stamp).
- * - Desktop only: hero stickers turn a little with the scroll, the ticker speeds up while scrolling.
+ * - Desktop only: hero stickers turn a little with the scroll, the ticker speeds up while scrolling,
+ *   `[data-parallax]` photos drift a little inside their frames.
  * Off entirely with prefers-reduced-motion. Never touches the menu, cart or order buttons.
  * Content is only hidden once this runs (html[data-motion]), so nothing stays hidden without JS.
  */
@@ -74,6 +75,19 @@ export default function ScrollEffects() {
       }
     };
 
+    // Parallax: the frame's centre vs the screen centre, max ±6% of the frame height (the photo is 16% taller).
+    const parallaxEls = Array.from(document.querySelectorAll<HTMLElement>("[data-parallax]"));
+    const parallax = () => {
+      const vh = window.innerHeight;
+      for (const el of parallaxEls) {
+        const frame = el.parentElement?.getBoundingClientRect();
+        if (!frame || frame.bottom < 0 || frame.top > vh) continue;
+        const t = (frame.top + frame.height / 2 - vh / 2) / (vh / 2 + frame.height / 2); // -1..1
+        el.style.setProperty("--parallax", `${(t * frame.height * 0.06).toFixed(1)}px`);
+      }
+    };
+    parallax();
+
     const onScroll = () => {
       const y = window.scrollY;
       const now = performance.now();
@@ -83,6 +97,7 @@ export default function ScrollEffects() {
       lastScroll = now;
       target = 1 + Math.min(2, speed * 2);
       root.style.setProperty("--sticker-spin", `${Math.min(y, 800) * 0.03}deg`);
+      parallax();
       if (!raf) raf = requestAnimationFrame(frame);
     };
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -94,6 +109,7 @@ export default function ScrollEffects() {
       cancelAnimationFrame(raf);
       for (const a of tickers) a.playbackRate = 1;
       root.style.removeProperty("--sticker-spin");
+      for (const el of parallaxEls) el.style.removeProperty("--parallax");
       delete root.dataset.motion;
     };
   }, []);
