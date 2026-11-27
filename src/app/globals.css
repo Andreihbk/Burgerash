@@ -238,13 +238,13 @@ html[data-motion] [data-reveal] {
 html[data-motion] [data-reveal]:not([data-shown]) { opacity: 0; transform: translateY(28px); }
 html[data-motion] [data-reveal="stamp"]:not([data-shown]) { opacity: 0; transform: scale(1.35) rotate(-6deg); }
 
-/* Hero stickers: roll in once on load; on desktop they turn slightly with the scroll (--sticker-spin). */
+/* Hero stickers: roll in once on load; on desktop they turn slightly with the scroll (ScrollEffects sets the transform on .sticker-spin). */
 @keyframes sticker-roll-in {
   from { opacity: 0; transform: translateX(-40%) rotate(-160deg) scale(0.7); }
   to { opacity: 1; transform: none; }
 }
 .sticker-roll-in { animation: sticker-roll-in 0.9s cubic-bezier(0.2, 0.9, 0.25, 1.1) both; }
-.sticker-spin { transform: rotate(var(--sticker-spin, 0deg)); }
+.sticker-spin { transform: rotate(0deg); } /* keeps its own layer/stacking context, as before */
 @media (prefers-reduced-motion: reduce) {
   .sticker-roll-in { animation: none; }
 }
