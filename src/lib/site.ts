@@ -42,10 +42,8 @@ export const SITE_COORDS = { lat: 44.4563518, lng: 26.0509441 } as const;
 /** Free-delivery radius drawn on the map. */
 export const DELIVERY_RADIUS_KM = 1;
 
+/** The shop's Google Maps place (has Directions). Used by DU-MĂ ACOLO and the footer. */
 export const GOOGLE_MAPS_URL = "https://maps.app.goo.gl/oqvQu7YiSKh3umCD6";
-
-/** Opens turn-by-turn directions to the shop (coordinates, so it works before the place is well known on Maps). */
-export const GOOGLE_DIRECTIONS_URL = `https://www.google.com/maps/dir/?api=1&destination=${SITE_COORDS.lat},${SITE_COORDS.lng}`;
 
 /**
  * Delivery-app store pages. Secondary to our own ordering (no commission for us, cheaper for the customer).
