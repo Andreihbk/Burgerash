@@ -16,3 +16,8 @@ export function isSnoozeActive(row: Pick<StockRow, "snoozed_until">, now: Date =
 export function isRowSoldOut(row: StockRow, now: Date = new Date()): boolean {
   return Boolean(row.sold_out) && isSnoozeActive(row, now);
 }
+
+/** Ids of the rows that are sold out right now. */
+export function soldOutIds(rows: readonly StockRow[], now: Date = new Date()): Set<string> {
+  return new Set(rows.filter((r) => r.product_id && isRowSoldOut(r, now)).map((r) => r.product_id));
+}
