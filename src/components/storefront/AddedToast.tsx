@@ -27,12 +27,12 @@ export default function AddedToast() {
       {lastAdded && (
         <div
           key={addedSeq}
-          className="animate-toast-in pointer-events-auto flex items-center gap-4 bg-[#790D20] text-[#F5E6CC] border-2 border-[#F5E6CC] rounded-lg px-4 py-3 shadow-[4px_4px_0px_0px_#332420]"
+          className="animate-toast-in pointer-events-auto flex items-center gap-4 bg-wine text-sand border-2 border-sand rounded-lg px-4 py-3 shadow-[4px_4px_0px_0px_var(--color-charcoal)]"
         >
           <Check className="w-5 h-5 shrink-0 stroke-[3]" />
           <div className="min-w-0">
             <p className="font-nunito font-black text-sm leading-tight">Adăugat în coș</p>
-            <p className="font-mono text-[11px] text-[#F5E6CC]/70 truncate">{lastAdded.name}</p>
+            <p className="font-mono text-[11px] text-sand/70 truncate">{lastAdded.name}</p>
           </div>
           <button
             type="button"
@@ -40,7 +40,7 @@ export default function AddedToast() {
               clearAdded();
               openCart();
             }}
-            className="font-nunito font-extrabold text-sm underline underline-offset-4 whitespace-nowrap hover:text-[#F5E6CC]/80"
+            className="font-nunito font-extrabold text-sm underline underline-offset-4 whitespace-nowrap hover:text-sand/80"
           >
             Vezi coșul
           </button>

@@ -28,9 +28,9 @@ export default function OrderStatusDemoPage() {
     <OrderStatusView
       order={DEMO}
       footer={
-        <div className="rounded-xl border-2 border-dashed border-[#790D20] p-4 font-nunito text-sm font-bold">
+        <div className="rounded-xl border-2 border-dashed border-wine p-4 font-nunito text-sm font-bold">
           Asta e o pagină de exemplu, cu date inventate.{" "}
-          <Link href="/" className="underline text-[#790D20]">
+          <Link href="/" className="underline text-wine">
             Înapoi la meniu
           </Link>
         </div>

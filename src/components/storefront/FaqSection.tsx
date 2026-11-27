@@ -25,18 +25,18 @@ const FAQ: { q: string; a: string }[] = [
 export default function FaqSection() {
   return (
     <section id="intrebari" aria-labelledby="faq-titlu" className="mt-20 scroll-mt-24">
-      <p className="font-mono text-xs font-bold tracking-widest text-[#790D20]">03 · PE SCURT</p>
-      <h2 id="faq-titlu" data-reveal className="font-bebas text-4xl sm:text-5xl leading-none text-[#332420] mb-6">
+      <p className="font-mono text-xs font-bold tracking-widest text-wine">03 · PE SCURT</p>
+      <h2 id="faq-titlu" data-reveal className="font-display text-4xl sm:text-5xl leading-none text-charcoal mb-6">
         <Display>ÎNTREBĂRI.</Display>
       </h2>
-      <div className="divide-y-2 divide-[#332420] border-y-2 border-[#332420]">
+      <div className="divide-y-2 divide-charcoal border-y-2 border-charcoal">
         {FAQ.map(({ q, a }) => (
           <details key={q} className="group">
-            <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-4 font-nunito font-extrabold text-lg text-[#332420] [&::-webkit-details-marker]:hidden">
+            <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-4 font-nunito font-extrabold text-lg text-charcoal [&::-webkit-details-marker]:hidden">
               {q}
-              <Plus className="h-5 w-5 shrink-0 text-[#790D20] transition-transform group-open:rotate-45" aria-hidden />
+              <Plus className="h-5 w-5 shrink-0 text-wine transition-transform group-open:rotate-45" aria-hidden />
             </summary>
-            <p className="pb-4 -mt-1 font-nunito font-semibold text-base text-[#332420]/80 max-w-2xl">{a}</p>
+            <p className="pb-4 -mt-1 font-nunito font-semibold text-base text-charcoal/80 max-w-2xl">{a}</p>
           </details>
         ))}
       </div>

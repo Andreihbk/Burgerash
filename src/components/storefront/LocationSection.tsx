@@ -12,37 +12,37 @@ export default function LocationSection() {
   return (
     <section
       id="locatie"
-      className="mt-20 scroll-mt-24 border-4 border-[#332420] rounded-xl overflow-hidden shadow-[6px_6px_0px_0px_#332420]"
+      className="mt-20 scroll-mt-24 border-4 border-charcoal rounded-xl overflow-hidden shadow-[6px_6px_0px_0px_var(--color-charcoal)]"
     >
       <div className="grid grid-cols-1 md:grid-cols-2">
-        <div className="bg-[#790D20] text-[#F5E6CC] p-8 md:p-10">
-          <div className="inline-flex items-center gap-2 text-[#F5E6CC] font-mono text-xs font-bold mb-2">
+        <div className="bg-wine text-sand p-8 md:p-10">
+          <div className="inline-flex items-center gap-2 text-sand font-mono text-xs font-bold mb-2">
             <MapPin className="w-4 h-4" />
             <span>02 · CARTIERUL CRUSTEI</span>
           </div>
-          <h2 data-reveal className="font-bebas text-4xl sm:text-5xl mb-4 text-[#F5E6CC]"><Display>UNDE GĂSEȘTI CRUSTA</Display></h2>
-          <p className="font-nunito font-bold text-base text-[#F5E6CC]/80 mb-6">
+          <h2 data-reveal className="font-display text-4xl sm:text-5xl mb-4 text-sand"><Display>UNDE GĂSEȘTI CRUSTA</Display></h2>
+          <p className="font-nunito font-bold text-base text-sand/80 mb-6">
             Fix lângă liceu, în {SITE_ADDRESS.sector}, {SITE_ADDRESS.city}. Urmărește mirosul de vită Black Angus caramelizată pe plită.
           </p>
           <address className="not-italic font-nunito font-extrabold text-xl mb-1">{SITE_ADDRESS.line}</address>
-          <p className="font-mono text-xs text-[#F5E6CC]/80 mb-4">Livrare în raza de {DELIVERY_RADIUS_KM} km</p>
+          <p className="font-mono text-xs text-sand/80 mb-4">Livrare în raza de {DELIVERY_RADIUS_KM} km</p>
           <div className="mb-6 flex flex-wrap items-center gap-x-5 gap-y-3">
             <a
               href={GOOGLE_MAPS_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 font-bebas text-2xl tracking-wide px-6 py-3 rounded-lg bg-[#F5E6CC] text-[#790D20] border-2 border-[#332420] shadow-[3px_3px_0px_0px_#332420] hover:bg-[#332420] hover:text-[#F5E6CC] transition-colors"
+              className="inline-flex items-center gap-2 font-display text-2xl tracking-wide px-6 py-3 rounded-lg bg-sand text-wine border-2 border-charcoal shadow-[3px_3px_0px_0px_var(--color-charcoal)] hover:bg-charcoal hover:text-sand transition-colors"
             >
               <Navigation className="w-5 h-5" aria-hidden />
               <Display>DU-MĂ ACOLO</Display>
             </a>
           </div>
-          <div className="font-mono text-sm space-y-1.5 border-t border-[#F5E6CC]/20 pt-4">
-            <p className="text-[#F5E6CC] font-bold">PROGRAMUL DE FOC:</p>
+          <div className="font-mono text-sm space-y-1.5 border-t border-sand/20 pt-4">
+            <p className="text-sand font-bold">PROGRAMUL DE FOC:</p>
             {scheduleLines().map((l) => (
               <p key={l.label}>
                 {l.label}: {l.hours}
-                <span className="text-[#F5E6CC]/70">
+                <span className="text-sand/70">
                   <span className="hidden sm:inline"> · </span>
                   <span className="block sm:inline">{SELL_OUT_NOTE}</span>
                 </span>
@@ -51,13 +51,13 @@ export default function LocationSection() {
           </div>
         </div>
 
-        <div className="border-t-4 md:border-t-0 md:border-l-4 border-[#332420] h-[320px] md:h-auto md:min-h-[420px] relative">
+        <div className="border-t-4 md:border-t-0 md:border-l-4 border-charcoal h-[320px] md:h-auto md:min-h-[420px] relative">
           <LocationMapLoader />
         </div>
       </div>
 
-      <div className="bg-[#F5E6CC] text-[#332420] p-8 md:p-10 flex flex-col sm:flex-row sm:flex-wrap lg:flex-nowrap sm:items-center justify-between gap-6 border-t-4 border-[#332420]">
-        <div className="group relative w-32 sm:w-40 shrink-0 aspect-[4/5] overflow-hidden rounded-2xl border-2 border-[#332420] shadow-[4px_4px_0px_0px_#332420]">
+      <div className="bg-sand text-charcoal p-8 md:p-10 flex flex-col sm:flex-row sm:flex-wrap lg:flex-nowrap sm:items-center justify-between gap-6 border-t-4 border-charcoal">
+        <div className="group relative w-32 sm:w-40 shrink-0 aspect-[4/5] overflow-hidden rounded-2xl border-2 border-charcoal shadow-[4px_4px_0px_0px_var(--color-charcoal)]">
           <Image
             src={trayHand}
             alt="Burger cu cheddar servit pe tavă"
@@ -68,13 +68,13 @@ export default function LocationSection() {
           />
         </div>
         <div className="sm:flex-1 sm:min-w-[260px]">
-          <h2 className="font-bebas text-4xl sm:text-5xl mb-4"><Display>LIVRARE PROPRIE & PICKUP</Display></h2>
-          <p className="font-nunito font-bold text-base text-[#332420]/90 max-w-2xl">
+          <h2 className="font-display text-4xl sm:text-5xl mb-4"><Display>LIVRARE PROPRIE & PICKUP</Display></h2>
+          <p className="font-nunito font-bold text-base text-charcoal/90 max-w-2xl">
             Comandă direct de pe site fără comisioane ascunse. Livrare gratuită în cartier la comenzi de peste 120 LEI sau ridicare direct de la geam în 15 minute.
           </p>
         </div>
         <div className="self-start shrink-0 flex flex-col gap-4 w-full lg:w-[400px]">
-          <OpenCartButton className="w-full bg-[#790D20] text-[#F5E6CC] font-bebas text-2xl sm:text-3xl lg:text-4xl px-6 sm:px-8 py-5 rounded-lg border-2 border-[#332420] shadow-[4px_4px_0px_0px_#332420] hover:bg-[#332420] transition-all">
+          <OpenCartButton className="w-full bg-wine text-sand font-display text-2xl sm:text-3xl lg:text-4xl px-6 sm:px-8 py-5 rounded-lg border-2 border-charcoal shadow-[4px_4px_0px_0px_var(--color-charcoal)] hover:bg-charcoal transition-all">
             <Display>DESCHIDE COȘUL DE COMANDĂ</Display>
           </OpenCartButton>
           <PartnerApps />

@@ -15,13 +15,13 @@ export default function PickupTimePicker() {
   const chip = (active: boolean) =>
     `min-h-11 rounded-lg border-2 font-nunito font-black text-sm transition-colors ${
       active
-        ? "bg-[#790D20] text-[#F5E6CC] border-[#332420] shadow-[2px_2px_0px_0px_#332420]"
-        : "bg-[#F5E6CC] text-[#332420] border-[#332420]/40 hover:border-[#332420]"
+        ? "bg-wine text-sand border-charcoal shadow-[2px_2px_0px_0px_var(--color-charcoal)]"
+        : "bg-sand text-charcoal border-charcoal/40 hover:border-charcoal"
     }`;
 
   return (
     <fieldset className="mb-6">
-      <legend className="flex items-center gap-2 font-bebas text-xl text-[#332420] mb-2">
+      <legend className="flex items-center gap-2 font-display text-xl text-charcoal mb-2">
         <Clock className="w-4 h-4" aria-hidden />
         <Display>CÂND VII DUPĂ EA?</Display>
       </legend>

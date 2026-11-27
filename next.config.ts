@@ -48,6 +48,8 @@ const SECURITY_HEADERS = [
 
 const nextConfig: NextConfig = {
   reactCompiler: true,
+  // AVIF first (~20-30% smaller than WebP), WebP for browsers without AVIF (audit R6).
+  images: { formats: ["image/avif", "image/webp"] },
   // Always define the flag so it is inlined at build time; with "false" the temporary map radius slider is dead-code-eliminated.
   env: { NEXT_PUBLIC_MAP_TUNING: process.env.NEXT_PUBLIC_MAP_TUNING === "true" ? "true" : "false" },
   async headers() {

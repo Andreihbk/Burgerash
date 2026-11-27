@@ -113,12 +113,12 @@ export default function LocationMap() {
   return (
     <div className="relative h-[320px] md:h-full md:min-h-[420px]">
       <div ref={containerRef} className="h-full w-full" role="img" aria-label="Hartă: locația Burgerash și zona de livrare de 1 km" />
-      <span className="pointer-events-none absolute left-3 top-3 rounded-md border-2 border-[#332420] bg-[#790D20] px-2.5 py-1 font-nunito text-xs font-black tracking-wider text-[#F5E6CC] shadow-[2px_2px_0px_0px_#332420]">
+      <span className="pointer-events-none absolute left-3 top-3 rounded-md border-2 border-charcoal bg-wine px-2.5 py-1 font-nunito text-xs font-black tracking-wider text-sand shadow-[2px_2px_0px_0px_var(--color-charcoal)]">
         LIVRARE {radiusKm.toLocaleString("ro-RO", { maximumFractionDigits: 1 })} KM
       </span>
-      <span className="absolute bottom-1 right-2 font-mono text-[9px] text-[#332420]/60">{ATTRIBUTION}</span>
+      <span className="absolute bottom-1 right-2 font-mono text-[9px] text-charcoal/60">{ATTRIBUTION}</span>
       {SHOW_SLIDER && (
-        <label className="absolute bottom-6 left-3 right-3 sm:right-auto sm:w-64 z-10 bg-[#F5E6CC] border-2 border-[#332420] rounded-lg px-3 py-2 font-mono text-xs font-bold text-[#332420]">
+        <label className="absolute bottom-6 left-3 right-3 sm:right-auto sm:w-64 z-10 bg-sand border-2 border-charcoal rounded-lg px-3 py-2 font-mono text-xs font-bold text-charcoal">
           Rază livrare: {radiusKm.toFixed(1)} km
           <input
             type="range"
@@ -127,7 +127,7 @@ export default function LocationMap() {
             step={0.1}
             value={radiusKm}
             onChange={(e) => onRadius(Number(e.target.value))}
-            className="block w-full accent-[#790D20]"
+            className="block w-full accent-wine"
           />
         </label>
       )}

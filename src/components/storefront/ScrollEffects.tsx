@@ -29,13 +29,16 @@ export default function ScrollEffects() {
     );
     document.querySelectorAll<HTMLElement>("[data-reveal]").forEach((el) => io.observe(el));
 
-    // Thin page progress bar under the header (all screens).
+    // Thin page progress bar under the header (all screens). Styles are written on the few elements that move,
+    // never as CSS variables on <html>, so a scroll frame does not restyle the whole page (audit R10).
+    const progressBars = Array.from(document.querySelectorAll<HTMLElement>("[data-page-progress]"));
     let progressRaf = 0;
     const onProgress = () => {
       cancelAnimationFrame(progressRaf);
       progressRaf = requestAnimationFrame(() => {
         const max = document.documentElement.scrollHeight - window.innerHeight;
-        root.style.setProperty("--page-progress", String(max > 0 ? Math.min(1, window.scrollY / max) : 0));
+        const transform = `scaleX(${max > 0 ? Math.min(1, window.scrollY / max) : 0})`;
+        for (const el of progressBars) el.style.transform = transform;
       });
     };
     window.addEventListener("scroll", onProgress, { passive: true });
@@ -43,7 +46,7 @@ export default function ScrollEffects() {
     const stopProgress = () => {
       window.removeEventListener("scroll", onProgress);
       cancelAnimationFrame(progressRaf);
-      root.style.removeProperty("--page-progress");
+      for (const el of progressBars) el.style.transform = "scaleX(0)";
     };
 
     if (!window.matchMedia("(min-width: 768px)").matches) {
@@ -54,6 +57,7 @@ export default function ScrollEffects() {
       };
     }
 
+    const spinners = Array.from(document.querySelectorAll<HTMLElement>(".sticker-spin"));
     const tickers = Array.from(document.querySelectorAll<HTMLElement>(".ticker-track")).flatMap((el) => el.getAnimations());
     let lastY = window.scrollY;
     let lastT = performance.now();
@@ -96,7 +100,8 @@ export default function ScrollEffects() {
       lastT = now;
       lastScroll = now;
       target = 1 + Math.min(2, speed * 2);
-      root.style.setProperty("--sticker-spin", `${Math.min(y, 800) * 0.03}deg`);
+      const spin = `rotate(${Math.min(y, 800) * 0.03}deg)`;
+      for (const el of spinners) el.style.transform = spin;
       parallax();
       if (!raf) raf = requestAnimationFrame(frame);
     };
@@ -108,7 +113,7 @@ export default function ScrollEffects() {
       window.removeEventListener("scroll", onScroll);
       cancelAnimationFrame(raf);
       for (const a of tickers) a.playbackRate = 1;
-      root.style.removeProperty("--sticker-spin");
+      for (const el of spinners) el.style.removeProperty("transform");
       for (const el of parallaxEls) el.style.removeProperty("--parallax");
       delete root.dataset.motion;
     };

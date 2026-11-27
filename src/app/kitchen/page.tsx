@@ -6,8 +6,11 @@
 import Link from "next/link";
 import { BrandLogo } from "@/components/BrandLogo";
 import SignOutButton from "@/components/SignOutButton";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { isSupabaseConfigured, supabase } from "@/lib/supabase";
+import { useEffect, useState } from "react";
+import { supabase } from "@/lib/supabase";
+import { formatAge, sortOldestFirst } from "@/lib/staff-format";
+import { useLiveOrders } from "@/lib/useLiveOrders";
+import { useStaffSound } from "@/lib/useStaffSound";
 import type { Order, OrderStatus } from "@/types/database";
 import { Display } from "@/components/Display";
 
@@ -28,138 +31,17 @@ const COLUMNS: {
 ];
 
 const LATE_AFTER_MIN = 10;
-const SELECT = "*, items:order_items(*)";
-
-function isKitchenStatus(s: string): s is KitchenStatus {
-  return (KITCHEN_STATUSES as string[]).includes(s);
-}
-
-function sortOldestFirst(list: Order[]): Order[] {
-  return [...list].sort((a, b) => a.created_at.localeCompare(b.created_at));
-}
-
-function formatAge(createdAt: string, now: number): { text: string; minutes: number } {
-  const secs = Math.max(0, Math.floor((now - new Date(createdAt).getTime()) / 1000));
-  const minutes = Math.floor(secs / 60);
-  if (minutes < 1) return { text: "acum", minutes };
-  if (minutes < 60) return { text: `${minutes} min`, minutes };
-  return { text: `${Math.floor(minutes / 60)} h ${minutes % 60} min`, minutes };
-}
-
 export default function KitchenPage() {
-  const [orders, setOrders] = useState<Order[]>([]);
-  const [loaded, setLoaded] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [connected, setConnected] = useState(false);
+  const { soundOn, toggleSound, beep } = useStaffSound(880);
+  const { orders, setOrders, loaded, error, setError, connected, fresh, clearFresh } = useLiveOrders({
+    channelName: "kitchen-orders",
+    statuses: KITCHEN_STATUSES,
+    freshStatus: "pending",
+    refetchMissing: false,
+    onArrive: beep,
+  });
   const [now, setNow] = useState(() => Date.now());
   const [tab, setTab] = useState<KitchenStatus>("pending");
-  const [fresh, setFresh] = useState<Set<string>>(new Set());
-  const [soundOn, setSoundOn] = useState(false);
-
-  const audioRef = useRef<AudioContext | null>(null);
-  const soundOnRef = useRef(false);
-  const knownIds = useRef<Set<string>>(new Set());
-  const firstLoad = useRef(true);
-
-  const beep = useCallback(() => {
-    const ctx = audioRef.current;
-    if (!soundOnRef.current || !ctx) return;
-    [0, 0.25].forEach((delay) => {
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.frequency.value = 880;
-      gain.gain.value = 0.2;
-      osc.connect(gain).connect(ctx.destination);
-      osc.start(ctx.currentTime + delay);
-      osc.stop(ctx.currentTime + delay + 0.15);
-    });
-  }, []);
-
-  const markFresh = useCallback(
-    (ids: string[]) => {
-      if (ids.length === 0) return;
-      setFresh((prev) => new Set([...prev, ...ids]));
-      beep();
-    },
-    [beep],
-  );
-
-  const load = useCallback(async () => {
-    const { data, error: err } = await supabase
-      .from("orders")
-      .select(SELECT)
-      .in("status", KITCHEN_STATUSES)
-      .order("created_at", { ascending: true });
-    if (err) {
-      setError("Nu pot încărca comenzile. Reîncerc la reconectare.");
-      return;
-    }
-    setError(null);
-    const list = (data ?? []) as Order[];
-    const newcomers = list.filter((o) => !knownIds.current.has(o.id) && o.status === "pending");
-    list.forEach((o) => knownIds.current.add(o.id));
-    setOrders(list);
-    setLoaded(true);
-    if (!firstLoad.current) markFresh(newcomers.map((o) => o.id));
-    firstLoad.current = false;
-  }, [markFresh]);
-
-  // Initial load + Realtime subscription (unsubscribes on unmount).
-  useEffect(() => {
-    if (!isSupabaseConfigured) {
-      setError("Supabase nu este configurat.");
-      setLoaded(true);
-      return;
-    }
-    void load();
-
-    const channel = supabase
-      .channel("kitchen-orders")
-      .on("postgres_changes", { event: "*", schema: "public", table: "orders" }, async (payload) => {
-        if (payload.eventType === "DELETE") {
-          const id = (payload.old as { id?: string }).id;
-          if (id) setOrders((prev) => prev.filter((o) => o.id !== id));
-          return;
-        }
-        const row = payload.new as Order;
-        if (!isKitchenStatus(row.status)) {
-          setOrders((prev) => prev.filter((o) => o.id !== row.id));
-          return;
-        }
-        if (payload.eventType === "INSERT" || !knownIds.current.has(row.id)) {
-          // Items are not in the orders payload: fetch the full order once.
-          const { data } = await supabase.from("orders").select(SELECT).eq("id", row.id).single();
-          if (!data) return;
-          const full = data as Order;
-          const isNew = !knownIds.current.has(full.id);
-          knownIds.current.add(full.id);
-          setOrders((prev) => [...prev.filter((o) => o.id !== full.id), full]);
-          if (isNew && full.status === "pending") markFresh([full.id]);
-          return;
-        }
-        // UPDATE of a known order: merge fields, keep the items we already have.
-        setOrders((prev) =>
-          prev.some((o) => o.id === row.id)
-            ? prev.map((o) => (o.id === row.id ? { ...o, ...row, items: o.items } : o))
-            : prev,
-        );
-      })
-      .subscribe((status) => {
-        const ok = status === "SUBSCRIBED";
-        setConnected(ok);
-        if (ok) void load(); // catch up on anything missed while offline
-      });
-
-    const onVisible = () => {
-      if (document.visibilityState === "visible") void load();
-    };
-    document.addEventListener("visibilitychange", onVisible);
-
-    return () => {
-      document.removeEventListener("visibilitychange", onVisible);
-      void supabase.removeChannel(channel);
-    };
-  }, [load, markFresh]);
 
   // Live age timer.
   useEffect(() => {
@@ -173,26 +55,9 @@ export default function KitchenPage() {
     document.title = pendingCount > 0 ? `(${pendingCount}) Bucătărie | Burgerash` : "Bucătărie | Burgerash";
   }, [pendingCount]);
 
-  function toggleSound() {
-    if (!soundOn) {
-      audioRef.current ??= new AudioContext();
-      void audioRef.current.resume();
-      soundOnRef.current = true;
-      setSoundOn(true);
-      beep();
-    } else {
-      soundOnRef.current = false;
-      setSoundOn(false);
-    }
-  }
-
   async function moveTo(order: Order, status: KitchenStatus) {
     const previous = order.status;
-    setFresh((prev) => {
-      const next = new Set(prev);
-      next.delete(order.id);
-      return next;
-    });
+    clearFresh(order.id);
     setOrders((prev) => prev.map((o) => (o.id === order.id ? { ...o, status } : o)));
     const { error: err } = await supabase.from("orders").update({ status }).eq("id", order.id);
     if (err) {
@@ -204,15 +69,15 @@ export default function KitchenPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F5E6CC] text-[#332420] flex flex-col">
-      <header className="bg-[#332420] text-[#F5E6CC] px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+    <div className="min-h-screen bg-sand text-charcoal flex flex-col">
+      <header className="bg-charcoal text-sand px-4 py-3 flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-4">
-          <Link href="/" className="font-bebas text-2xl tracking-wide min-h-11 inline-flex items-center gap-2">
+          <Link href="/" className="font-display text-2xl tracking-wide min-h-11 inline-flex items-center gap-2">
             <span aria-hidden>&larr;</span>
             <BrandLogo variant="icon" tone="sand" className="h-8 w-auto sm:hidden" />
             <BrandLogo variant="horizontal" tone="sand" className="h-8 w-auto hidden sm:block" />
           </Link>
-          <span className="font-bebas text-2xl tracking-wide text-[#F5E6CC]/70 hidden sm:inline"><Display>BUCĂTĂRIE</Display></span>
+          <span className="font-display text-2xl tracking-wide text-sand/70 hidden sm:inline"><Display>BUCĂTĂRIE</Display></span>
         </div>
         <div className="flex items-center gap-3">
           <span className="font-mono text-xs" role="status">
@@ -222,8 +87,8 @@ export default function KitchenPage() {
             type="button"
             onClick={toggleSound}
             aria-pressed={soundOn}
-            className={`min-h-11 px-4 font-nunito font-bold text-sm border-2 border-[#F5E6CC] ${
-              soundOn ? "bg-[#F5E6CC] text-[#332420]" : "bg-transparent text-[#F5E6CC]"
+            className={`min-h-11 px-4 font-nunito font-bold text-sm border-2 border-sand ${
+              soundOn ? "bg-sand text-charcoal" : "bg-transparent text-sand"
             }`}
           >
             SUNET {soundOn ? "PORNIT" : "OPRIT"}
@@ -233,13 +98,13 @@ export default function KitchenPage() {
       </header>
 
       {error && (
-        <div role="alert" className="bg-[#790D20] text-[#F5E6CC] px-4 py-3 font-nunito font-bold">
+        <div role="alert" className="bg-wine text-sand px-4 py-3 font-nunito font-bold">
           {error}
         </div>
       )}
 
       {/* Phone: tabs. md and up: all three columns. */}
-      <nav className="md:hidden grid grid-cols-3 border-b-2 border-[#332420]" aria-label="Coloane">
+      <nav className="md:hidden grid grid-cols-3 border-b-2 border-charcoal" aria-label="Coloane">
         {COLUMNS.map((col) => {
           const count = orders.filter((o) => o.status === col.status).length;
           const active = tab === col.status;
@@ -249,8 +114,8 @@ export default function KitchenPage() {
               type="button"
               onClick={() => setTab(col.status)}
               aria-pressed={active}
-              className={`min-h-14 font-bebas text-xl tracking-wide ${
-                active ? "bg-[#790D20] text-[#F5E6CC]" : "bg-transparent text-[#332420]"
+              className={`min-h-14 font-display text-xl tracking-wide ${
+                active ? "bg-wine text-sand" : "bg-transparent text-charcoal"
               }`}
             >
               {col.title} ({count})
@@ -265,10 +130,10 @@ export default function KitchenPage() {
           return (
             <section
               key={col.status}
-              className={`${tab === col.status ? "block" : "hidden"} md:block border-2 border-[#332420]`}
+              className={`${tab === col.status ? "block" : "hidden"} md:block border-2 border-charcoal`}
               aria-label={col.title}
             >
-              <h2 className="hidden md:flex items-center justify-between bg-[#332420] text-[#F5E6CC] px-4 py-2 font-bebas text-2xl tracking-wide">
+              <h2 className="hidden md:flex items-center justify-between bg-charcoal text-sand px-4 py-2 font-display text-2xl tracking-wide">
                 <span><Display>{col.title}</Display></span>
                 <span className="font-mono text-sm">{list.length}</span>
               </h2>
@@ -287,13 +152,7 @@ export default function KitchenPage() {
                     nextLabel={col.nextLabel}
                     prev={col.prev}
                     onMove={moveTo}
-                    onSeen={() =>
-                      setFresh((prev) => {
-                        const next = new Set(prev);
-                        next.delete(order.id);
-                        return next;
-                      })
-                    }
+                    onSeen={() => clearFresh(order.id)}
                   />
                 ))}
               </div>
@@ -331,15 +190,15 @@ function Ticket({
   return (
     <article
       onClick={isFresh ? onSeen : undefined}
-      className={`bg-[#F5E6CC] border-2 border-[#332420] shadow-[4px_4px_0_0_#332420] ${
-        isFresh ? "outline-4 outline-offset-2 outline-[#790D20]" : ""
+      className={`bg-sand border-2 border-charcoal shadow-[4px_4px_0_0_var(--color-charcoal)] ${
+        isFresh ? "outline-4 outline-offset-2 outline-wine" : ""
       }`}
     >
-      <header className="flex items-baseline justify-between gap-2 px-4 pt-3 pb-2 border-b-2 border-[#332420]">
-        <span className="font-bebas text-3xl tracking-wide leading-none"><Display>{order.order_number}</Display></span>
+      <header className="flex items-baseline justify-between gap-2 px-4 pt-3 pb-2 border-b-2 border-charcoal">
+        <span className="font-display text-3xl tracking-wide leading-none"><Display>{order.order_number}</Display></span>
         <span className="font-mono text-sm font-bold flex items-center gap-2">
           {order.fulfillment_type === "delivery" ? "LIVRARE" : "RIDICARE"}
-          <span className={late ? "bg-[#790D20] text-[#F5E6CC] px-2 py-0.5" : "bg-[#332420] text-[#F5E6CC] px-2 py-0.5"}>
+          <span className={late ? "bg-wine text-sand px-2 py-0.5" : "bg-charcoal text-sand px-2 py-0.5"}>
             {age.text}
           </span>
         </span>
@@ -354,13 +213,13 @@ function Ticket({
             {item.modifiers.length > 0 && (
               <ul className="mt-1 pl-6 text-base font-semibold">
                 {item.modifiers.map((m) => (
-                  <li key={m.id} className={m.name.toLowerCase().startsWith("fără") ? "text-[#790D20] font-extrabold" : ""}>
+                  <li key={m.id} className={m.name.toLowerCase().startsWith("fără") ? "text-wine font-extrabold" : ""}>
                     + {m.name}
                   </li>
                 ))}
               </ul>
             )}
-            {item.note && <p className="mt-1 pl-6 text-base font-bold text-[#790D20]">Notă: {item.note}</p>}
+            {item.note && <p className="mt-1 pl-6 text-base font-bold text-wine">Notă: {item.note}</p>}
           </li>
         ))}
         {items.length === 0 && <li className="opacity-70">Se încarcă produsele…</li>}
@@ -368,19 +227,19 @@ function Ticket({
 
       {(order.order_note || order.cutlery_sets > 0) && (
         <div className="px-4 pb-3 font-nunito text-base font-bold flex flex-col gap-1">
-          {order.order_note && <p className="text-[#790D20]">Notă comandă: {order.order_note}</p>}
+          {order.order_note && <p className="text-wine">Notă comandă: {order.order_note}</p>}
           {order.cutlery_sets > 0 && <p>Tacâmuri: {order.cutlery_sets}</p>}
         </div>
       )}
 
       {(next || prev) && (
-        <footer className="flex gap-2 p-3 border-t-2 border-[#332420]">
+        <footer className="flex gap-2 p-3 border-t-2 border-charcoal">
           {prev && (
             <button
               type="button"
               onClick={() => onMove(order, prev)}
               aria-label={`Înapoi ${order.order_number}`}
-              className="min-h-14 px-4 border-2 border-[#332420] font-nunito font-bold"
+              className="min-h-14 px-4 border-2 border-charcoal font-nunito font-bold"
             >
               ↩
             </button>
@@ -389,7 +248,7 @@ function Ticket({
             <button
               type="button"
               onClick={() => onMove(order, next)}
-              className="flex-1 min-h-14 bg-[#790D20] text-[#F5E6CC] font-bebas text-2xl tracking-wide"
+              className="flex-1 min-h-14 bg-wine text-sand font-display text-2xl tracking-wide"
             >
               <Display>{nextLabel} →</Display>
             </button>

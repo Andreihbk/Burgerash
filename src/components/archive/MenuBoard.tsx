@@ -93,27 +93,27 @@ function Line({
     <>
       <span className="min-w-0 flex-1">
         <span className="flex flex-wrap items-baseline gap-x-[0.5em] gap-y-[0.1em]">
-          <span className={`font-bebas text-[1.15em] leading-tight text-[#790D20] ${soldOut ? "line-through decoration-2" : ""}`}>
+          <span className={`font-display text-[1.15em] leading-tight text-wine ${soldOut ? "line-through decoration-2" : ""}`}>
             <Display>{name}</Display>
           </span>
-          {weight && <span className="font-mono text-[0.7em] text-[#332420]">{formatWeight(weight)}</span>}
+          {weight && <span className="font-mono text-[0.7em] text-charcoal">{formatWeight(weight)}</span>}
           {soldOut && (
-            <span className="font-bebas text-[0.75em] leading-none px-[0.5em] py-[0.25em] rounded bg-[#790D20] text-[#F5E6CC]">
+            <span className="font-display text-[0.75em] leading-none px-[0.5em] py-[0.25em] rounded bg-wine text-sand">
               <Display>EPUIZAT</Display>
             </span>
           )}
         </span>
         {description && (
-          <span className="block font-nunito font-semibold text-[0.85em] leading-snug text-[#332420] mt-[0.15em]">
+          <span className="block font-nunito font-semibold text-[0.85em] leading-snug text-charcoal mt-[0.15em]">
             {description}
           </span>
         )}
         {allergens && (
-          <span className="block font-nunito text-[0.7em] leading-snug text-[#332420]/70 mt-[0.15em]">{allergens}</span>
+          <span className="block font-nunito text-[0.7em] leading-snug text-charcoal/70 mt-[0.15em]">{allergens}</span>
         )}
       </span>
       <span
-        className={`shrink-0 font-nunito font-bold tabular-nums text-[1.05em] leading-tight text-[#790D20] whitespace-nowrap ${soldOut ? "opacity-60" : ""}`}
+        className={`shrink-0 font-nunito font-bold tabular-nums text-[1.05em] leading-tight text-wine whitespace-nowrap ${soldOut ? "opacity-60" : ""}`}
       >
         {price} lei
       </span>
@@ -132,7 +132,7 @@ function Line({
       onFocus={onLineActive && (() => onLineActive(name))}
       onBlur={onLineActive && (() => onLineActive(null))}
       aria-label={`Personalizează ${name}, ${price} RON${soldOut ? ", epuizat" : ""}`}
-      className={`${ROW_CLASS} min-h-[44px] px-[0.35em] -mx-[0.35em] w-[calc(100%+0.7em)] hover:bg-[#790D20]/5 transition-colors duration-200 motion-reduce:transition-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#790D20]`}
+      className={`${ROW_CLASS} min-h-[44px] px-[0.35em] -mx-[0.35em] w-[calc(100%+0.7em)] hover:bg-wine/5 transition-colors duration-200 motion-reduce:transition-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-wine`}
     >
       {content}
     </button>
@@ -158,10 +158,10 @@ export default function MenuBoard({
 
   return (
     <section id="lightboard" data-lit={lit ? "on" : "off"} aria-label="Panou meniu" className="lightbox-board w-full mx-auto scroll-mt-24">
-      <div className="lightbox-frame bg-[#790D20] p-[0.9em] rounded-[1.25em]">
-        <div className="lightbox-panel relative overflow-hidden bg-[#F5E6CC] text-[#790D20] rounded-[0.75em]">
+      <div className="lightbox-frame bg-wine p-[0.9em] rounded-[1.25em]">
+        <div className="lightbox-panel relative overflow-hidden bg-sand text-wine rounded-[0.75em]">
           {/* Printed inner border */}
-          <div aria-hidden className="pointer-events-none absolute inset-[0.45em] rounded-[0.5em] border border-[#790D20]/40" />
+          <div aria-hidden className="pointer-events-none absolute inset-[0.45em] rounded-[0.5em] border border-wine/40" />
 
           <div className="relative px-[1.25em] pt-[1.5em] sm:px-[2em] sm:pt-[2em]">
             <div className="flex justify-center mb-[1.5em]">
@@ -172,7 +172,7 @@ export default function MenuBoard({
               {MENU_SECTIONS.map(({ category, products }) => (
                 <div key={category.id} className="grid grid-cols-1 sm:grid-cols-[minmax(0,1fr)_1.5em]">
                   <div className="flex items-center gap-[0.6em] min-w-0">
-                    <h3 className="font-bebas text-[1.45em] leading-none text-[#790D20] shrink-0">
+                    <h3 className="font-display text-[1.45em] leading-none text-wine shrink-0">
                       <Display>{category.name}</Display>
                     </h3>
                     <RailLine />
@@ -195,7 +195,7 @@ export default function MenuBoard({
               ))}
             </div>
 
-            <p className="font-bebas text-[1.2em] leading-none text-[#790D20] text-right mt-[1.75em]">
+            <p className="font-display text-[1.2em] leading-none text-wine text-right mt-[1.75em]">
               <Display>YOUR LOCAL BURGER SPOT.</Display>
             </p>
           </div>
