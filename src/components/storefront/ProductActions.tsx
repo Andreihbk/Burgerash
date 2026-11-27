@@ -6,6 +6,7 @@ import { useUiStore } from "@/store/uiStore";
 import { useIsSoldOut } from "@/lib/useSoldOut";
 import type { Product } from "@/types/database";
 import { Display } from "@/components/Display";
+import { flyToCart } from "./flyToCart";
 
 // The only client part of a product card: add to cart / open the customize modal.
 export default function ProductActions({ product, customizable }: { product: Product; customizable: boolean }) {
@@ -39,9 +40,10 @@ export default function ProductActions({ product, customizable }: { product: Pro
 
       <button
         type="button"
-        onClick={() => {
+        onClick={(e) => {
           addItem(product);
           notifyAdded(product.name);
+          flyToCart(e.currentTarget);
         }}
         className="disabled:opacity-50 disabled:pointer-events-none bg-wine text-sand border-2 border-charcoal px-4 py-2.5 rounded-lg font-display text-lg flex items-center gap-1.5 shadow-[2px_2px_0px_0px_var(--color-charcoal)] hover:bg-charcoal active:translate-y-[1px] transition-all"
       >

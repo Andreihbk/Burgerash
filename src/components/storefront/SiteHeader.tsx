@@ -68,6 +68,7 @@ export default function SiteHeader() {
 
         <button
           onClick={openCart}
+          data-cart-target
           aria-label={`Coș, ${totalItems} produse`}
           className="relative bg-sand text-wine px-4 py-2 rounded-lg font-display text-xl tracking-wide flex items-center gap-2 border-2 border-charcoal shadow-[3px_3px_0px_0px_var(--color-charcoal)] hover:translate-y-[-2px] active:translate-y-[0px] transition-all"
         >

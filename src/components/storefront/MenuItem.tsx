@@ -7,6 +7,7 @@ import { useUiStore } from "@/store/uiStore";
 import { useIsSoldOut } from "@/lib/useSoldOut";
 import type { Product } from "@/types/database";
 import { Display } from "@/components/Display";
+import { flyToCart } from "./flyToCart";
 import ProductActions from "./ProductActions";
 import { isCustomizable } from "./ids";
 
@@ -76,9 +77,10 @@ export default function MenuItem({ product }: { product: Product }) {
           ) : (
             <button
               type="button"
-              onClick={() => {
+              onClick={(e) => {
                 addItem(product);
                 notifyAdded(product.name);
+                flyToCart(e.currentTarget);
               }}
               aria-label={`Adaugă ${product.name} în coș`}
               className="grid place-items-center w-11 h-11 rounded-full bg-wine text-sand border-2 border-charcoal shadow-[2px_2px_0px_0px_var(--color-charcoal)] active:translate-y-px disabled:opacity-50 disabled:pointer-events-none"
