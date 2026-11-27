@@ -10,7 +10,7 @@ Staff apps must keep working if Ebriza is slow or down.
 
 ## Structure
 - src/app: page, layout, globals.css, kitchen/ dispatch/ rider/ admin/, api/orders/route.ts
-- src/components: StoreFront, CartDrawer, BurgerStamp
+- src/components: StoreFront, CartDrawer (+ cart/), BurgerStamp
 - src/lib: catalog.ts, pricing.ts (server-side order pricing), supabase.ts, ebriza.ts
 - src/store/cartStore.ts - src/types/{database,ebriza}.ts - supabase/schema.sql (repo root)
 
