@@ -1,15 +1,16 @@
 // Single source for company data used on the legal pages (PLAN B.2).
-// The owner fills these in before launch. Never invent real data here.
+// Company data from the registration certificate (ONRC, issued 22.06.2026). Email and phone
+// are still to be filled in by the owner. Never invent real data here.
 export const PLACEHOLDER = "[DE COMPLETAT]";
 
-export const COMPANY_NAME = "[DE COMPLETAT]";
-export const CUI = "[DE COMPLETAT]";
-export const REG_COM = "[DE COMPLETAT]";
-export const ADDRESS = "[DE COMPLETAT]";
+export const COMPANY_NAME = "SOLE KIDS S.R.L.";
+export const CUI = "49110839";
+export const REG_COM = "J2023021506409";
+export const ADDRESS = "Strada Porumbacu nr. 48, parter, Sector 6, București";
 export const EMAIL = "[DE COMPLETAT]";
 export const PHONE = "[DE COMPLETAT]";
 
-export const LEGAL_UPDATED = "19 noiembrie 2026";
+export const LEGAL_UPDATED = "27 noiembrie 2026";
 
 export const ANPC_SAL_URL = "https://anpc.ro/ce-este-sal/";
 export const ANPC_SOL_URL = "https://ec.europa.eu/consumers/odr";
