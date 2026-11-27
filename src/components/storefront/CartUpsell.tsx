@@ -18,7 +18,7 @@ export default function CartUpsell({ soldOutIds }: { soldOutIds: ReadonlySet<str
 
   return (
     <section aria-label="Sugestii" className="mt-6">
-      <h3 className="font-bebas text-lg text-brand-dark mb-2"><Display>MERGE LÂNGĂ</Display></h3>
+      <h3 className="font-display text-lg text-brand-dark mb-2"><Display>MERGE LÂNGĂ</Display></h3>
       <ul className="space-y-2">
         {suggestions.map((product) => (
           <li
@@ -26,7 +26,7 @@ export default function CartUpsell({ soldOutIds }: { soldOutIds: ReadonlySet<str
             className="flex items-center justify-between gap-3 rounded-lg border-2 border-dashed border-brand-dark/40 bg-brand-paper px-3 py-2"
           >
             <div className="min-w-0">
-              <p className="font-bebas text-lg leading-tight text-brand-dark"><Display>{product.name}</Display></p>
+              <p className="font-display text-lg leading-tight text-brand-dark"><Display>{product.name}</Display></p>
               {product.weight_label && (
                 <p className="font-mono text-[11px] text-brand-dark/60">{product.weight_label}</p>
               )}

@@ -171,7 +171,7 @@ export default function CartDrawer() {
           <div className="bg-brand-red text-brand-paper px-6 py-4 flex items-center justify-between border-b-2 border-brand-dark">
             <div className="flex items-center gap-2">
               <ShoppingBag className="w-6 h-6 text-brand-paper" />
-              <h2 className="font-bebas text-2xl tracking-wide"><Display>COȘUL TĂU</Display></h2>
+              <h2 className="font-display text-2xl tracking-wide"><Display>COȘUL TĂU</Display></h2>
             </div>
             <button onClick={closeCart} className="text-brand-paper hover:text-white transition-colors">
               <X className="w-6 h-6" />
@@ -183,7 +183,7 @@ export default function CartDrawer() {
             {step === "success" ? (
               <div className="text-center py-12 space-y-4">
                 <CheckCircle2 className="w-16 h-16 text-[#790D20] mx-auto" />
-                <h3 className="font-bebas text-4xl text-brand-dark"><Display>COMANDĂ PLASATĂ!</Display></h3>
+                <h3 className="font-display text-4xl text-brand-dark"><Display>COMANDĂ PLASATĂ!</Display></h3>
                 <p className="font-mono text-lg font-bold bg-brand-dark text-brand-paper py-2 px-4 inline-block rounded">
                   Număr bon: {orderNumber}
                 </p>
@@ -194,7 +194,7 @@ export default function CartDrawer() {
                   <div>
                     <a
                       href={`/comanda/${publicToken}`}
-                      className="mt-2 inline-flex min-h-11 items-center bg-brand-dark text-brand-paper font-bebas text-xl px-6 py-3 rounded shadow-[3px_3px_0px_0px_#790D20]"
+                      className="mt-2 inline-flex min-h-11 items-center bg-brand-dark text-brand-paper font-display text-xl px-6 py-3 rounded shadow-[3px_3px_0px_0px_#790D20]"
                     >
                       <Display>URMĂREȘTE COMANDA</Display>
                     </a>
@@ -205,7 +205,7 @@ export default function CartDrawer() {
                     setStep("cart");
                     closeCart();
                   }}
-                  className="mt-4 bg-brand-red text-white font-bebas text-xl px-6 py-3 rounded shadow-[3px_3px_0px_0px_#332420]"
+                  className="mt-4 bg-brand-red text-white font-display text-xl px-6 py-3 rounded shadow-[3px_3px_0px_0px_#332420]"
                 >
                   <Display>ÎNAPOI LA MENIU</Display>
                 </button>
@@ -232,7 +232,7 @@ export default function CartDrawer() {
                 <div className="grid grid-cols-2 gap-2 bg-brand-dark/10 p-1.5 rounded-lg mb-6 border-2 border-brand-dark">
                   <button
                     onClick={() => setFulfillmentType("delivery")}
-                    className={`font-bebas text-lg py-2 rounded transition-all ${
+                    className={`font-display text-lg py-2 rounded transition-all ${
                       fulfillmentType === "delivery"
                         ? "bg-brand-red text-white shadow-[2px_2px_0px_0px_#332420]"
                         : "text-brand-dark hover:bg-brand-dark/5"
@@ -242,7 +242,7 @@ export default function CartDrawer() {
                   </button>
                   <button
                     onClick={() => setFulfillmentType("pickup")}
-                    className={`font-bebas text-lg py-2 rounded transition-all ${
+                    className={`font-display text-lg py-2 rounded transition-all ${
                       fulfillmentType === "pickup"
                         ? "bg-brand-red text-white shadow-[2px_2px_0px_0px_#332420]"
                         : "text-brand-dark hover:bg-brand-dark/5"
@@ -268,7 +268,7 @@ export default function CartDrawer() {
                       >
                         <div className="flex justify-between items-start">
                           <div>
-                            <h4 className="font-bebas text-xl text-brand-dark"><Display>{item.product.name}</Display></h4>
+                            <h4 className="font-display text-xl text-brand-dark"><Display>{item.product.name}</Display></h4>
                             {soldOutIds.has(item.product.id) && (
                               <p className="font-mono text-xs font-bold text-brand-red">
                                 EPUIZAT - scoate-l din coș ca să continui
@@ -321,7 +321,7 @@ export default function CartDrawer() {
                     {/* Extras: Cutlery & Tip */}
                     <div className="bg-white border-2 border-brand-dark rounded-lg p-4 space-y-4 mt-6 shadow-[3px_3px_0px_0px_#332420]">
                       <div className="flex justify-between items-center">
-                        <span className="font-bebas text-lg"><Display>SETURI TACĂMURI (Gratis)</Display></span>
+                        <span className="font-display text-lg"><Display>SETURI TACĂMURI (Gratis)</Display></span>
                         <div className="flex items-center gap-2 border-2 border-brand-dark rounded px-2 py-0.5 bg-brand-paper">
                           <button onClick={() => setCutlerySets(cutlerySets - 1)} className="hover:text-brand-red">
                             <Minus className="w-3.5 h-3.5" />
@@ -334,7 +334,7 @@ export default function CartDrawer() {
                       </div>
 
                       <div className="flex flex-wrap justify-between items-center gap-2 pt-3 border-t border-brand-dark/10">
-                        <span className="font-bebas text-lg"><Display>BACȘIȘ ECHIPĂ</Display></span>
+                        <span className="font-display text-lg"><Display>BACȘIȘ ECHIPĂ</Display></span>
                         <div className="flex gap-1.5">
                           {[0, 3, 5, 10].map((val) => (
                             <button
@@ -364,7 +364,7 @@ export default function CartDrawer() {
                   ← Înapoi la produsele din coș
                 </button>
 
-                <h3 className="font-bebas text-3xl text-brand-dark mb-4"><Display>DETALII LIVRARE</Display></h3>
+                <h3 className="font-display text-3xl text-brand-dark mb-4"><Display>DETALII LIVRARE</Display></h3>
 
                 {errorMessage && (
                   <div className="bg-red-100 border-2 border-brand-red text-brand-red p-3 text-xs font-mono font-bold rounded">
@@ -506,7 +506,7 @@ export default function CartDrawer() {
                 <button
                   type="submit"
                   disabled={isSubmitting || orderingOff || isClosed || hasSoldOut}
-                  className="w-full bg-brand-red text-white font-bebas text-2xl py-4 rounded-lg shadow-[4px_4px_0px_0px_#332420] hover:bg-brand-dark transition-all mt-6 disabled:opacity-50"
+                  className="w-full bg-brand-red text-white font-display text-2xl py-4 rounded-lg shadow-[4px_4px_0px_0px_#332420] hover:bg-brand-dark transition-all mt-6 disabled:opacity-50"
                 >
                   <Display>{orderingOff ? OPENING_SOON.toUpperCase() : isClosed ? "Suntem închiși acum" : hasSoldOut ? "Produs epuizat în coș" : isSubmitting ? "SE TRIMITE..." : `PLASEAZĂ COMANDA · ${formatLei(grandTotal)}`}</Display>
                 </button>
@@ -541,7 +541,7 @@ export default function CartDrawer() {
                   <span>+{formatLei(tipAmount)}</span>
                 </div>
               )}
-              <div className="flex justify-between gap-3 font-bebas text-2xl pt-2 border-t border-brand-dark/10">
+              <div className="flex justify-between gap-3 font-display text-2xl pt-2 border-t border-brand-dark/10">
                 <span><Display>TOTAL DE PLATĂ:</Display></span>
                 <span className="text-brand-red"><Display>{formatLei(grandTotal)}</Display></span>
               </div>
@@ -552,7 +552,7 @@ export default function CartDrawer() {
                   setCheckoutOpenedAt(Date.now());
                 }}
                 disabled={hasSoldOut}
-                className="w-full disabled:opacity-50 bg-brand-dark text-brand-paper font-bebas text-2xl py-4 rounded-lg shadow-[4px_4px_0px_0px_#790D20] hover:bg-brand-red transition-all flex items-center justify-center gap-2 mt-4"
+                className="w-full disabled:opacity-50 bg-brand-dark text-brand-paper font-display text-2xl py-4 rounded-lg shadow-[4px_4px_0px_0px_#790D20] hover:bg-brand-red transition-all flex items-center justify-center gap-2 mt-4"
               >
                 <span><Display>CONTINUĂ LA CHECKOUT</Display></span>
                 <ArrowRight className="w-5 h-5" />

@@ -30,13 +30,13 @@ export default function SiteHeader() {
       <div className="flex items-center gap-4">
         <a
           href="#meniu"
-          className="hidden md:inline-block font-bebas text-lg tracking-wider text-[#F5E6CC]/80 hover:text-[#F5E6CC] transition-colors"
+          className="hidden md:inline-block font-display text-lg tracking-wider text-[#F5E6CC]/80 hover:text-[#F5E6CC] transition-colors"
         >
           <Display>MENIU</Display>
         </a>
         <a
           href="#locatie"
-          className="hidden md:inline-block font-bebas text-lg tracking-wider text-[#F5E6CC]/80 hover:text-[#F5E6CC] transition-colors"
+          className="hidden md:inline-block font-display text-lg tracking-wider text-[#F5E6CC]/80 hover:text-[#F5E6CC] transition-colors"
         >
           <Display>LOCAȚIE</Display>
         </a>
@@ -73,7 +73,7 @@ export default function SiteHeader() {
         <button
           onClick={openCart}
           aria-label={`Coș, ${totalItems} produse`}
-          className="relative bg-[#F5E6CC] text-[#790D20] px-4 py-2 rounded-lg font-bebas text-xl tracking-wide flex items-center gap-2 border-2 border-[#332420] shadow-[3px_3px_0px_0px_#332420] hover:translate-y-[-2px] active:translate-y-[0px] transition-all"
+          className="relative bg-[#F5E6CC] text-[#790D20] px-4 py-2 rounded-lg font-display text-xl tracking-wide flex items-center gap-2 border-2 border-[#332420] shadow-[3px_3px_0px_0px_#332420] hover:translate-y-[-2px] active:translate-y-[0px] transition-all"
         >
           <ShoppingBag className="w-5 h-5" />
           <span><Display>COȘ</Display></span>

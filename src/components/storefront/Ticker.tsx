@@ -17,7 +17,7 @@ function Loop() {
     <ul className="flex shrink-0 items-center" aria-hidden>
       {[...ITEMS, ...ITEMS].map((text, i) => (
         <li key={i} className="flex items-center gap-6 pr-6 whitespace-nowrap">
-          <span className="font-bebas text-2xl sm:text-3xl tracking-wider leading-none">
+          <span className="font-display text-2xl sm:text-3xl tracking-wider leading-none">
             <Display>{text}</Display>
           </span>
           <BurgerGlyph className="h-5 w-5 shrink-0" />

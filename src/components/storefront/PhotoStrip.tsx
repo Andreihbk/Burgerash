@@ -169,7 +169,7 @@ export default function PhotoStrip() {
       className="group/strip max-w-6xl mx-auto px-4 sm:px-6 py-10 lg:py-14 transition-[opacity,transform] duration-700 ease-out data-[reveal=out]:opacity-0 data-[reveal=out]:translate-y-12"
     >
       <div className="flex items-end justify-between gap-4">
-        <h2 id="facut-pe-loc" className="font-bebas text-3xl sm:text-5xl leading-none whitespace-nowrap text-[#332420]">
+        <h2 id="facut-pe-loc" className="font-display text-3xl sm:text-5xl leading-none whitespace-nowrap text-[#332420]">
           <Display>PROASPĂT. PE LOC.</Display>
         </h2>
         <div className="hidden sm:flex shrink-0 items-center gap-3">

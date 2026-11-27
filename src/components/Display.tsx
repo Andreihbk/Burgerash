@@ -4,7 +4,7 @@ import { splitDigits, stripDiacritics } from "@/lib/display";
 const NUMBER_CLASS = "font-nunito font-extrabold tabular-nums";
 
 /**
- * Wrap the text of any `.font-bebas` element:
+ * Wrap the text of any `.font-display` element:
  * - diacritics are transliterated (the display font has no ă â î ș ț),
  * - digits (prices, totals, weights, quantities, order numbers) render in bold Nunito with tabular figures.
  * Elements passed as children are left untouched.

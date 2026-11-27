@@ -37,7 +37,7 @@ export default function Home() {
 
           <div id={MENU_TOP_ID} className="mb-8">
             <p className="font-mono text-xs font-bold tracking-widest text-[#790D20]">01 · COMANDĂ ONLINE</p>
-            <h2 data-reveal className="font-bebas text-4xl sm:text-5xl text-[#332420] leading-none">
+            <h2 data-reveal className="font-display text-4xl sm:text-5xl text-[#332420] leading-none">
               <Display>MENIU</Display>
             </h2>
             <p className="mt-2 font-nunito font-semibold text-base text-[#332420]/70">Pregătim zilnic. Când se termină, se termină.</p>

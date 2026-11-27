@@ -1,4 +1,4 @@
-// The display font (.font-bebas, Eatvetica) has no Romanian diacritics, so every
+// The display font (.font-display, Eatvetica) has no Romanian diacritics, so every
 // display-font string is transliterated at render time. Body text (Nunito) keeps its diacritics.
 // Catalog data is never changed: call this where the string is rendered.
 const MAP: Record<string, string> = {

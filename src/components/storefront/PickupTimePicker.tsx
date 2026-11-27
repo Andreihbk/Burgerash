@@ -21,7 +21,7 @@ export default function PickupTimePicker() {
 
   return (
     <fieldset className="mb-6">
-      <legend className="flex items-center gap-2 font-bebas text-xl text-[#332420] mb-2">
+      <legend className="flex items-center gap-2 font-display text-xl text-[#332420] mb-2">
         <Clock className="w-4 h-4" aria-hidden />
         <Display>CÂND VII DUPĂ EA?</Display>
       </legend>

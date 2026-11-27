@@ -62,7 +62,7 @@ export default function CategoryBar() {
                 scrollToTab(tab.id);
                 setActiveTab(tab.id);
               }}
-              className={`font-bebas text-xl tracking-wide px-5 py-2 rounded-lg transition-all whitespace-nowrap shrink-0 snap-center border-2 border-[#332420] ${
+              className={`font-display text-xl tracking-wide px-5 py-2 rounded-lg transition-all whitespace-nowrap shrink-0 snap-center border-2 border-[#332420] ${
                 active
                   ? "bg-[#790D20] text-[#F5E6CC] shadow-[3px_3px_0px_0px_#332420]"
                   : "bg-[#F5E6CC] text-[#332420] hover:bg-[#332420]/10"

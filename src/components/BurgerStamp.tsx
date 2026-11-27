@@ -112,7 +112,7 @@ function Wordmark({ ink, y, size, tagline }: { ink: string; y: number; size: num
 
 function NameLines({ lines, ink, baselines, size }: { lines: string[]; ink: string; baselines: number[]; size: number }) {
   return (
-    <g className="font-bebas" textAnchor="middle" style={{ fill: ink }}>
+    <g className="font-display" textAnchor="middle" style={{ fill: ink }}>
       {lines.map((line, i) => (
         <text key={line} x="100" y={baselines[i]} fontSize={size}>
           {stripDiacritics(line)}
@@ -153,7 +153,7 @@ function FullBody({ lines, ink, accent, weight }: { lines: string[]; ink: string
             y="172"
             textAnchor="middle"
             fontSize="18"
-            className="font-bebas"
+            className="font-display"
             style={{ fill: ink === SAND ? accent : ink }}
           >
             <tspan className="font-nunito" style={{ fontWeight: 800, fontVariantNumeric: "tabular-nums" }}>

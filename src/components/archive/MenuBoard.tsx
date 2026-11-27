@@ -93,12 +93,12 @@ function Line({
     <>
       <span className="min-w-0 flex-1">
         <span className="flex flex-wrap items-baseline gap-x-[0.5em] gap-y-[0.1em]">
-          <span className={`font-bebas text-[1.15em] leading-tight text-[#790D20] ${soldOut ? "line-through decoration-2" : ""}`}>
+          <span className={`font-display text-[1.15em] leading-tight text-[#790D20] ${soldOut ? "line-through decoration-2" : ""}`}>
             <Display>{name}</Display>
           </span>
           {weight && <span className="font-mono text-[0.7em] text-[#332420]">{formatWeight(weight)}</span>}
           {soldOut && (
-            <span className="font-bebas text-[0.75em] leading-none px-[0.5em] py-[0.25em] rounded bg-[#790D20] text-[#F5E6CC]">
+            <span className="font-display text-[0.75em] leading-none px-[0.5em] py-[0.25em] rounded bg-[#790D20] text-[#F5E6CC]">
               <Display>EPUIZAT</Display>
             </span>
           )}
@@ -172,7 +172,7 @@ export default function MenuBoard({
               {MENU_SECTIONS.map(({ category, products }) => (
                 <div key={category.id} className="grid grid-cols-1 sm:grid-cols-[minmax(0,1fr)_1.5em]">
                   <div className="flex items-center gap-[0.6em] min-w-0">
-                    <h3 className="font-bebas text-[1.45em] leading-none text-[#790D20] shrink-0">
+                    <h3 className="font-display text-[1.45em] leading-none text-[#790D20] shrink-0">
                       <Display>{category.name}</Display>
                     </h3>
                     <RailLine />
@@ -195,7 +195,7 @@ export default function MenuBoard({
               ))}
             </div>
 
-            <p className="font-bebas text-[1.2em] leading-none text-[#790D20] text-right mt-[1.75em]">
+            <p className="font-display text-[1.2em] leading-none text-[#790D20] text-right mt-[1.75em]">
               <Display>YOUR LOCAL BURGER SPOT.</Display>
             </p>
           </div>

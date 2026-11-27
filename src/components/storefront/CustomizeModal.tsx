@@ -100,7 +100,7 @@ export default function CustomizeModal({ product }: { product: Product }) {
                 <span className="font-mono text-xs text-[#790D20] font-bold">
                   PERSONALIZEAZĂ BURGERUL
                 </span>
-                <h3 id="customize-title" className="font-bebas text-4xl text-[#332420]">
+                <h3 id="customize-title" className="font-display text-4xl text-[#332420]">
                   <Display>{product.name}</Display>
                 </h3>
               </div>
@@ -130,7 +130,7 @@ export default function CustomizeModal({ product }: { product: Product }) {
                 ] as const
               ).filter((group) => group.mods.length > 0).map((group) => (
                 <div key={group.title}>
-                  <p className="font-bebas text-xl text-[#332420] mb-2"><Display>{group.title}</Display></p>
+                  <p className="font-display text-xl text-[#332420] mb-2"><Display>{group.title}</Display></p>
                   <div className="grid grid-cols-1 gap-2">
                     {group.mods.map((mod) => {
                       const checked = selectedModifiers.some((m) => m.id === mod.id);
@@ -207,7 +207,7 @@ export default function CustomizeModal({ product }: { product: Product }) {
               type="button"
               onClick={handleConfirm}
               disabled={soldOut}
-              className="flex-1 min-w-0 bg-[#790D20] text-white font-bebas text-xl sm:text-2xl px-3 sm:px-5 py-3 rounded-lg border-2 border-[#332420] shadow-[3px_3px_0px_0px_#332420] hover:bg-[#332420] transition-all whitespace-nowrap disabled:bg-[#F5E6CC] disabled:text-[#790D20] disabled:border-dashed disabled:border-[#790D20] disabled:shadow-none"
+              className="flex-1 min-w-0 bg-[#790D20] text-white font-display text-xl sm:text-2xl px-3 sm:px-5 py-3 rounded-lg border-2 border-[#332420] shadow-[3px_3px_0px_0px_#332420] hover:bg-[#332420] transition-all whitespace-nowrap disabled:bg-[#F5E6CC] disabled:text-[#790D20] disabled:border-dashed disabled:border-[#790D20] disabled:shadow-none"
             >
               {soldOut ? (
                 <Display>EPUIZAT</Display>

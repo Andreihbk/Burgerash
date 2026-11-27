@@ -17,13 +17,13 @@ export default function NotFound() {
           <BurgerStamp product={sticker} className="h-full w-full" />
         </div>
         <p className="mt-8 font-mono text-xs font-bold tracking-widest text-[#790D20]">404</p>
-        <h1 className="font-bebas text-5xl sm:text-7xl leading-none mt-1">
+        <h1 className="font-display text-5xl sm:text-7xl leading-none mt-1">
           <Display>AICI NU E NIMIC.</Display>
         </h1>
         <p className="mt-4 font-semibold text-lg text-[#332420]/80">Burgerii sunt în altă parte.</p>
         <Link
           href="/"
-          className="mt-8 inline-block font-bebas text-2xl px-8 py-3.5 rounded-lg bg-[#790D20] text-[#F5E6CC] border-2 border-[#332420] shadow-[4px_4px_0px_0px_#332420] hover:bg-[#332420] transition-colors"
+          className="mt-8 inline-block font-display text-2xl px-8 py-3.5 rounded-lg bg-[#790D20] text-[#F5E6CC] border-2 border-[#332420] shadow-[4px_4px_0px_0px_#332420] hover:bg-[#332420] transition-colors"
         >
           <Display>ÎNAPOI LA MENIU</Display>
         </Link>

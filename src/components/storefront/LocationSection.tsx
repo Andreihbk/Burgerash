@@ -20,7 +20,7 @@ export default function LocationSection() {
             <MapPin className="w-4 h-4" />
             <span>02 · CARTIERUL CRUSTEI</span>
           </div>
-          <h2 data-reveal className="font-bebas text-4xl sm:text-5xl mb-4 text-[#F5E6CC]"><Display>UNDE GĂSEȘTI CRUSTA</Display></h2>
+          <h2 data-reveal className="font-display text-4xl sm:text-5xl mb-4 text-[#F5E6CC]"><Display>UNDE GĂSEȘTI CRUSTA</Display></h2>
           <p className="font-nunito font-bold text-base text-[#F5E6CC]/80 mb-6">
             Fix lângă liceu, în {SITE_ADDRESS.sector}, {SITE_ADDRESS.city}. Urmărește mirosul de vită Black Angus caramelizată pe plită.
           </p>
@@ -31,7 +31,7 @@ export default function LocationSection() {
               href={GOOGLE_MAPS_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 font-bebas text-2xl tracking-wide px-6 py-3 rounded-lg bg-[#F5E6CC] text-[#790D20] border-2 border-[#332420] shadow-[3px_3px_0px_0px_#332420] hover:bg-[#332420] hover:text-[#F5E6CC] transition-colors"
+              className="inline-flex items-center gap-2 font-display text-2xl tracking-wide px-6 py-3 rounded-lg bg-[#F5E6CC] text-[#790D20] border-2 border-[#332420] shadow-[3px_3px_0px_0px_#332420] hover:bg-[#332420] hover:text-[#F5E6CC] transition-colors"
             >
               <Navigation className="w-5 h-5" aria-hidden />
               <Display>DU-MĂ ACOLO</Display>
@@ -68,13 +68,13 @@ export default function LocationSection() {
           />
         </div>
         <div className="sm:flex-1 sm:min-w-[260px]">
-          <h2 className="font-bebas text-4xl sm:text-5xl mb-4"><Display>LIVRARE PROPRIE & PICKUP</Display></h2>
+          <h2 className="font-display text-4xl sm:text-5xl mb-4"><Display>LIVRARE PROPRIE & PICKUP</Display></h2>
           <p className="font-nunito font-bold text-base text-[#332420]/90 max-w-2xl">
             Comandă direct de pe site fără comisioane ascunse. Livrare gratuită în cartier la comenzi de peste 120 LEI sau ridicare direct de la geam în 15 minute.
           </p>
         </div>
         <div className="self-start shrink-0 flex flex-col gap-4 w-full lg:w-[400px]">
-          <OpenCartButton className="w-full bg-[#790D20] text-[#F5E6CC] font-bebas text-2xl sm:text-3xl lg:text-4xl px-6 sm:px-8 py-5 rounded-lg border-2 border-[#332420] shadow-[4px_4px_0px_0px_#332420] hover:bg-[#332420] transition-all">
+          <OpenCartButton className="w-full bg-[#790D20] text-[#F5E6CC] font-display text-2xl sm:text-3xl lg:text-4xl px-6 sm:px-8 py-5 rounded-lg border-2 border-[#332420] shadow-[4px_4px_0px_0px_#332420] hover:bg-[#332420] transition-all">
             <Display>DESCHIDE COȘUL DE COMANDĂ</Display>
           </OpenCartButton>
           <PartnerApps />

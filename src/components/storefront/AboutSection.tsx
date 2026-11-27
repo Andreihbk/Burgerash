@@ -26,7 +26,7 @@ export default function AboutSection() {
         </div>
         <div className="p-8 sm:p-10 md:p-14 flex flex-col justify-center">
           <p className="font-mono text-xs font-bold tracking-widest text-[#F5E6CC]/80">04 · DESPRE NOI</p>
-          <h2 id="despre-titlu" data-reveal className="font-bebas text-5xl sm:text-7xl leading-[0.9] mt-2 mb-8">
+          <h2 id="despre-titlu" data-reveal className="font-display text-5xl sm:text-7xl leading-[0.9] mt-2 mb-8">
             <Display>DIN CARTIER.</Display>
           </h2>
           <div className="space-y-4 font-nunito font-semibold text-lg sm:text-xl text-[#F5E6CC]/90 max-w-lg">
@@ -40,7 +40,7 @@ export default function AboutSection() {
                 key={f}
                 data-reveal="stamp"
                 style={{ "--reveal-delay": `${i * 140}ms` } as React.CSSProperties}
-                className="font-bebas text-lg sm:text-xl leading-none px-4 py-2.5 rounded-lg bg-[#F5E6CC] text-[#790D20] border-2 border-[#332420] shadow-[3px_3px_0px_0px_#332420]"
+                className="font-display text-lg sm:text-xl leading-none px-4 py-2.5 rounded-lg bg-[#F5E6CC] text-[#790D20] border-2 border-[#332420] shadow-[3px_3px_0px_0px_#332420]"
               >
                 <Display>{f}</Display>
               </li>

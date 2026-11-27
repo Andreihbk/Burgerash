@@ -14,7 +14,7 @@ export default function TodayAtBurgerash({ status }: { status: OpeningStatus | n
     >
       <div>
         <p className="font-mono text-xs font-bold tracking-widest text-[#790D20]">AZI LA BURGERASH</p>
-        <h2 id="azi-title" className="font-bebas text-3xl sm:text-4xl tracking-wide leading-none mt-1">
+        <h2 id="azi-title" className="font-display text-3xl sm:text-4xl tracking-wide leading-none mt-1">
           <Display>{soon ? OPENING_SOON.toUpperCase() : status ? statusLabel(status).toUpperCase() : " "}</Display>
         </h2>
         <p className="font-nunito font-bold text-sm mt-2">

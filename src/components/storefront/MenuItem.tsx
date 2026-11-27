@@ -40,7 +40,7 @@ export default function MenuItem({ product }: { product: Product }) {
       </div>
 
       <div className="flex-1 min-w-0 md:flex-none">
-        <h4 className="font-bebas text-xl/tight md:text-3xl tracking-wide text-[#332420] md:mb-2">
+        <h4 className="font-display text-xl/tight md:text-3xl tracking-wide text-[#332420] md:mb-2">
           <Display>{product.name}</Display>
         </h4>
 
@@ -70,7 +70,7 @@ export default function MenuItem({ product }: { product: Product }) {
 
         <div className="md:hidden">
           {soldOut ? (
-            <span className="block font-bebas text-sm tracking-wide text-[#790D20] border-2 border-dashed border-[#790D20] rounded-md px-2 py-1">
+            <span className="block font-display text-sm tracking-wide text-[#790D20] border-2 border-dashed border-[#790D20] rounded-md px-2 py-1">
               <Display>EPUIZAT</Display>
             </span>
           ) : (

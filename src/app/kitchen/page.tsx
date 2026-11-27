@@ -207,12 +207,12 @@ export default function KitchenPage() {
     <div className="min-h-screen bg-[#F5E6CC] text-[#332420] flex flex-col">
       <header className="bg-[#332420] text-[#F5E6CC] px-4 py-3 flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-4">
-          <Link href="/" className="font-bebas text-2xl tracking-wide min-h-11 inline-flex items-center gap-2">
+          <Link href="/" className="font-display text-2xl tracking-wide min-h-11 inline-flex items-center gap-2">
             <span aria-hidden>&larr;</span>
             <BrandLogo variant="icon" tone="sand" className="h-8 w-auto sm:hidden" />
             <BrandLogo variant="horizontal" tone="sand" className="h-8 w-auto hidden sm:block" />
           </Link>
-          <span className="font-bebas text-2xl tracking-wide text-[#F5E6CC]/70 hidden sm:inline"><Display>BUCĂTĂRIE</Display></span>
+          <span className="font-display text-2xl tracking-wide text-[#F5E6CC]/70 hidden sm:inline"><Display>BUCĂTĂRIE</Display></span>
         </div>
         <div className="flex items-center gap-3">
           <span className="font-mono text-xs" role="status">
@@ -249,7 +249,7 @@ export default function KitchenPage() {
               type="button"
               onClick={() => setTab(col.status)}
               aria-pressed={active}
-              className={`min-h-14 font-bebas text-xl tracking-wide ${
+              className={`min-h-14 font-display text-xl tracking-wide ${
                 active ? "bg-[#790D20] text-[#F5E6CC]" : "bg-transparent text-[#332420]"
               }`}
             >
@@ -268,7 +268,7 @@ export default function KitchenPage() {
               className={`${tab === col.status ? "block" : "hidden"} md:block border-2 border-[#332420]`}
               aria-label={col.title}
             >
-              <h2 className="hidden md:flex items-center justify-between bg-[#332420] text-[#F5E6CC] px-4 py-2 font-bebas text-2xl tracking-wide">
+              <h2 className="hidden md:flex items-center justify-between bg-[#332420] text-[#F5E6CC] px-4 py-2 font-display text-2xl tracking-wide">
                 <span><Display>{col.title}</Display></span>
                 <span className="font-mono text-sm">{list.length}</span>
               </h2>
@@ -336,7 +336,7 @@ function Ticket({
       }`}
     >
       <header className="flex items-baseline justify-between gap-2 px-4 pt-3 pb-2 border-b-2 border-[#332420]">
-        <span className="font-bebas text-3xl tracking-wide leading-none"><Display>{order.order_number}</Display></span>
+        <span className="font-display text-3xl tracking-wide leading-none"><Display>{order.order_number}</Display></span>
         <span className="font-mono text-sm font-bold flex items-center gap-2">
           {order.fulfillment_type === "delivery" ? "LIVRARE" : "RIDICARE"}
           <span className={late ? "bg-[#790D20] text-[#F5E6CC] px-2 py-0.5" : "bg-[#332420] text-[#F5E6CC] px-2 py-0.5"}>
@@ -389,7 +389,7 @@ function Ticket({
             <button
               type="button"
               onClick={() => onMove(order, next)}
-              className="flex-1 min-h-14 bg-[#790D20] text-[#F5E6CC] font-bebas text-2xl tracking-wide"
+              className="flex-1 min-h-14 bg-[#790D20] text-[#F5E6CC] font-display text-2xl tracking-wide"
             >
               <Display>{nextLabel} →</Display>
             </button>

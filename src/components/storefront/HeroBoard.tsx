@@ -106,7 +106,7 @@ export default function HeroBoard() {
       <section className="max-w-6xl mx-auto px-4 sm:px-6 pt-6 pb-8 md:pt-14 lg:pt-16 grid grid-cols-1 md:grid-cols-2 md:items-center gap-6 md:gap-8 lg:gap-12 md:min-h-[min(calc(100svh-9rem),52rem)]">
         <div className="flex flex-col items-start">
           {/* Each line is skewed on its own from its bottom-left corner, so all lines start on the same left edge. */}
-          <h1 className="font-bebas text-[clamp(3.5rem,8.5vw,6.5rem)] leading-[0.88] text-[#332420]">
+          <h1 className="font-display text-[clamp(3.5rem,8.5vw,6.5rem)] leading-[0.88] text-[#332420]">
             {["YOUR", "LOCAL"].map((line) => (
               // The trailing space keeps the words apart in the text Google and screen readers read (audit R5).
               <span key={line} className="block w-fit -skew-x-6 origin-bottom-left"><Display>{line}</Display>{" "}</span>
@@ -133,7 +133,7 @@ export default function HeroBoard() {
                 className="flex flex-col items-start gap-2 rounded-xl bg-[#790D20] text-[#F5E6CC] border-2 border-[#332420] p-4 text-left shadow-[4px_4px_0px_0px_#332420] active:translate-x-px active:translate-y-px active:shadow-[2px_2px_0px_0px_#332420]"
               >
                 <Icon className="w-7 h-7" aria-hidden />
-                <span className="font-bebas text-2xl leading-none tracking-wide"><Display>{label}</Display></span>
+                <span className="font-display text-2xl leading-none tracking-wide"><Display>{label}</Display></span>
                 <span className="font-nunito font-bold text-xs text-[#F5E6CC]/80">{sub}</span>
               </button>
             ))}
@@ -142,7 +142,7 @@ export default function HeroBoard() {
           <button
             type="button"
             onClick={() => scrollToTab(ALL_TAB)}
-            className="hidden md:block mt-2 md:mt-8 min-h-[60px] bg-[#790D20] text-[#F5E6CC] font-bebas text-3xl tracking-wider px-12 py-4 rounded-lg border-2 border-[#332420] shadow-[6px_6px_0px_0px_#332420] hover:bg-[#332420] active:translate-x-px active:translate-y-px active:shadow-[3px_3px_0px_0px_#332420] transition-colors duration-200"
+            className="hidden md:block mt-2 md:mt-8 min-h-[60px] bg-[#790D20] text-[#F5E6CC] font-display text-3xl tracking-wider px-12 py-4 rounded-lg border-2 border-[#332420] shadow-[6px_6px_0px_0px_#332420] hover:bg-[#332420] active:translate-x-px active:translate-y-px active:shadow-[3px_3px_0px_0px_#332420] transition-colors duration-200"
           >
             <Display>COMANDĂ</Display>
           </button>

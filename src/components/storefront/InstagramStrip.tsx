@@ -18,14 +18,14 @@ export default function InstagramStrip() {
   return (
     <section aria-labelledby="ig-titlu" className="mt-20">
       <div className="flex items-end justify-between gap-4 mb-6">
-        <h2 id="ig-titlu" data-reveal className="font-bebas text-3xl sm:text-5xl leading-none text-[#332420]">
+        <h2 id="ig-titlu" data-reveal className="font-display text-3xl sm:text-5xl leading-none text-[#332420]">
           <Display>@BURGERASH</Display>
         </h2>
         <a
           href={INSTAGRAM_URL}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 font-bebas text-lg sm:text-xl px-4 py-2 rounded-lg bg-[#790D20] text-[#F5E6CC] border-2 border-[#332420] shadow-[3px_3px_0px_0px_#332420] hover:bg-[#332420] transition-colors"
+          className="inline-flex items-center gap-2 font-display text-lg sm:text-xl px-4 py-2 rounded-lg bg-[#790D20] text-[#F5E6CC] border-2 border-[#332420] shadow-[3px_3px_0px_0px_#332420] hover:bg-[#332420] transition-colors"
         >
           <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.2" aria-hidden>
             <rect x="3" y="3" width="18" height="18" rx="5" />

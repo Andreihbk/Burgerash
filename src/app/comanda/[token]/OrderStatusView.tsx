@@ -75,7 +75,7 @@ export default function OrderStatusView({ order, footer }: { order: StatusOrder;
           <div className="grid grid-cols-[1fr_auto] items-center gap-4 p-5">
             <div>
               <p className="font-mono text-xs font-bold tracking-widest text-[#F5E6CC]/80">STAREA COMENZII</p>
-              <h1 className="font-bebas text-3xl sm:text-5xl leading-none mt-1">
+              <h1 className="font-display text-3xl sm:text-5xl leading-none mt-1">
                 <Display>{title}</Display>
               </h1>
               <p className="font-nunito font-bold text-sm mt-2 text-[#F5E6CC]/90">
@@ -83,7 +83,7 @@ export default function OrderStatusView({ order, footer }: { order: StatusOrder;
                   ? "Comanda a fost anulată. Dacă nu te așteptai la asta, sună-ne."
                   : stepNote(order.status, order.fulfillment_type)}
               </p>
-              <p className="mt-3 inline-block rounded-full bg-[#F5E6CC] text-[#790D20] font-bebas text-sm tracking-wider px-3 py-1">
+              <p className="mt-3 inline-block rounded-full bg-[#F5E6CC] text-[#790D20] font-display text-sm tracking-wider px-3 py-1">
                 <Display>{order.fulfillment_type === "pickup" ? "PICK UP" : "DELIVERY"}</Display>
               </p>
             </div>
@@ -116,7 +116,7 @@ export default function OrderStatusView({ order, footer }: { order: StatusOrder;
                     <Icon className="w-5 h-5" aria-hidden />
                   </span>
                   <span className="pt-1.5">
-                    <span className={`block font-bebas text-xl leading-none tracking-wide ${reached ? "" : "opacity-40"}`}>
+                    <span className={`block font-display text-xl leading-none tracking-wide ${reached ? "" : "opacity-40"}`}>
                       <Display>{step.label.toUpperCase()}</Display>
                     </span>
                     {reached && (
@@ -148,7 +148,7 @@ export default function OrderStatusView({ order, footer }: { order: StatusOrder;
 
         {/* Receipt */}
         <section className="rounded-2xl border-2 border-[#332420] bg-[#F5E6CC] p-5 shadow-[4px_4px_0px_0px_#332420]">
-          <h2 className="font-bebas text-2xl tracking-wide mb-3"><Display>COMANDA TA</Display></h2>
+          <h2 className="font-display text-2xl tracking-wide mb-3"><Display>COMANDA TA</Display></h2>
           <ul className="space-y-2">
             {order.order_items.map((item) => (
               <li key={item.id} className="font-nunito font-bold text-sm">

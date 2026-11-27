@@ -33,7 +33,7 @@ export default function BottomNav() {
 
   const behavior: ScrollBehavior = prefersReducedMotion() ? "auto" : "smooth";
   const item = (on: boolean) =>
-    `relative flex flex-1 flex-col items-center justify-center gap-0.5 font-bebas text-[13px] tracking-wider transition-colors ${
+    `relative flex flex-1 flex-col items-center justify-center gap-0.5 font-display text-[13px] tracking-wider transition-colors ${
       on ? "text-[#F5E6CC]" : "text-[#F5E6CC]/60"
     }`;
   const dot = (on: boolean) => (on ? <span aria-hidden className="absolute top-1.5 h-1 w-6 rounded-full bg-[#F5E6CC]" /> : null);

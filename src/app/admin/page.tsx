@@ -55,7 +55,7 @@ export default function AdminPage() {
     <div className="min-h-screen bg-[#F5E6CC] text-[#332420] flex flex-col">
       <header className="border-b-4 border-[#332420] bg-[#332420] text-[#F5E6CC] p-6 flex justify-between items-center gap-4">
         <div className="flex items-center gap-4">
-          <Link href="/" className="font-bebas text-3xl text-[#F5E6CC] uppercase inline-flex items-center gap-2 hover:opacity-80">
+          <Link href="/" className="font-display text-3xl text-[#F5E6CC] uppercase inline-flex items-center gap-2 hover:opacity-80">
             <span aria-hidden>&larr;</span>
             <BrandLogo variant="icon" tone="sand" className="h-9 w-auto sm:hidden" />
             <BrandLogo variant="horizontal" tone="sand" className="h-9 w-auto hidden sm:block" />
@@ -70,13 +70,13 @@ export default function AdminPage() {
         <section aria-label="Comenzi astăzi" className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div className="border-4 border-[#332420] bg-white p-6 shadow-[6px_6px_0px_0px_#332420]">
             <span className="font-mono text-xs font-bold text-[#790D20] uppercase">Comenzi astăzi</span>
-            <p className="font-bebas text-5xl text-[#332420] mt-2"><Display>{today ? today.count : "–"}</Display></p>
+            <p className="font-display text-5xl text-[#332420] mt-2"><Display>{today ? today.count : "–"}</Display></p>
             <span className="font-mono text-xs text-[#332420]/70">fără cele anulate</span>
           </div>
 
           <div className="border-4 border-[#332420] bg-white p-6 shadow-[6px_6px_0px_0px_#332420]">
             <span className="font-mono text-xs font-bold text-[#790D20] uppercase">Total comenzi</span>
-            <p className="font-bebas text-5xl text-[#332420] mt-2"><Display>{today ? money(today.total) : "–"}</Display></p>
+            <p className="font-display text-5xl text-[#332420] mt-2"><Display>{today ? money(today.total) : "–"}</Display></p>
             <span className="font-mono text-xs text-[#332420]/70">cu livrare și bacșiș</span>
           </div>
 

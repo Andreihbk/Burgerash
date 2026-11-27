@@ -106,7 +106,7 @@ export default function StockToggles() {
 
   return (
     <section className="border-4 border-[#332420] bg-white p-6 shadow-[8px_8px_0px_0px_#332420]">
-      <h2 className="font-bebas text-3xl uppercase text-[#332420] border-b-2 border-[#332420] pb-2 mb-2">
+      <h2 className="font-display text-3xl uppercase text-[#332420] border-b-2 border-[#332420] pb-2 mb-2">
         <Display>Stoc epuizat</Display>
       </h2>
       <p className="font-nunito font-bold text-sm text-[#332420]/75 mb-4">
@@ -131,7 +131,7 @@ export default function StockToggles() {
                 const isOut = soldOut.has(product.id);
                 return (
                   <li key={product.id} className="flex items-center justify-between gap-4 px-4 py-2 min-h-14">
-                    <span className="font-bebas text-2xl tracking-wide text-[#332420]"><Display>{product.name}</Display></span>
+                    <span className="font-display text-2xl tracking-wide text-[#332420]"><Display>{product.name}</Display></span>
                     <button
                       type="button"
                       role="switch"
@@ -139,7 +139,7 @@ export default function StockToggles() {
                       aria-label={`${product.name}: stoc epuizat`}
                       disabled={!loaded || busy.has(product.id)}
                       onClick={() => void toggle(product.id)}
-                      className={`min-h-11 min-w-32 px-4 border-2 border-[#332420] font-bebas text-xl disabled:opacity-60 ${
+                      className={`min-h-11 min-w-32 px-4 border-2 border-[#332420] font-display text-xl disabled:opacity-60 ${
                         isOut ? "bg-[#790D20] text-[#F5E6CC]" : "bg-[#F5E6CC] text-[#332420]"
                       }`}
                     >

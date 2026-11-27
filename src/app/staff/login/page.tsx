@@ -28,7 +28,7 @@ export default async function StaffAuthLoginPage({
         className="w-full max-w-sm border-2 border-[#332420] shadow-[4px_4px_0_0_#332420] p-6 flex flex-col gap-4"
       >
         <BrandLogo variant="full" tone="wine" className="h-24 w-auto mx-auto" />
-        <h1 className="font-bebas text-4xl tracking-wide"><Display>ACCES PERSONAL</Display></h1>
+        <h1 className="font-display text-4xl tracking-wide"><Display>ACCES PERSONAL</Display></h1>
         <input type="hidden" name="next" value={safeNext(next)} />
         <label className="font-nunito font-bold flex flex-col gap-1">
           Email
@@ -43,7 +43,7 @@ export default async function StaffAuthLoginPage({
             {ERRORS[error] ?? ERRORS.credentials}
           </p>
         )}
-        <button type="submit" className="min-h-14 bg-[#790D20] text-[#F5E6CC] font-bebas text-2xl tracking-wide">
+        <button type="submit" className="min-h-14 bg-[#790D20] text-[#F5E6CC] font-display text-2xl tracking-wide">
           <Display>INTRĂ</Display>
         </button>
       </form>

@@ -11,7 +11,7 @@ export default function MenuSections() {
           <div className="flex items-center gap-4 mb-4 md:mb-6">
             <h3
               id={`${sectionDomId(category.id)}-title`}
-              className="font-bebas text-3xl md:text-4xl tracking-wide text-[#332420] shrink-0"
+              className="font-display text-3xl md:text-4xl tracking-wide text-[#332420] shrink-0"
             >
               <Display>{category.name}</Display>
             </h3>
