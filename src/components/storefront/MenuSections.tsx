@@ -18,8 +18,13 @@ export default function MenuSections() {
             <div className="flex-1 h-2 border-y-2 border-[#332420]" />
           </div>
 
-          {/* Each product is rendered once: a row on phones, a sticker card from md up (see MenuItem). */}
-          <ul className="space-y-3 md:space-y-0 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-6">
+          {/* Each product is rendered once: a row on phones, a sticker card from md up (see MenuItem).
+              Sections of 4 (sides, drinks) get 4 columns on desktop, so no product sits alone on the last row. */}
+          <ul
+            className={`space-y-3 md:space-y-0 md:grid md:grid-cols-2 md:gap-6 ${
+              products.length % 4 === 0 ? "lg:grid-cols-4 lg:gap-5" : "lg:grid-cols-3"
+            }`}
+          >
             {products.map((product) => (
               <MenuItem key={product.id} product={product} />
             ))}
