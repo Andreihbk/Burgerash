@@ -27,5 +27,13 @@ They are **mood photos, not the menu**. Menu data, product cards and stickers do
 - Web versions are made from the originals with sharp: max 1600 px wide, JPG q82, metadata stripped. Sources: `docs/brand/PHOTO-2026-11-25-*.jpg`.
 - The current files are WhatsApp copies (853x1280). When the photographer's originals arrive, re-export with the same names: no code change.
 
+## Video (one loop on the site)
+Ask the photographer for (rules in docs/DESIGN.md, Usability):
+- V1, main pick: patty hitting the plită or the burger going out the window, 6-10 s, steady (tripod), loops cleanly.
+- V2, backup: slow-mo (cheese melt, sauce, bun press), 120 fps or more.
+- Both horizontal 16:9 AND vertical 9:16 if possible (site desktop + phone/Instagram), 4K or 1080p originals.
+- No music needed on site (muted); for social the same clips can get sound.
+We cut and compress to 1-2 MB ourselves.
+
 ## Check before going live
 - The photographer/boss agrees the photos can be used on the website (written OK is enough).
