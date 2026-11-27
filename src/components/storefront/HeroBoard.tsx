@@ -108,7 +108,8 @@ export default function HeroBoard() {
           {/* Each line is skewed on its own from its bottom-left corner, so all lines start on the same left edge. */}
           <h1 className="font-bebas text-[clamp(3.5rem,8.5vw,6.5rem)] leading-[0.88] text-[#332420]">
             {["YOUR", "LOCAL"].map((line) => (
-              <span key={line} className="block w-fit -skew-x-6 origin-bottom-left"><Display>{line}</Display></span>
+              // The trailing space keeps the words apart in the text Google and screen readers read (audit R5).
+              <span key={line} className="block w-fit -skew-x-6 origin-bottom-left"><Display>{line}</Display>{" "}</span>
             ))}
             <span className="block w-fit -skew-x-6 origin-bottom-left text-[#790D20]"><Display>BURGER SPOT.</Display></span>
           </h1>

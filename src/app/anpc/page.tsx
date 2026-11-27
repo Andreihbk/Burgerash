@@ -3,7 +3,11 @@ import Link from "next/link";
 import LegalPage, { H2 } from "@/components/legal/LegalPage";
 import { ANPC_SAL_URL, ANPC_SOL_URL } from "@/lib/legal";
 
-export const metadata: Metadata = { title: "ANPC", alternates: { canonical: "/anpc" } };
+export const metadata: Metadata = {
+  title: "ANPC",
+  description: "Cum rezolvi o problemă cu o comandă Burgerash: contact direct, ANPC, SAL și platforma europeană SOL pentru litigii online.",
+  alternates: { canonical: "/anpc" },
+};
 
 export default function AnpcPage() {
   return (

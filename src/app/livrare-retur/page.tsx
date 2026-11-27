@@ -7,6 +7,7 @@ import { DELIVERY_FEE_STANDARD, FREE_DELIVERY_THRESHOLD } from "@/lib/pricing";
 
 export const metadata: Metadata = {
   title: "Livrare, ridicare, anulare și retur",
+  description: `Livrare Burgerash în ${DELIVERY_RADIUS_KM} km de restaurant, gratuită peste ${FREE_DELIVERY_THRESHOLD} lei, ridicare din Sector 6, anulare și retur pentru comenzile online.`,
   alternates: { canonical: "/livrare-retur" },
 };
 
