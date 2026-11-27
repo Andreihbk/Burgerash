@@ -1,0 +1,55 @@
+# Runs on every pull request and on every push to main.
+# Vercel only builds a preview; this also runs lint, type check, tests and a security audit.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: Build, lint, types, tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      # Placeholders only (no real keys). Real values live in Vercel env vars.
+      NEXT_PUBLIC_SUPABASE_URL: https://example.supabase.co
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: ci-placeholder
+      NEXT_PUBLIC_SITE_URL: https://www.burgerash.ro
+      NEXT_TELEMETRY_DISABLED: "1"
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Lint
+        run: npm run lint
+      - name: Tests
+        run: npm test
+      - name: Build
+        run: npm run build
+      # After build, because next build generates next-env.d.ts (image import types).
+      - name: Type check
+        run: npx tsc --noEmit
+
+  audit:
+    name: Security audit (npm)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+      # Fails only on high/critical problems in packages that ship to the site.
+      - run: npm audit --omit=dev --audit-level=high

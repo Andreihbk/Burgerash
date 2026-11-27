@@ -1,0 +1,33 @@
+# Weekly dependency updates, grouped so there are few small PRs.
+# Security fixes come as their own PRs as soon as GitHub finds a problem
+# (needs "Dependabot security updates" turned on in repo Settings > Code security).
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "08:00"
+      timezone: Europe/Bucharest
+    open-pull-requests-limit: 5
+    groups:
+      # One PR for all small, safe updates (minor + patch).
+      minor-and-patch:
+        update-types: [minor, patch]
+      # Security fixes grouped into one PR too.
+      security:
+        applies-to: security-updates
+        patterns: ["*"]
+    commit-message:
+      prefix: deps
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    groups:
+      actions:
+        patterns: ["*"]
+    commit-message:
+      prefix: ci
