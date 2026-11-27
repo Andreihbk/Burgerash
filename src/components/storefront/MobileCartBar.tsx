@@ -18,13 +18,13 @@ export default function MobileCartBar() {
 
   return (
     <div
-      className="md:hidden fixed inset-x-0 z-40 bg-[#F5E6CC] border-t-2 border-[#332420] px-4 py-3"
+      className="md:hidden fixed inset-x-0 z-40 bg-sand border-t-2 border-charcoal px-4 py-3"
       style={{ bottom: `calc(${BOTTOM_NAV_HEIGHT}px + env(safe-area-inset-bottom))` }}
     >
       <button
         type="button"
         onClick={openCart}
-        className="w-full flex items-center justify-between gap-3 bg-[#790D20] text-[#F5E6CC] font-display text-xl px-4 py-3 rounded-lg border-2 border-[#332420] shadow-[3px_3px_0px_0px_#332420] active:translate-y-[1px] transition-all"
+        className="w-full flex items-center justify-between gap-3 bg-wine text-sand font-display text-xl px-4 py-3 rounded-lg border-2 border-charcoal shadow-[3px_3px_0px_0px_var(--color-charcoal)] active:translate-y-[1px] transition-all"
       >
         <span>
           <Display>COȘ</Display> (

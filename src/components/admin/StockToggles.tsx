@@ -105,33 +105,33 @@ export default function StockToggles() {
   }
 
   return (
-    <section className="border-4 border-[#332420] bg-white p-6 shadow-[8px_8px_0px_0px_#332420]">
-      <h2 className="font-display text-3xl uppercase text-[#332420] border-b-2 border-[#332420] pb-2 mb-2">
+    <section className="border-4 border-charcoal bg-white p-6 shadow-[8px_8px_0px_0px_var(--color-charcoal)]">
+      <h2 className="font-display text-3xl uppercase text-charcoal border-b-2 border-charcoal pb-2 mb-2">
         <Display>Stoc epuizat</Display>
       </h2>
-      <p className="font-nunito font-bold text-sm text-[#332420]/75 mb-4">
+      <p className="font-nunito font-bold text-sm text-charcoal/75 mb-4">
         Activează când un produs s-a terminat: apare EPUIZAT pe site și comenzile cu el sunt refuzate.
       </p>
 
       {error && (
-        <p role="alert" className="mb-4 border-2 border-[#790D20] px-3 py-2 font-nunito font-bold text-sm text-[#790D20]">
+        <p role="alert" className="mb-4 border-2 border-wine px-3 py-2 font-nunito font-bold text-sm text-wine">
           {error}
         </p>
       )}
       {!isSupabaseConfigured && (
-        <p className="font-nunito font-bold text-sm text-[#790D20]">Supabase nu este configurat.</p>
+        <p className="font-nunito font-bold text-sm text-wine">Supabase nu este configurat.</p>
       )}
 
       <div className="space-y-6">
         {MENU_SECTIONS.map(({ category, products }) => (
           <div key={category.id}>
-            <h3 className="font-mono text-xs font-bold text-[#790D20] mb-2">{category.name}</h3>
-            <ul className="divide-y-2 divide-[#332420]/10 border-2 border-[#332420]">
+            <h3 className="font-mono text-xs font-bold text-wine mb-2">{category.name}</h3>
+            <ul className="divide-y-2 divide-charcoal/10 border-2 border-charcoal">
               {products.map((product) => {
                 const isOut = soldOut.has(product.id);
                 return (
                   <li key={product.id} className="flex items-center justify-between gap-4 px-4 py-2 min-h-14">
-                    <span className="font-display text-2xl tracking-wide text-[#332420]"><Display>{product.name}</Display></span>
+                    <span className="font-display text-2xl tracking-wide text-charcoal"><Display>{product.name}</Display></span>
                     <button
                       type="button"
                       role="switch"
@@ -139,8 +139,8 @@ export default function StockToggles() {
                       aria-label={`${product.name}: stoc epuizat`}
                       disabled={!loaded || busy.has(product.id)}
                       onClick={() => void toggle(product.id)}
-                      className={`min-h-11 min-w-32 px-4 border-2 border-[#332420] font-display text-xl disabled:opacity-60 ${
-                        isOut ? "bg-[#790D20] text-[#F5E6CC]" : "bg-[#F5E6CC] text-[#332420]"
+                      className={`min-h-11 min-w-32 px-4 border-2 border-charcoal font-display text-xl disabled:opacity-60 ${
+                        isOut ? "bg-wine text-sand" : "bg-sand text-charcoal"
                       }`}
                     >
                       <Display>{isOut ? "EPUIZAT" : "ÎN STOC"}</Display>

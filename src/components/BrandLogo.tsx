@@ -18,8 +18,8 @@ interface BrandLogoProps {
 }
 
 const TONE_CLASS: Record<BrandLogoTone, string> = {
-  wine: "text-[#790D20]",
-  sand: "text-[#F5E6CC]",
+  wine: "text-wine",
+  sand: "text-sand",
 };
 
 // Icon is drawn in a 44 x 49 box.

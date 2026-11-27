@@ -158,7 +158,7 @@ export default function PhotoStrip() {
   }, []);
 
   const arrow =
-    "grid place-items-center w-11 h-11 rounded-full bg-[#790D20] text-[#F5E6CC] border-2 border-[#332420] shadow-[3px_3px_0px_0px_#332420] hover:bg-[#332420] disabled:opacity-40 disabled:hover:bg-[#790D20] transition-colors duration-200";
+    "grid place-items-center w-11 h-11 rounded-full bg-wine text-sand border-2 border-charcoal shadow-[3px_3px_0px_0px_var(--color-charcoal)] hover:bg-charcoal disabled:opacity-40 disabled:hover:bg-wine transition-colors duration-200";
 
   return (
     <div ref={wrap}>
@@ -169,11 +169,11 @@ export default function PhotoStrip() {
       className="group/strip max-w-6xl mx-auto px-4 sm:px-6 py-10 lg:py-14 transition-[opacity,transform] duration-700 ease-out data-[reveal=out]:opacity-0 data-[reveal=out]:translate-y-12"
     >
       <div className="flex items-end justify-between gap-4">
-        <h2 id="facut-pe-loc" className="font-display text-3xl sm:text-5xl leading-none whitespace-nowrap text-[#332420]">
+        <h2 id="facut-pe-loc" className="font-display text-3xl sm:text-5xl leading-none whitespace-nowrap text-charcoal">
           <Display>PROASPĂT. PE LOC.</Display>
         </h2>
         <div className="hidden sm:flex shrink-0 items-center gap-3">
-          <span className="hidden sm:inline font-mono text-xs font-bold tracking-widest whitespace-nowrap text-[#790D20]" aria-live="polite">
+          <span className="hidden sm:inline font-mono text-xs font-bold tracking-widest whitespace-nowrap text-wine" aria-live="polite">
             {pad(index + 1)} / {pad(SLIDES.length)}
           </span>
           <button type="button" className={arrow} onClick={() => go(-1)} disabled={index === 0} aria-label="Poza anterioară">
@@ -196,7 +196,7 @@ export default function PhotoStrip() {
             style={{ transitionDelay: `${Math.min(i, 3) * 90}ms` }}
             aria-label={`${i + 1} din ${SLIDES.length}`}
           >
-            <div className="group relative aspect-[4/5] overflow-hidden rounded-2xl border-2 border-[#332420] shadow-[6px_6px_0px_0px_#332420]">
+            <div className="group relative aspect-[4/5] overflow-hidden rounded-2xl border-2 border-charcoal shadow-[6px_6px_0px_0px_var(--color-charcoal)]">
               <Image
                 src={s.src}
                 alt={s.alt}

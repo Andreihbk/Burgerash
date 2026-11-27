@@ -17,7 +17,7 @@ export default function ProductActions({ product, customizable }: { product: Pro
 
   if (soldOut) {
     return (
-      <span className="inline-flex min-h-11 items-center border-2 border-dashed border-[#790D20] px-4 py-2.5 rounded-lg font-display text-lg tracking-wide text-[#790D20]">
+      <span className="inline-flex min-h-11 items-center border-2 border-dashed border-wine px-4 py-2.5 rounded-lg font-display text-lg tracking-wide text-wine">
         <Display>EPUIZAT</Display>
       </span>
     );
@@ -29,7 +29,7 @@ export default function ProductActions({ product, customizable }: { product: Pro
         <button
           type="button"
           onClick={() => openCustomize(product)}
-          className="disabled:opacity-50 disabled:pointer-events-none bg-[#F5E6CC] text-[#332420] border-2 border-[#332420] px-3 py-2.5 rounded-lg font-display text-base flex items-center gap-1 hover:bg-[#332420] hover:text-[#F5E6CC] transition-colors"
+          className="disabled:opacity-50 disabled:pointer-events-none bg-sand text-charcoal border-2 border-charcoal px-3 py-2.5 rounded-lg font-display text-base flex items-center gap-1 hover:bg-charcoal hover:text-sand transition-colors"
           title="Personalizează ingredientele"
         >
           <SlidersHorizontal className="w-4 h-4" />
@@ -43,7 +43,7 @@ export default function ProductActions({ product, customizable }: { product: Pro
           addItem(product);
           notifyAdded(product.name);
         }}
-        className="disabled:opacity-50 disabled:pointer-events-none bg-[#790D20] text-[#F5E6CC] border-2 border-[#332420] px-4 py-2.5 rounded-lg font-display text-lg flex items-center gap-1.5 shadow-[2px_2px_0px_0px_#332420] hover:bg-[#332420] active:translate-y-[1px] transition-all"
+        className="disabled:opacity-50 disabled:pointer-events-none bg-wine text-sand border-2 border-charcoal px-4 py-2.5 rounded-lg font-display text-lg flex items-center gap-1.5 shadow-[2px_2px_0px_0px_var(--color-charcoal)] hover:bg-charcoal active:translate-y-[1px] transition-all"
       >
         <Plus className="w-5 h-5 stroke-[3]" />
         <span><Display>ADAUGĂ</Display></span>

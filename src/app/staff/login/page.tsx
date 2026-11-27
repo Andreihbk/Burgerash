@@ -11,7 +11,7 @@ const ERRORS: Record<string, string> = {
   config: "Accesul personalului nu este configurat.",
 };
 
-const FIELD = "min-h-12 px-3 border-2 border-[#332420] bg-transparent font-nunito text-lg";
+const FIELD = "min-h-12 px-3 border-2 border-charcoal bg-transparent font-nunito text-lg";
 
 export default async function StaffAuthLoginPage({
   searchParams,
@@ -21,11 +21,11 @@ export default async function StaffAuthLoginPage({
   const { error, next } = await searchParams;
 
   return (
-    <main className="min-h-screen bg-[#F5E6CC] text-[#332420] flex items-center justify-center p-4">
+    <main className="min-h-screen bg-sand text-charcoal flex items-center justify-center p-4">
       <form
         method="post"
         action="/api/staff-auth/login"
-        className="w-full max-w-sm border-2 border-[#332420] shadow-[4px_4px_0_0_#332420] p-6 flex flex-col gap-4"
+        className="w-full max-w-sm border-2 border-charcoal shadow-[4px_4px_0_0_var(--color-charcoal)] p-6 flex flex-col gap-4"
       >
         <BrandLogo variant="full" tone="wine" className="h-24 w-auto mx-auto" />
         <h1 className="font-display text-4xl tracking-wide"><Display>ACCES PERSONAL</Display></h1>
@@ -39,11 +39,11 @@ export default async function StaffAuthLoginPage({
           <input type="password" name="password" required autoComplete="current-password" className={FIELD} />
         </label>
         {error && (
-          <p role="alert" className="font-nunito font-bold text-[#790D20]">
+          <p role="alert" className="font-nunito font-bold text-wine">
             {ERRORS[error] ?? ERRORS.credentials}
           </p>
         )}
-        <button type="submit" className="min-h-14 bg-[#790D20] text-[#F5E6CC] font-display text-2xl tracking-wide">
+        <button type="submit" className="min-h-14 bg-wine text-sand font-display text-2xl tracking-wide">
           <Display>INTRĂ</Display>
         </button>
       </form>

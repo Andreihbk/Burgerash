@@ -5,25 +5,25 @@ import { scheduleLines } from "@/lib/hours";
 import { ANPC_SAL_URL, ANPC_SOL_URL, LEGAL_LINKS } from "@/lib/legal";
 
 const BADGE =
-  "inline-block border-2 border-[#332420] px-2 py-1 font-bold text-[#332420] hover:bg-[#790D20] hover:text-[#F5E6CC] hover:border-[#790D20] transition-colors";
+  "inline-block border-2 border-charcoal px-2 py-1 font-bold text-charcoal hover:bg-wine hover:text-sand hover:border-wine transition-colors";
 
 export default function SiteFooter() {
   return (
-    <footer className="max-w-6xl mx-auto px-4 mt-20 pt-8 border-t-2 border-[#332420]/20 font-mono text-xs text-[#332420]/70">
+    <footer className="max-w-6xl mx-auto px-4 mt-20 pt-8 border-t-2 border-charcoal/20 font-mono text-xs text-charcoal/70">
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
         <div className="flex flex-col sm:flex-row items-center gap-4 text-center sm:text-left">
           <BrandLogo variant="horizontal" tone="wine" className="h-10 w-auto shrink-0" />
           <div>
-            <p className="font-bold text-[#332420]">GOOD BURGERS /// GOOD PEOPLE /// ALWAYS</p>
+            <p className="font-bold text-charcoal">GOOD BURGERS /// GOOD PEOPLE /// ALWAYS</p>
             <p className="mt-1">Carne proaspătă, zilnic.</p>
             <p className="mt-1">
-              <a href={GOOGLE_MAPS_URL} target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-[#790D20]">
+              <a href={GOOGLE_MAPS_URL} target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-wine">
                 {SITE_ADDRESS.line}
               </a>
             </p>
             <p className="mt-1">
               {scheduleLines().map((l) => `${l.label} ${l.hours}`).join(" · ")} ·{" "}
-              <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-[#790D20]">
+              <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-wine">
                 Instagram
               </a>
             </p>
@@ -33,7 +33,7 @@ export default function SiteFooter() {
 
         <nav aria-label="Informații legale" className="flex flex-col items-center sm:items-end">
           {LEGAL_LINKS.map((l) => (
-            <Link key={l.href} href={l.href} className="inline-flex min-h-6 items-center underline underline-offset-2 hover:text-[#790D20]">
+            <Link key={l.href} href={l.href} className="inline-flex min-h-6 items-center underline underline-offset-2 hover:text-wine">
               {l.label}
             </Link>
           ))}

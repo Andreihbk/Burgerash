@@ -11,10 +11,10 @@ export default function AboutSection() {
     <section
       id="despre"
       aria-labelledby="despre-titlu"
-      className="mt-20 scroll-mt-24 overflow-hidden rounded-xl border-4 border-[#332420] bg-[#790D20] text-[#F5E6CC] shadow-[6px_6px_0px_0px_#332420]"
+      className="mt-20 scroll-mt-24 overflow-hidden rounded-xl border-4 border-charcoal bg-wine text-sand shadow-[6px_6px_0px_0px_var(--color-charcoal)]"
     >
       <div className="grid md:grid-cols-[minmax(0,5fr)_minmax(0,6fr)]">
-        <div className="group relative overflow-hidden aspect-[4/5] md:aspect-auto md:min-h-[560px] border-b-4 md:border-b-0 md:border-r-4 border-[#332420]">
+        <div className="group relative overflow-hidden aspect-[4/5] md:aspect-auto md:min-h-[560px] border-b-4 md:border-b-0 md:border-r-4 border-charcoal">
           <Image
             src={aboutBacon}
             alt="Burger cu bacon și cheddar pe faianța roșie"
@@ -25,11 +25,11 @@ export default function AboutSection() {
           />
         </div>
         <div className="p-8 sm:p-10 md:p-14 flex flex-col justify-center">
-          <p className="font-mono text-xs font-bold tracking-widest text-[#F5E6CC]/80">04 · DESPRE NOI</p>
+          <p className="font-mono text-xs font-bold tracking-widest text-sand/80">04 · DESPRE NOI</p>
           <h2 id="despre-titlu" data-reveal className="font-display text-5xl sm:text-7xl leading-[0.9] mt-2 mb-8">
             <Display>DIN CARTIER.</Display>
           </h2>
-          <div className="space-y-4 font-nunito font-semibold text-lg sm:text-xl text-[#F5E6CC]/90 max-w-lg">
+          <div className="space-y-4 font-nunito font-semibold text-lg sm:text-xl text-sand/90 max-w-lg">
             <p>Un burger spot mic din {SITE_ADDRESS.sector}, fix lângă liceu.</p>
             <p>Carne proaspătă, puține lucruri pe meniu, făcute bine. Fiecare burger se face când îl comanzi.</p>
             <p>Treci pe la geam sau comandă de aici. Ne vedem.</p>
@@ -40,7 +40,7 @@ export default function AboutSection() {
                 key={f}
                 data-reveal="stamp"
                 style={{ "--reveal-delay": `${i * 140}ms` } as React.CSSProperties}
-                className="font-display text-lg sm:text-xl leading-none px-4 py-2.5 rounded-lg bg-[#F5E6CC] text-[#790D20] border-2 border-[#332420] shadow-[3px_3px_0px_0px_#332420]"
+                className="font-display text-lg sm:text-xl leading-none px-4 py-2.5 rounded-lg bg-sand text-wine border-2 border-charcoal shadow-[3px_3px_0px_0px_var(--color-charcoal)]"
               >
                 <Display>{f}</Display>
               </li>

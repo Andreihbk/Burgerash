@@ -204,15 +204,15 @@ export default function KitchenPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F5E6CC] text-[#332420] flex flex-col">
-      <header className="bg-[#332420] text-[#F5E6CC] px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+    <div className="min-h-screen bg-sand text-charcoal flex flex-col">
+      <header className="bg-charcoal text-sand px-4 py-3 flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-4">
           <Link href="/" className="font-display text-2xl tracking-wide min-h-11 inline-flex items-center gap-2">
             <span aria-hidden>&larr;</span>
             <BrandLogo variant="icon" tone="sand" className="h-8 w-auto sm:hidden" />
             <BrandLogo variant="horizontal" tone="sand" className="h-8 w-auto hidden sm:block" />
           </Link>
-          <span className="font-display text-2xl tracking-wide text-[#F5E6CC]/70 hidden sm:inline"><Display>BUCĂTĂRIE</Display></span>
+          <span className="font-display text-2xl tracking-wide text-sand/70 hidden sm:inline"><Display>BUCĂTĂRIE</Display></span>
         </div>
         <div className="flex items-center gap-3">
           <span className="font-mono text-xs" role="status">
@@ -222,8 +222,8 @@ export default function KitchenPage() {
             type="button"
             onClick={toggleSound}
             aria-pressed={soundOn}
-            className={`min-h-11 px-4 font-nunito font-bold text-sm border-2 border-[#F5E6CC] ${
-              soundOn ? "bg-[#F5E6CC] text-[#332420]" : "bg-transparent text-[#F5E6CC]"
+            className={`min-h-11 px-4 font-nunito font-bold text-sm border-2 border-sand ${
+              soundOn ? "bg-sand text-charcoal" : "bg-transparent text-sand"
             }`}
           >
             SUNET {soundOn ? "PORNIT" : "OPRIT"}
@@ -233,13 +233,13 @@ export default function KitchenPage() {
       </header>
 
       {error && (
-        <div role="alert" className="bg-[#790D20] text-[#F5E6CC] px-4 py-3 font-nunito font-bold">
+        <div role="alert" className="bg-wine text-sand px-4 py-3 font-nunito font-bold">
           {error}
         </div>
       )}
 
       {/* Phone: tabs. md and up: all three columns. */}
-      <nav className="md:hidden grid grid-cols-3 border-b-2 border-[#332420]" aria-label="Coloane">
+      <nav className="md:hidden grid grid-cols-3 border-b-2 border-charcoal" aria-label="Coloane">
         {COLUMNS.map((col) => {
           const count = orders.filter((o) => o.status === col.status).length;
           const active = tab === col.status;
@@ -250,7 +250,7 @@ export default function KitchenPage() {
               onClick={() => setTab(col.status)}
               aria-pressed={active}
               className={`min-h-14 font-display text-xl tracking-wide ${
-                active ? "bg-[#790D20] text-[#F5E6CC]" : "bg-transparent text-[#332420]"
+                active ? "bg-wine text-sand" : "bg-transparent text-charcoal"
               }`}
             >
               {col.title} ({count})
@@ -265,10 +265,10 @@ export default function KitchenPage() {
           return (
             <section
               key={col.status}
-              className={`${tab === col.status ? "block" : "hidden"} md:block border-2 border-[#332420]`}
+              className={`${tab === col.status ? "block" : "hidden"} md:block border-2 border-charcoal`}
               aria-label={col.title}
             >
-              <h2 className="hidden md:flex items-center justify-between bg-[#332420] text-[#F5E6CC] px-4 py-2 font-display text-2xl tracking-wide">
+              <h2 className="hidden md:flex items-center justify-between bg-charcoal text-sand px-4 py-2 font-display text-2xl tracking-wide">
                 <span><Display>{col.title}</Display></span>
                 <span className="font-mono text-sm">{list.length}</span>
               </h2>
@@ -331,15 +331,15 @@ function Ticket({
   return (
     <article
       onClick={isFresh ? onSeen : undefined}
-      className={`bg-[#F5E6CC] border-2 border-[#332420] shadow-[4px_4px_0_0_#332420] ${
-        isFresh ? "outline-4 outline-offset-2 outline-[#790D20]" : ""
+      className={`bg-sand border-2 border-charcoal shadow-[4px_4px_0_0_var(--color-charcoal)] ${
+        isFresh ? "outline-4 outline-offset-2 outline-wine" : ""
       }`}
     >
-      <header className="flex items-baseline justify-between gap-2 px-4 pt-3 pb-2 border-b-2 border-[#332420]">
+      <header className="flex items-baseline justify-between gap-2 px-4 pt-3 pb-2 border-b-2 border-charcoal">
         <span className="font-display text-3xl tracking-wide leading-none"><Display>{order.order_number}</Display></span>
         <span className="font-mono text-sm font-bold flex items-center gap-2">
           {order.fulfillment_type === "delivery" ? "LIVRARE" : "RIDICARE"}
-          <span className={late ? "bg-[#790D20] text-[#F5E6CC] px-2 py-0.5" : "bg-[#332420] text-[#F5E6CC] px-2 py-0.5"}>
+          <span className={late ? "bg-wine text-sand px-2 py-0.5" : "bg-charcoal text-sand px-2 py-0.5"}>
             {age.text}
           </span>
         </span>
@@ -354,13 +354,13 @@ function Ticket({
             {item.modifiers.length > 0 && (
               <ul className="mt-1 pl-6 text-base font-semibold">
                 {item.modifiers.map((m) => (
-                  <li key={m.id} className={m.name.toLowerCase().startsWith("fără") ? "text-[#790D20] font-extrabold" : ""}>
+                  <li key={m.id} className={m.name.toLowerCase().startsWith("fără") ? "text-wine font-extrabold" : ""}>
                     + {m.name}
                   </li>
                 ))}
               </ul>
             )}
-            {item.note && <p className="mt-1 pl-6 text-base font-bold text-[#790D20]">Notă: {item.note}</p>}
+            {item.note && <p className="mt-1 pl-6 text-base font-bold text-wine">Notă: {item.note}</p>}
           </li>
         ))}
         {items.length === 0 && <li className="opacity-70">Se încarcă produsele…</li>}
@@ -368,19 +368,19 @@ function Ticket({
 
       {(order.order_note || order.cutlery_sets > 0) && (
         <div className="px-4 pb-3 font-nunito text-base font-bold flex flex-col gap-1">
-          {order.order_note && <p className="text-[#790D20]">Notă comandă: {order.order_note}</p>}
+          {order.order_note && <p className="text-wine">Notă comandă: {order.order_note}</p>}
           {order.cutlery_sets > 0 && <p>Tacâmuri: {order.cutlery_sets}</p>}
         </div>
       )}
 
       {(next || prev) && (
-        <footer className="flex gap-2 p-3 border-t-2 border-[#332420]">
+        <footer className="flex gap-2 p-3 border-t-2 border-charcoal">
           {prev && (
             <button
               type="button"
               onClick={() => onMove(order, prev)}
               aria-label={`Înapoi ${order.order_number}`}
-              className="min-h-14 px-4 border-2 border-[#332420] font-nunito font-bold"
+              className="min-h-14 px-4 border-2 border-charcoal font-nunito font-bold"
             >
               ↩
             </button>
@@ -389,7 +389,7 @@ function Ticket({
             <button
               type="button"
               onClick={() => onMove(order, next)}
-              className="flex-1 min-h-14 bg-[#790D20] text-[#F5E6CC] font-display text-2xl tracking-wide"
+              className="flex-1 min-h-14 bg-wine text-sand font-display text-2xl tracking-wide"
             >
               <Display>{nextLabel} →</Display>
             </button>

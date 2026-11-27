@@ -63,7 +63,7 @@ function HeroStickers({
               zIndex: slot.z,
               transform: `translate(${slot.x}%, ${slot.y}%) rotate(${slot.r}deg) scale(${slot.s})`,
             }}
-            className="absolute left-0 top-0 rounded-full drop-shadow-[4px_4px_0px_#332420] hero-sticker focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#790D20]"
+            className="absolute left-0 top-0 rounded-full drop-shadow-[4px_4px_0px_var(--color-charcoal)] hero-sticker focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-wine"
           >
             <span className="sticker-spin block h-full w-full">
               <span className="sticker-roll-in block h-full w-full" style={{ animationDelay: `${150 + i * 140}ms` }}>
@@ -110,11 +110,11 @@ export function HeroFulfillmentButtons() {
             setFulfillmentType(type);
             scrollToTab(ALL_TAB);
           }}
-          className="flex flex-col items-start gap-2 rounded-xl bg-[#790D20] text-[#F5E6CC] border-2 border-[#332420] p-4 text-left shadow-[4px_4px_0px_0px_#332420] active:translate-x-px active:translate-y-px active:shadow-[2px_2px_0px_0px_#332420]"
+          className="flex flex-col items-start gap-2 rounded-xl bg-wine text-sand border-2 border-charcoal p-4 text-left shadow-[4px_4px_0px_0px_var(--color-charcoal)] active:translate-x-px active:translate-y-px active:shadow-[2px_2px_0px_0px_var(--color-charcoal)]"
         >
           <Icon className="w-7 h-7" aria-hidden />
           <span className="font-display text-2xl leading-none tracking-wide"><Display>{label}</Display></span>
-          <span className="font-nunito font-bold text-xs text-[#F5E6CC]/80">{sub}</span>
+          <span className="font-nunito font-bold text-xs text-sand/80">{sub}</span>
         </button>
       ))}
     </div>
@@ -127,7 +127,7 @@ export function HeroOrderButton() {
     <button
       type="button"
       onClick={() => scrollToTab(ALL_TAB)}
-      className="hidden md:block mt-2 md:mt-8 min-h-[60px] bg-[#790D20] text-[#F5E6CC] font-display text-3xl tracking-wider px-12 py-4 rounded-lg border-2 border-[#332420] shadow-[6px_6px_0px_0px_#332420] hover:bg-[#332420] active:translate-x-px active:translate-y-px active:shadow-[3px_3px_0px_0px_#332420] transition-colors duration-200"
+      className="hidden md:block mt-2 md:mt-8 min-h-[60px] bg-wine text-sand font-display text-3xl tracking-wider px-12 py-4 rounded-lg border-2 border-charcoal shadow-[6px_6px_0px_0px_var(--color-charcoal)] hover:bg-charcoal active:translate-x-px active:translate-y-px active:shadow-[3px_3px_0px_0px_var(--color-charcoal)] transition-colors duration-200"
     >
       <Display>COMANDĂ</Display>
     </button>
@@ -139,20 +139,20 @@ export function HeroStatusLine() {
   const status = useStorefrontStatus();
   return (
     <p
-      className="mt-4 min-h-8 flex items-center gap-2 font-nunito font-bold text-sm sm:text-base text-[#332420]"
+      className="mt-4 min-h-8 flex items-center gap-2 font-nunito font-bold text-sm sm:text-base text-charcoal"
       aria-live="polite"
     >
       {!isOrderingEnabled() ? (
         <>
-          <span aria-hidden className="w-3 h-3 rounded-full shrink-0 border-2 border-[#790D20] opacity-50" />
+          <span aria-hidden className="w-3 h-3 rounded-full shrink-0 border-2 border-wine opacity-50" />
           {OPENING_SOON}
         </>
       ) : status && (
         <>
           <span
             aria-hidden
-            className={`w-3 h-3 rounded-full shrink-0 border-2 border-[#790D20] ${
-              status.open ? "bg-[#790D20] status-led-on" : "bg-transparent opacity-50"
+            className={`w-3 h-3 rounded-full shrink-0 border-2 border-wine ${
+              status.open ? "bg-wine status-led-on" : "bg-transparent opacity-50"
             }`}
           />
           {heroStatusLine(status)}

@@ -6,9 +6,9 @@ import type { Product } from "@/types/database";
 // Product names come from catalog.ts; `lines` only controls line breaks on the sticker.
 // Colors are tokens from globals.css only: 3 brand tokens + per-product --color-sticker-* accents.
 
-const SAND = "var(--color-brand-sand)";
-const WINE = "var(--color-brand-wine)";
-const CHARCOAL = "var(--color-brand-charcoal)";
+const SAND = "var(--color-sand)";
+const WINE = "var(--color-wine)";
+const CHARCOAL = "var(--color-charcoal)";
 
 interface StickerStyle {
   /** Sticker artwork text (Romanian, as printed), one entry per line. */

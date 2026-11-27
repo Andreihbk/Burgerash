@@ -166,14 +166,14 @@ export default function CartDrawer() {
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity" onClick={closeCart} />
 
       <div className="absolute inset-y-0 right-0 flex w-full max-w-md">
-        <div className="w-full min-w-0 bg-brand-paper border-l-4 border-brand-dark flex flex-col shadow-2xl">
+        <div className="w-full min-w-0 bg-sand border-l-4 border-charcoal flex flex-col shadow-2xl">
           {/* Drawer Header */}
-          <div className="bg-brand-red text-brand-paper px-6 py-4 flex items-center justify-between border-b-2 border-brand-dark">
+          <div className="bg-wine text-sand px-6 py-4 flex items-center justify-between border-b-2 border-charcoal">
             <div className="flex items-center gap-2">
-              <ShoppingBag className="w-6 h-6 text-brand-paper" />
+              <ShoppingBag className="w-6 h-6 text-sand" />
               <h2 className="font-display text-2xl tracking-wide"><Display>COȘUL TĂU</Display></h2>
             </div>
-            <button onClick={closeCart} className="text-brand-paper hover:text-white transition-colors">
+            <button onClick={closeCart} className="text-sand hover:text-white transition-colors">
               <X className="w-6 h-6" />
             </button>
           </div>
@@ -182,19 +182,19 @@ export default function CartDrawer() {
           <div className="brand-scroll flex-1 overflow-y-auto overflow-x-hidden p-4 sm:p-6">
             {step === "success" ? (
               <div className="text-center py-12 space-y-4">
-                <CheckCircle2 className="w-16 h-16 text-[#790D20] mx-auto" />
-                <h3 className="font-display text-4xl text-brand-dark"><Display>COMANDĂ PLASATĂ!</Display></h3>
-                <p className="font-mono text-lg font-bold bg-brand-dark text-brand-paper py-2 px-4 inline-block rounded">
+                <CheckCircle2 className="w-16 h-16 text-wine mx-auto" />
+                <h3 className="font-display text-4xl text-charcoal"><Display>COMANDĂ PLASATĂ!</Display></h3>
+                <p className="font-mono text-lg font-bold bg-charcoal text-sand py-2 px-4 inline-block rounded">
                   Număr bon: {orderNumber}
                 </p>
-                <p className="font-nunito text-sm text-brand-dark/80">
+                <p className="font-nunito text-sm text-charcoal/80">
                   Comanda ta a fost primită. Focul e pornit!
                 </p>
                 {publicToken && (
                   <div>
                     <a
                       href={`/comanda/${publicToken}`}
-                      className="mt-2 inline-flex min-h-11 items-center bg-brand-dark text-brand-paper font-display text-xl px-6 py-3 rounded shadow-[3px_3px_0px_0px_#790D20]"
+                      className="mt-2 inline-flex min-h-11 items-center bg-charcoal text-sand font-display text-xl px-6 py-3 rounded shadow-[3px_3px_0px_0px_var(--color-wine)]"
                     >
                       <Display>URMĂREȘTE COMANDA</Display>
                     </a>
@@ -205,7 +205,7 @@ export default function CartDrawer() {
                     setStep("cart");
                     closeCart();
                   }}
-                  className="mt-4 bg-brand-red text-white font-display text-xl px-6 py-3 rounded shadow-[3px_3px_0px_0px_#332420]"
+                  className="mt-4 bg-wine text-white font-display text-xl px-6 py-3 rounded shadow-[3px_3px_0px_0px_var(--color-charcoal)]"
                 >
                   <Display>ÎNAPOI LA MENIU</Display>
                 </button>
@@ -215,7 +215,7 @@ export default function CartDrawer() {
                 {orderingOff && (
                   <div
                     role="status"
-                    className="mb-4 rounded-lg border-2 border-brand-red bg-brand-red/10 p-3 font-nunito text-sm font-bold text-brand-dark"
+                    className="mb-4 rounded-lg border-2 border-wine bg-wine/10 p-3 font-nunito text-sm font-bold text-charcoal"
                   >
                     {ORDERING_CLOSED_BANNER}
                   </div>
@@ -223,19 +223,19 @@ export default function CartDrawer() {
                 {!orderingOff && isClosed && openingStatus && (
                   <div
                     role="status"
-                    className="mb-4 rounded-lg border-2 border-brand-red bg-brand-red/10 p-3 font-nunito text-sm font-bold text-brand-dark"
+                    className="mb-4 rounded-lg border-2 border-wine bg-wine/10 p-3 font-nunito text-sm font-bold text-charcoal"
                   >
                     {closedCartNotice(openingStatus)}
                   </div>
                 )}
                 {/* Fulfillment Type Toggle */}
-                <div className="grid grid-cols-2 gap-2 bg-brand-dark/10 p-1.5 rounded-lg mb-6 border-2 border-brand-dark">
+                <div className="grid grid-cols-2 gap-2 bg-charcoal/10 p-1.5 rounded-lg mb-6 border-2 border-charcoal">
                   <button
                     onClick={() => setFulfillmentType("delivery")}
                     className={`font-display text-lg py-2 rounded transition-all ${
                       fulfillmentType === "delivery"
-                        ? "bg-brand-red text-white shadow-[2px_2px_0px_0px_#332420]"
-                        : "text-brand-dark hover:bg-brand-dark/5"
+                        ? "bg-wine text-white shadow-[2px_2px_0px_0px_var(--color-charcoal)]"
+                        : "text-charcoal hover:bg-charcoal/5"
                     }`}
                   >
                     <Display>LIVRARE LA ADRESĂ</Display>
@@ -244,8 +244,8 @@ export default function CartDrawer() {
                     onClick={() => setFulfillmentType("pickup")}
                     className={`font-display text-lg py-2 rounded transition-all ${
                       fulfillmentType === "pickup"
-                        ? "bg-brand-red text-white shadow-[2px_2px_0px_0px_#332420]"
-                        : "text-brand-dark hover:bg-brand-dark/5"
+                        ? "bg-wine text-white shadow-[2px_2px_0px_0px_var(--color-charcoal)]"
+                        : "text-charcoal hover:bg-charcoal/5"
                     }`}
                   >
                     <Display>RIDICARE DIN RESTAURANT</Display>
@@ -255,7 +255,7 @@ export default function CartDrawer() {
                 {fulfillmentType === "pickup" && items.length > 0 && <PickupTimePicker />}
 
                 {items.length === 0 ? (
-                  <div className="text-center py-16 text-brand-dark/60 font-nunito font-bold">
+                  <div className="text-center py-16 text-charcoal/60 font-nunito font-bold">
                     <p className="text-lg mb-2">Coșul tău este gol momentan.</p>
                     <p className="text-sm">Carnea e proaspătă, plita e caldă. Alege ceva.</p>
                   </div>
@@ -264,52 +264,52 @@ export default function CartDrawer() {
                     {items.map((item) => (
                       <div
                         key={item.cartItemId}
-                        className="bg-white border-2 border-brand-dark rounded-lg p-4 shadow-[3px_3px_0px_0px_#332420] flex flex-col gap-2"
+                        className="bg-white border-2 border-charcoal rounded-lg p-4 shadow-[3px_3px_0px_0px_var(--color-charcoal)] flex flex-col gap-2"
                       >
                         <div className="flex justify-between items-start">
                           <div>
-                            <h4 className="font-display text-xl text-brand-dark"><Display>{item.product.name}</Display></h4>
+                            <h4 className="font-display text-xl text-charcoal"><Display>{item.product.name}</Display></h4>
                             {soldOutIds.has(item.product.id) && (
-                              <p className="font-mono text-xs font-bold text-brand-red">
+                              <p className="font-mono text-xs font-bold text-wine">
                                 EPUIZAT - scoate-l din coș ca să continui
                               </p>
                             )}
-                            <p className="font-nunito font-bold text-xs text-brand-dark/60">
+                            <p className="font-nunito font-bold text-xs text-charcoal/60">
                               {formatLei(item.unitPriceWithModifiers)} / buc
                             </p>
                           </div>
                           <button
                             onClick={() => removeItem(item.cartItemId)}
-                            className="text-brand-red hover:opacity-80 p-1"
+                            className="text-wine hover:opacity-80 p-1"
                           >
                             <Trash2 className="w-4 h-4" />
                           </button>
                         </div>
 
                         {item.modifiers.length > 0 && (
-                          <div className="text-[11px] font-mono bg-brand-paper p-1.5 rounded text-brand-dark/80">
+                          <div className="text-[11px] font-mono bg-sand p-1.5 rounded text-charcoal/80">
                             {item.modifiers.map((m) => (m.price > 0 ? `+ ${m.name}` : m.name)).join(", ")}
                           </div>
                         )}
 
-                        <div className="flex justify-between items-center mt-2 pt-2 border-t border-brand-dark/10">
-                          <div className="flex items-center gap-2 border-2 border-brand-dark rounded px-2 py-0.5 bg-brand-paper">
+                        <div className="flex justify-between items-center mt-2 pt-2 border-t border-charcoal/10">
+                          <div className="flex items-center gap-2 border-2 border-charcoal rounded px-2 py-0.5 bg-sand">
                             <button
                               onClick={() => updateQuantity(item.cartItemId, item.quantity - 1)}
-                              className="text-brand-dark hover:text-brand-red"
+                              className="text-charcoal hover:text-wine"
                             >
                               <Minus className="w-3.5 h-3.5" />
                             </button>
                             <span className="font-mono font-bold text-sm w-6 text-center">{item.quantity}</span>
                             <button
                               onClick={() => updateQuantity(item.cartItemId, item.quantity + 1)}
-                              className="text-brand-dark hover:text-brand-red"
+                              className="text-charcoal hover:text-wine"
                             >
                               <Plus className="w-3.5 h-3.5" />
                             </button>
                           </div>
 
-                          <span className="font-nunito font-black text-lg text-brand-dark">
+                          <span className="font-nunito font-black text-lg text-charcoal">
                             {formatLei(item.unitPriceWithModifiers * item.quantity)}
                           </span>
                         </div>
@@ -319,29 +319,29 @@ export default function CartDrawer() {
                     <CartUpsell soldOutIds={soldOutIds} />
 
                     {/* Extras: Cutlery & Tip */}
-                    <div className="bg-white border-2 border-brand-dark rounded-lg p-4 space-y-4 mt-6 shadow-[3px_3px_0px_0px_#332420]">
+                    <div className="bg-white border-2 border-charcoal rounded-lg p-4 space-y-4 mt-6 shadow-[3px_3px_0px_0px_var(--color-charcoal)]">
                       <div className="flex justify-between items-center">
                         <span className="font-display text-lg"><Display>SETURI TACĂMURI (Gratis)</Display></span>
-                        <div className="flex items-center gap-2 border-2 border-brand-dark rounded px-2 py-0.5 bg-brand-paper">
-                          <button onClick={() => setCutlerySets(cutlerySets - 1)} className="hover:text-brand-red">
+                        <div className="flex items-center gap-2 border-2 border-charcoal rounded px-2 py-0.5 bg-sand">
+                          <button onClick={() => setCutlerySets(cutlerySets - 1)} className="hover:text-wine">
                             <Minus className="w-3.5 h-3.5" />
                           </button>
                           <span className="font-mono font-bold text-sm w-5 text-center">{cutlerySets}</span>
-                          <button onClick={() => setCutlerySets(cutlerySets + 1)} className="hover:text-brand-red">
+                          <button onClick={() => setCutlerySets(cutlerySets + 1)} className="hover:text-wine">
                             <Plus className="w-3.5 h-3.5" />
                           </button>
                         </div>
                       </div>
 
-                      <div className="flex flex-wrap justify-between items-center gap-2 pt-3 border-t border-brand-dark/10">
+                      <div className="flex flex-wrap justify-between items-center gap-2 pt-3 border-t border-charcoal/10">
                         <span className="font-display text-lg"><Display>BACȘIȘ ECHIPĂ</Display></span>
                         <div className="flex gap-1.5">
                           {[0, 3, 5, 10].map((val) => (
                             <button
                               key={val}
                               onClick={() => setTipAmount(val)}
-                              className={`font-mono text-xs font-bold px-2.5 py-1 rounded border-2 border-brand-dark transition-all ${
-                                tipAmount === val ? "bg-brand-red text-white" : "bg-brand-paper text-brand-dark"
+                              className={`font-mono text-xs font-bold px-2.5 py-1 rounded border-2 border-charcoal transition-all ${
+                                tipAmount === val ? "bg-wine text-white" : "bg-sand text-charcoal"
                               }`}
                             >
                               {formatLei(val)}
@@ -359,15 +359,15 @@ export default function CartDrawer() {
                 <button
                   type="button"
                   onClick={() => setStep("cart")}
-                  className="text-xs font-mono font-bold text-brand-red underline mb-2 block"
+                  className="text-xs font-mono font-bold text-wine underline mb-2 block"
                 >
                   ← Înapoi la produsele din coș
                 </button>
 
-                <h3 className="font-display text-3xl text-brand-dark mb-4"><Display>DETALII LIVRARE</Display></h3>
+                <h3 className="font-display text-3xl text-charcoal mb-4"><Display>DETALII LIVRARE</Display></h3>
 
                 {errorMessage && (
-                  <div className="bg-red-100 border-2 border-brand-red text-brand-red p-3 text-xs font-mono font-bold rounded">
+                  <div className="bg-red-100 border-2 border-wine text-wine p-3 text-xs font-mono font-bold rounded">
                     {errorMessage}
                   </div>
                 )}
@@ -387,7 +387,7 @@ export default function CartDrawer() {
                     maxLength={ORDER_LIMITS.name}
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="w-full border-2 border-brand-dark p-2.5 rounded font-nunito font-semibold bg-white"
+                    className="w-full border-2 border-charcoal p-2.5 rounded font-nunito font-semibold bg-white"
                     placeholder="Andrei Popescu"
                   />
                 </div>
@@ -410,11 +410,11 @@ export default function CartDrawer() {
                     }}
                     aria-invalid={!!phoneError}
                     aria-describedby={phoneError ? "phone-error" : undefined}
-                    className="w-full border-2 border-brand-dark p-2.5 rounded font-nunito font-semibold bg-white"
+                    className="w-full border-2 border-charcoal p-2.5 rounded font-nunito font-semibold bg-white"
                     placeholder="0721 123 456"
                   />
                   {phoneError && (
-                    <p id="phone-error" className="mt-1 text-xs font-nunito font-bold text-brand-red">
+                    <p id="phone-error" className="mt-1 text-xs font-nunito font-bold text-wine">
                       {phoneError}
                     </p>
                   )}
@@ -436,11 +436,11 @@ export default function CartDrawer() {
                     }}
                     aria-invalid={!!emailError}
                     aria-describedby={emailError ? "email-error" : undefined}
-                    className="w-full border-2 border-brand-dark p-2.5 rounded font-nunito font-semibold bg-white"
+                    className="w-full border-2 border-charcoal p-2.5 rounded font-nunito font-semibold bg-white"
                     placeholder="andrei@example.com"
                   />
                   {emailError && (
-                    <p id="email-error" className="mt-1 text-xs font-nunito font-bold text-brand-red">
+                    <p id="email-error" className="mt-1 text-xs font-nunito font-bold text-wine">
                       {emailError}
                     </p>
                   )}
@@ -457,7 +457,7 @@ export default function CartDrawer() {
                         maxLength={ORDER_LIMITS.address}
                         value={formData.address}
                         onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                        className="w-full border-2 border-brand-dark p-2.5 rounded font-nunito font-semibold bg-white"
+                        className="w-full border-2 border-charcoal p-2.5 rounded font-nunito font-semibold bg-white"
                         placeholder="Str. Crângași nr. 14"
                       />
                     </div>
@@ -469,7 +469,7 @@ export default function CartDrawer() {
                         maxLength={ORDER_LIMITS.details}
                         value={formData.details}
                         onChange={(e) => setFormData({ ...formData, details: e.target.value })}
-                        className="w-full border-2 border-brand-dark p-2.5 rounded font-nunito font-semibold bg-white"
+                        className="w-full border-2 border-charcoal p-2.5 rounded font-nunito font-semibold bg-white"
                         placeholder="Bl. 3, Sc. A, Ap. 12"
                       />
                     </div>
@@ -482,7 +482,7 @@ export default function CartDrawer() {
                     maxLength={ORDER_LIMITS.orderNote - 24} // room for the "Ridicare la HH:MM · " prefix
                     value={formData.note}
                     onChange={(e) => setFormData({ ...formData, note: e.target.value })}
-                    className="w-full border-2 border-brand-dark p-2.5 rounded font-nunito font-semibold bg-white h-20"
+                    className="w-full border-2 border-charcoal p-2.5 rounded font-nunito font-semibold bg-white h-20"
                     placeholder="Fără ceapă la clasic, sos extra..."
                   />
                 </div>
@@ -493,7 +493,7 @@ export default function CartDrawer() {
                     required
                     checked={termsAccepted}
                     onChange={(e) => setTermsAccepted(e.target.checked)}
-                    className="mt-1 h-4 w-4 shrink-0 accent-[#790D20]"
+                    className="mt-1 h-4 w-4 shrink-0 accent-wine"
                   />
                   <span>
                     Am citit și accept{" "}
@@ -506,12 +506,12 @@ export default function CartDrawer() {
                 <button
                   type="submit"
                   disabled={isSubmitting || orderingOff || isClosed || hasSoldOut}
-                  className="w-full bg-brand-red text-white font-display text-2xl py-4 rounded-lg shadow-[4px_4px_0px_0px_#332420] hover:bg-brand-dark transition-all mt-6 disabled:opacity-50"
+                  className="w-full bg-wine text-white font-display text-2xl py-4 rounded-lg shadow-[4px_4px_0px_0px_var(--color-charcoal)] hover:bg-charcoal transition-all mt-6 disabled:opacity-50"
                 >
                   <Display>{orderingOff ? OPENING_SOON.toUpperCase() : isClosed ? "Suntem închiși acum" : hasSoldOut ? "Produs epuizat în coș" : isSubmitting ? "SE TRIMITE..." : `PLASEAZĂ COMANDA · ${formatLei(grandTotal)}`}</Display>
                 </button>
                 {orderingOff && (
-                  <p className="mt-3 text-center font-nunito text-sm font-bold text-brand-dark/70">
+                  <p className="mt-3 text-center font-nunito text-sm font-bold text-charcoal/70">
                     Comenzile online pornesc la lansare. Până atunci nu se trimite nimic.
                   </p>
                 )}
@@ -521,7 +521,7 @@ export default function CartDrawer() {
 
           {/* Drawer Footer / Summary */}
           {items.length > 0 && step === "cart" && (
-            <div className="bg-white border-t-2 border-brand-dark p-4 sm:p-6 space-y-2">
+            <div className="bg-white border-t-2 border-charcoal p-4 sm:p-6 space-y-2">
               <div className="flex justify-between gap-3 font-nunito font-semibold text-sm">
                 <span>Subtotal produse:</span>
                 <span>{formatLei(subtotal)}</span>
@@ -536,14 +536,14 @@ export default function CartDrawer() {
                 </>
               )}
               {tipAmount > 0 && (
-                <div className="flex justify-between gap-3 font-nunito font-semibold text-sm text-brand-red">
+                <div className="flex justify-between gap-3 font-nunito font-semibold text-sm text-wine">
                   <span>Bacșiș echipă:</span>
                   <span>+{formatLei(tipAmount)}</span>
                 </div>
               )}
-              <div className="flex justify-between gap-3 font-display text-2xl pt-2 border-t border-brand-dark/10">
+              <div className="flex justify-between gap-3 font-display text-2xl pt-2 border-t border-charcoal/10">
                 <span><Display>TOTAL DE PLATĂ:</Display></span>
-                <span className="text-brand-red"><Display>{formatLei(grandTotal)}</Display></span>
+                <span className="text-wine"><Display>{formatLei(grandTotal)}</Display></span>
               </div>
 
               <button
@@ -552,7 +552,7 @@ export default function CartDrawer() {
                   setCheckoutOpenedAt(Date.now());
                 }}
                 disabled={hasSoldOut}
-                className="w-full disabled:opacity-50 bg-brand-dark text-brand-paper font-display text-2xl py-4 rounded-lg shadow-[4px_4px_0px_0px_#790D20] hover:bg-brand-red transition-all flex items-center justify-center gap-2 mt-4"
+                className="w-full disabled:opacity-50 bg-charcoal text-sand font-display text-2xl py-4 rounded-lg shadow-[4px_4px_0px_0px_var(--color-wine)] hover:bg-wine transition-all flex items-center justify-center gap-2 mt-4"
               >
                 <span><Display>CONTINUĂ LA CHECKOUT</Display></span>
                 <ArrowRight className="w-5 h-5" />

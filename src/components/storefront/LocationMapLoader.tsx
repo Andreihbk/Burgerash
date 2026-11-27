@@ -5,7 +5,7 @@ import dynamic from "next/dynamic";
 // Static import: the CSS ships with the page, not the lazy map chunk, so the map never flashes unstyled.
 import "maplibre-gl/dist/maplibre-gl.css";
 
-const PLACEHOLDER_CLASS = "h-[320px] md:h-full md:min-h-[420px] bg-[#332420]/10";
+const PLACEHOLDER_CLASS = "h-[320px] md:h-full md:min-h-[420px] bg-charcoal/10";
 
 // MapLibre needs the browser: load it client-side only.
 const LocationMap = dynamic(() => import("./LocationMap"), {

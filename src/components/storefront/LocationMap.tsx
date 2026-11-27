@@ -120,7 +120,7 @@ export default function LocationMap() {
     <div className="relative h-[320px] md:h-full md:min-h-[420px]">
       <div ref={containerRef} className="h-full w-full" role="img" aria-label="Hartă: locația Burgerash și zona de livrare" />
       {SHOW_SLIDER && (
-        <label className="absolute bottom-6 left-3 right-3 sm:right-auto sm:w-64 z-10 bg-[#F5E6CC] border-2 border-[#332420] rounded-lg px-3 py-2 font-mono text-xs font-bold text-[#332420]">
+        <label className="absolute bottom-6 left-3 right-3 sm:right-auto sm:w-64 z-10 bg-sand border-2 border-charcoal rounded-lg px-3 py-2 font-mono text-xs font-bold text-charcoal">
           Rază livrare: {radiusKm.toFixed(1)} km
           <input
             type="range"
@@ -129,7 +129,7 @@ export default function LocationMap() {
             step={0.1}
             value={radiusKm}
             onChange={(e) => onRadius(Number(e.target.value))}
-            className="block w-full accent-[#790D20]"
+            className="block w-full accent-wine"
           />
         </label>
       )}

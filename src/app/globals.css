@@ -1,23 +1,11 @@
 @import "tailwindcss";
 
 @theme {
-  /* Brand Colors: Butter Cream (#F5E6CC), Burgundy (#790D20), Charcoal (#332420), White (#FFFFFF) */
-  --color-butter-cream: #F5E6CC;
-  --color-burgundy: #790D20;
+  /* Brand tokens (CLAUDE.md): the only 3 brand colors. Use bg-wine, text-charcoal/70, border-sand...
+     The old aliases (brand-red, brand-dark, brand-paper, burgundy, butter-cream...) were merged into these in audit R11. */
+  --color-wine: #790D20;
+  --color-sand: #F5E6CC;
   --color-charcoal: #332420;
-  --color-white: #FFFFFF;
-
-  --color-brand-paper: #F5E6CC;
-  --color-brand-cream: #F5E6CC;
-  --color-brand-red: #790D20;
-  --color-brand-burgundy: #790D20;
-  --color-brand-dark: #332420;
-  --color-brand-charcoal: #332420;
-  --color-brand-metal: #790D20;
-
-  /* Canonical brand token names (CLAUDE.md): wine, sand, charcoal */
-  --color-brand-wine: #790D20;
-  --color-brand-sand: #F5E6CC;
 
   /* Per-product sticker accents, sampled from the printed sticker sheet.
      Use ONLY for that product's sticker. These + the 3 brand tokens are the only allowed colors. */

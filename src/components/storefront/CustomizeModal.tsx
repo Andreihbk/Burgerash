@@ -93,21 +93,21 @@ export default function CustomizeModal({ product }: { product: Product }) {
           role="dialog"
           aria-modal="true"
           aria-labelledby="customize-title"
-          className="bg-[#F5E6CC] border-4 border-[#332420] rounded-xl max-w-lg w-full shadow-[8px_8px_0px_0px_#332420] max-h-[90vh] flex flex-col overflow-hidden">
+          className="bg-sand border-4 border-charcoal rounded-xl max-w-lg w-full shadow-[8px_8px_0px_0px_var(--color-charcoal)] max-h-[90vh] flex flex-col overflow-hidden">
           <div className="brand-scroll flex-1 min-h-0 overflow-y-auto p-6">
-            <div className="flex justify-between items-start border-b-2 border-[#332420] pb-3 mb-4">
+            <div className="flex justify-between items-start border-b-2 border-charcoal pb-3 mb-4">
               <div>
-                <span className="font-mono text-xs text-[#790D20] font-bold">
+                <span className="font-mono text-xs text-wine font-bold">
                   PERSONALIZEAZĂ BURGERUL
                 </span>
-                <h3 id="customize-title" className="font-display text-4xl text-[#332420]">
+                <h3 id="customize-title" className="font-display text-4xl text-charcoal">
                   <Display>{product.name}</Display>
                 </h3>
               </div>
               <button
                 onClick={closeCustomize}
                 aria-label="Închide"
-                className="p-1 text-[#332420] hover:text-[#790D20]"
+                className="p-1 text-charcoal hover:text-wine"
               >
                 <X className="w-6 h-6"/>
               </button>
@@ -117,7 +117,7 @@ export default function CustomizeModal({ product }: { product: Product }) {
               <BurgerStamp product={product} className="h-36 w-36 rotate-[-6deg]" />
             </div>
             {product.description && (
-              <p className="font-nunito text-sm text-[#332420]/80 text-center max-w-sm mx-auto mb-4">
+              <p className="font-nunito text-sm text-charcoal/80 text-center max-w-sm mx-auto mb-4">
                 {product.description}
               </p>
             )}
@@ -130,7 +130,7 @@ export default function CustomizeModal({ product }: { product: Product }) {
                 ] as const
               ).filter((group) => group.mods.length > 0).map((group) => (
                 <div key={group.title}>
-                  <p className="font-display text-xl text-[#332420] mb-2"><Display>{group.title}</Display></p>
+                  <p className="font-display text-xl text-charcoal mb-2"><Display>{group.title}</Display></p>
                   <div className="grid grid-cols-1 gap-2">
                     {group.mods.map((mod) => {
                       const checked = selectedModifiers.some((m) => m.id === mod.id);
@@ -139,18 +139,18 @@ export default function CustomizeModal({ product }: { product: Product }) {
                           key={mod.id}
                           type="button"
                           onClick={() => toggleModifier(mod)}
-                          className={`flex items-center justify-between p-3 rounded-lg border-2 border-[#332420] font-nunito font-bold text-sm transition-all ${
+                          className={`flex items-center justify-between p-3 rounded-lg border-2 border-charcoal font-nunito font-bold text-sm transition-all ${
                             checked
-                              ? "bg-[#790D20] text-white"
-                              : "bg-white text-[#332420] hover:bg-white/80"
+                              ? "bg-wine text-white"
+                              : "bg-white text-charcoal hover:bg-white/80"
                           }`}
                         >
                           <span className="flex items-center gap-2">
                             <span
                               className={`w-5 h-5 rounded flex items-center justify-center border ${
                                 checked
-                                  ? "bg-white text-[#790D20] border-white"
-                                  : "border-[#332420]"
+                                  ? "bg-white text-wine border-white"
+                                  : "border-charcoal"
                               }`}
                             >
                               {checked && <Check className="w-3.5 h-3.5 stroke-[3]"/>}
@@ -176,14 +176,14 @@ export default function CustomizeModal({ product }: { product: Product }) {
                   value={itemNote}
                   onChange={(e) => setItemNote(e.target.value)}
                   placeholder="Ex: bine făcut, sosul separat..."
-                  className="w-full border-2 border-[#332420] rounded-lg p-2.5 bg-white font-nunito font-semibold text-sm"
+                  className="w-full border-2 border-charcoal rounded-lg p-2.5 bg-white font-nunito font-semibold text-sm"
                 />
               </div>
             </div>
           </div>
 
-          <div className="shrink-0 flex items-center justify-between gap-3 p-4 border-t-4 border-[#332420] bg-[#F5E6CC]">
-            <div className="shrink-0 flex items-center gap-1 sm:gap-3 bg-white border-2 border-[#332420] rounded-lg px-1.5 sm:px-3 py-1.5">
+          <div className="shrink-0 flex items-center justify-between gap-3 p-4 border-t-4 border-charcoal bg-sand">
+            <div className="shrink-0 flex items-center gap-1 sm:gap-3 bg-white border-2 border-charcoal rounded-lg px-1.5 sm:px-3 py-1.5">
               <button
                 type="button"
                 aria-label="Scade cantitatea"
@@ -207,7 +207,7 @@ export default function CustomizeModal({ product }: { product: Product }) {
               type="button"
               onClick={handleConfirm}
               disabled={soldOut}
-              className="flex-1 min-w-0 bg-[#790D20] text-white font-display text-xl sm:text-2xl px-3 sm:px-5 py-3 rounded-lg border-2 border-[#332420] shadow-[3px_3px_0px_0px_#332420] hover:bg-[#332420] transition-all whitespace-nowrap disabled:bg-[#F5E6CC] disabled:text-[#790D20] disabled:border-dashed disabled:border-[#790D20] disabled:shadow-none"
+              className="flex-1 min-w-0 bg-wine text-white font-display text-xl sm:text-2xl px-3 sm:px-5 py-3 rounded-lg border-2 border-charcoal shadow-[3px_3px_0px_0px_var(--color-charcoal)] hover:bg-charcoal transition-all whitespace-nowrap disabled:bg-sand disabled:text-wine disabled:border-dashed disabled:border-wine disabled:shadow-none"
             >
               {soldOut ? (
                 <Display>EPUIZAT</Display>

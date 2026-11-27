@@ -18,7 +18,7 @@ export default function LastOrderLink() {
   return (
     <a
       href={`/comanda/${order.token}`}
-      className="inline-flex items-center min-h-11 font-display text-lg tracking-wider underline underline-offset-4 text-[#F5E6CC]/90 hover:text-[#F5E6CC]"
+      className="inline-flex items-center min-h-11 font-display text-lg tracking-wider underline underline-offset-4 text-sand/90 hover:text-sand"
     >
       <Display>COMANDA TA</Display>
     </a>

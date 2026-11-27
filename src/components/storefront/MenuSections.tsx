@@ -11,11 +11,11 @@ export default function MenuSections() {
           <div className="flex items-center gap-4 mb-4 md:mb-6">
             <h3
               id={`${sectionDomId(category.id)}-title`}
-              className="font-display text-3xl md:text-4xl tracking-wide text-[#332420] shrink-0"
+              className="font-display text-3xl md:text-4xl tracking-wide text-charcoal shrink-0"
             >
               <Display>{category.name}</Display>
             </h3>
-            <div className="flex-1 h-2 border-y-2 border-[#332420]" />
+            <div className="flex-1 h-2 border-y-2 border-charcoal" />
           </div>
 
           {/* Each product is rendered once: a row on phones, a sticker card from md up (see MenuItem). */}

@@ -29,7 +29,7 @@ function Loop() {
 
 function Strip({ className = "" }: { className?: string }) {
   return (
-    <div className={`ticker overflow-hidden bg-[#790D20] text-[#F5E6CC] py-3 border-y-[3px] border-[#332420] ${className}`}>
+    <div className={`ticker overflow-hidden bg-wine text-sand py-3 border-y-[3px] border-charcoal ${className}`}>
       <div className="ticker-track flex w-max">
         <Loop />
         <Loop />
@@ -43,7 +43,7 @@ export default function Ticker() {
   return (
     <div className="relative py-6 overflow-x-clip">
       <p className="sr-only">{ITEMS.join(" · ")}</p>
-      <Strip className="-mx-[4%] w-[108%] -rotate-1 shadow-[0_4px_0_0_#332420]" />
+      <Strip className="-mx-[4%] w-[108%] -rotate-1 shadow-[0_4px_0_0_var(--color-charcoal)]" />
     </div>
   );
 }

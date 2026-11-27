@@ -59,8 +59,8 @@ export default function OrderStatusView({ order, footer }: { order: StatusOrder;
       : steps[Math.max(currentIndex, 0)].label.toUpperCase();
 
   return (
-    <main className="min-h-screen bg-[#F5E6CC] text-[#332420]">
-      <header className="bg-[#790D20] text-[#F5E6CC] border-b-2 border-[#332420] px-4 py-3">
+    <main className="min-h-screen bg-sand text-charcoal">
+      <header className="bg-wine text-sand border-b-2 border-charcoal px-4 py-3">
         <div className="max-w-xl mx-auto flex items-center justify-between">
           <Link href="/" className="inline-flex items-center">
             <BrandLogo variant="horizontal" tone="sand" className="h-9 w-auto" />
@@ -71,30 +71,30 @@ export default function OrderStatusView({ order, footer }: { order: StatusOrder;
 
       <div className="max-w-xl mx-auto px-4 py-8 space-y-6">
         {/* Status hero: wine block + framed photo */}
-        <section className="relative overflow-hidden rounded-2xl border-2 border-[#332420] bg-[#790D20] text-[#F5E6CC] shadow-[6px_6px_0px_0px_#332420]">
+        <section className="relative overflow-hidden rounded-2xl border-2 border-charcoal bg-wine text-sand shadow-[6px_6px_0px_0px_var(--color-charcoal)]">
           <div className="grid grid-cols-[1fr_auto] items-center gap-4 p-5">
             <div>
-              <p className="font-mono text-xs font-bold tracking-widest text-[#F5E6CC]/80">STAREA COMENZII</p>
+              <p className="font-mono text-xs font-bold tracking-widest text-sand/80">STAREA COMENZII</p>
               <h1 className="font-display text-3xl sm:text-5xl leading-none mt-1">
                 <Display>{title}</Display>
               </h1>
-              <p className="font-nunito font-bold text-sm mt-2 text-[#F5E6CC]/90">
+              <p className="font-nunito font-bold text-sm mt-2 text-sand/90">
                 {canceled
                   ? "Comanda a fost anulată. Dacă nu te așteptai la asta, sună-ne."
                   : stepNote(order.status, order.fulfillment_type)}
               </p>
-              <p className="mt-3 inline-block rounded-full bg-[#F5E6CC] text-[#790D20] font-display text-sm tracking-wider px-3 py-1">
+              <p className="mt-3 inline-block rounded-full bg-sand text-wine font-display text-sm tracking-wider px-3 py-1">
                 <Display>{order.fulfillment_type === "pickup" ? "PICK UP" : "DELIVERY"}</Display>
               </p>
             </div>
-            <div className="relative w-20 sm:w-32 aspect-[4/5] -rotate-3 overflow-hidden rounded-xl border-2 border-[#332420] shadow-[3px_3px_0px_0px_#332420]">
+            <div className="relative w-20 sm:w-32 aspect-[4/5] -rotate-3 overflow-hidden rounded-xl border-2 border-charcoal shadow-[3px_3px_0px_0px_var(--color-charcoal)]">
               <Image src={packedPhoto} alt="" fill sizes="128px" placeholder="blur" className="object-cover" />
             </div>
           </div>
         </section>
 
         {!canceled && (
-          <ol className="rounded-2xl border-2 border-[#332420] bg-[#F5E6CC] p-5 shadow-[4px_4px_0px_0px_#332420]">
+          <ol className="rounded-2xl border-2 border-charcoal bg-sand p-5 shadow-[4px_4px_0px_0px_var(--color-charcoal)]">
             {steps.map((step, i) => {
               const reached = i <= currentIndex;
               const active = i === currentIndex && !done;
@@ -105,13 +105,13 @@ export default function OrderStatusView({ order, footer }: { order: StatusOrder;
                   {!last && (
                     <span
                       aria-hidden
-                      className={`absolute left-[19px] top-10 bottom-0 w-[3px] rounded-full ${i < currentIndex ? "bg-[#790D20]" : "bg-[#332420]/15"}`}
+                      className={`absolute left-[19px] top-10 bottom-0 w-[3px] rounded-full ${i < currentIndex ? "bg-wine" : "bg-charcoal/15"}`}
                     />
                   )}
                   <span
-                    className={`relative z-10 w-10 h-10 shrink-0 rounded-full border-2 border-[#332420] grid place-items-center ${
-                      reached ? "bg-[#790D20] text-[#F5E6CC]" : "bg-[#F5E6CC] text-[#332420]/40"
-                    } ${active ? "ring-4 ring-[#790D20]/25" : ""}`}
+                    className={`relative z-10 w-10 h-10 shrink-0 rounded-full border-2 border-charcoal grid place-items-center ${
+                      reached ? "bg-wine text-sand" : "bg-sand text-charcoal/40"
+                    } ${active ? "ring-4 ring-wine/25" : ""}`}
                   >
                     <Icon className="w-5 h-5" aria-hidden />
                   </span>
@@ -120,7 +120,7 @@ export default function OrderStatusView({ order, footer }: { order: StatusOrder;
                       <Display>{step.label.toUpperCase()}</Display>
                     </span>
                     {reached && (
-                      <span className="block font-nunito font-semibold text-sm text-[#332420]/70 mt-1">
+                      <span className="block font-nunito font-semibold text-sm text-charcoal/70 mt-1">
                         {stepNote(step.status, order.fulfillment_type)}
                       </span>
                     )}
@@ -136,23 +136,23 @@ export default function OrderStatusView({ order, footer }: { order: StatusOrder;
             href={GOOGLE_MAPS_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-3 rounded-2xl border-2 border-[#332420] bg-[#F5E6CC] p-4 shadow-[4px_4px_0px_0px_#332420] hover:bg-[#790D20]/5"
+            className="flex items-center gap-3 rounded-2xl border-2 border-charcoal bg-sand p-4 shadow-[4px_4px_0px_0px_var(--color-charcoal)] hover:bg-wine/5"
           >
-            <MapPin className="w-6 h-6 shrink-0 text-[#790D20]" aria-hidden />
+            <MapPin className="w-6 h-6 shrink-0 text-wine" aria-hidden />
             <span>
-              <span className="block font-mono text-xs font-bold tracking-widest text-[#790D20]">RIDICI DE LA</span>
+              <span className="block font-mono text-xs font-bold tracking-widest text-wine">RIDICI DE LA</span>
               <span className="block font-nunito font-black">{SITE_ADDRESS.line}</span>
             </span>
           </a>
         )}
 
         {/* Receipt */}
-        <section className="rounded-2xl border-2 border-[#332420] bg-[#F5E6CC] p-5 shadow-[4px_4px_0px_0px_#332420]">
+        <section className="rounded-2xl border-2 border-charcoal bg-sand p-5 shadow-[4px_4px_0px_0px_var(--color-charcoal)]">
           <h2 className="font-display text-2xl tracking-wide mb-3"><Display>COMANDA TA</Display></h2>
           <ul className="space-y-2">
             {order.order_items.map((item) => (
               <li key={item.id} className="font-nunito font-bold text-sm">
-                <span className="font-black text-[#790D20]">{item.quantity}×</span> {item.product_name}
+                <span className="font-black text-wine">{item.quantity}×</span> {item.product_name}
                 {item.modifiers?.length > 0 && (
                   <span className="block font-mono text-[11px] font-normal opacity-70">
                     {item.modifiers.map((m) => m.name).join(", ")}
@@ -161,13 +161,13 @@ export default function OrderStatusView({ order, footer }: { order: StatusOrder;
               </li>
             ))}
           </ul>
-          <dl className="mt-4 pt-3 border-t-2 border-dashed border-[#332420]/30 font-nunito text-sm space-y-1">
+          <dl className="mt-4 pt-3 border-t-2 border-dashed border-charcoal/30 font-nunito text-sm space-y-1">
             <Row label="Produse" value={formatLei(order.subtotal)} />
             {order.delivery_fee > 0 && <Row label="Livrare" value={formatLei(order.delivery_fee)} />}
             {order.tip_amount > 0 && <Row label="Bacșiș" value={formatLei(order.tip_amount)} />}
             <div className="flex justify-between font-black text-lg pt-1">
               <dt>Total</dt>
-              <dd className="text-[#790D20]">{formatLei(order.total_amount)}</dd>
+              <dd className="text-wine">{formatLei(order.total_amount)}</dd>
             </div>
           </dl>
         </section>

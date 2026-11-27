@@ -22,7 +22,7 @@ export default function SignOutButton() {
       type="button"
       onClick={signOut}
       disabled={busy}
-      className="min-h-11 px-4 font-nunito font-bold text-sm border-2 border-[#F5E6CC] bg-transparent text-[#F5E6CC] disabled:opacity-60"
+      className="min-h-11 px-4 font-nunito font-bold text-sm border-2 border-sand bg-transparent text-sand disabled:opacity-60"
     >
       IEȘI
     </button>
