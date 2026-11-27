@@ -20,7 +20,7 @@ export default function LocationSection() {
             <MapPin className="w-4 h-4" />
             <span>02 · CARTIERUL CRUSTEI</span>
           </div>
-          <h3 data-reveal className="font-bebas text-4xl sm:text-5xl mb-4 text-[#F5E6CC]"><Display>UNDE GĂSEȘTI CRUSTA</Display></h3>
+          <h2 data-reveal className="font-bebas text-4xl sm:text-5xl mb-4 text-[#F5E6CC]"><Display>UNDE GĂSEȘTI CRUSTA</Display></h2>
           <p className="font-nunito font-bold text-base text-[#F5E6CC]/80 mb-6">
             Fix lângă liceu, în {SITE_ADDRESS.sector}, {SITE_ADDRESS.city}. Urmărește mirosul de vită Black Angus caramelizată pe plită.
           </p>
@@ -68,7 +68,7 @@ export default function LocationSection() {
           />
         </div>
         <div className="sm:flex-1 sm:min-w-[260px]">
-          <h3 className="font-bebas text-4xl sm:text-5xl mb-4"><Display>LIVRARE PROPRIE & PICKUP</Display></h3>
+          <h2 className="font-bebas text-4xl sm:text-5xl mb-4"><Display>LIVRARE PROPRIE & PICKUP</Display></h2>
           <p className="font-nunito font-bold text-base text-[#332420]/90 max-w-2xl">
             Comandă direct de pe site fără comisioane ascunse. Livrare gratuită în cartier la comenzi de peste 120 LEI sau ridicare direct de la geam în 15 minute.
           </p>

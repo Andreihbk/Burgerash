@@ -1,6 +1,5 @@
 import { MENU_SECTIONS } from "@/lib/catalog";
-import ProductCard from "./ProductCard";
-import ProductRow from "./ProductRow";
+import MenuItem from "./MenuItem";
 import { sectionDomId } from "./ids";
 import { Display } from "@/components/Display";
 
@@ -19,18 +18,12 @@ export default function MenuSections() {
             <div className="flex-1 h-2 border-y-2 border-[#332420]" />
           </div>
 
-          {/* Phones: compact tappable rows (app-style list). md+: the sticker cards. */}
-          <ul className="md:hidden space-y-3">
+          {/* Each product is rendered once: a row on phones, a sticker card from md up (see MenuItem). */}
+          <ul className="space-y-3 md:space-y-0 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-6">
             {products.map((product) => (
-              <ProductRow key={product.id} product={product} />
+              <MenuItem key={product.id} product={product} />
             ))}
           </ul>
-
-          <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {products.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
         </section>
       ))}
     </div>

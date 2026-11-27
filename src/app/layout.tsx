@@ -5,22 +5,29 @@ import localFont from "next/font/local";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_TITLE, SITE_URL } from "@/lib/site";
 import SiteAnalytics from "@/components/SiteAnalytics";
 
-// Small mono accents (codes, prices meta)
+// Small mono accents (codes, prices meta). Not preloaded: it is never in the first screen's big text,
+// so it should not compete with Nunito and Eatvetica for bandwidth (audit R4).
 const robotoMono = Roboto_Mono({
   subsets: ["latin", "latin-ext"],
   variable: "--font-roboto-mono",
+  display: "swap",
+  preload: false,
 });
 
 // Body text, form labels and all digits (also the fallback for glyphs Eatvetica lacks)
 const nunito = Nunito({
   subsets: ["latin", "latin-ext"],
   variable: "--font-nunito",
+  display: "swap",
 });
 
 // Display/headings (.font-bebas). Used with the designer's written permission.
 // No digits and no Romanian diacritics: digits render in Nunito, text goes through stripDiacritics.
+// WOFF2 subset of docs/brand/fonts/eatvetica.otf to the unicode-range below (208 KB -> 22 KB, audit R4).
+// To rebuild: pyftsubset docs/brand/fonts/eatvetica.otf --unicodes="U+0020-002F,U+003A-007E,U+00A0-024F,U+2000-206F"
+//   --flavor=woff2 --layout-features='*' --output-file=src/app/fonts/eatvetica.woff2
 const eatvetica = localFont({
-  src: "./fonts/eatvetica.otf",
+  src: "./fonts/eatvetica.woff2",
   variable: "--font-eatvetica",
   weight: "400",
   display: "swap",

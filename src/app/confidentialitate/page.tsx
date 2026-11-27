@@ -5,6 +5,7 @@ import { ANSPDCP } from "@/lib/legal";
 
 export const metadata: Metadata = {
   title: "Confidențialitate și cookies",
+  description: "Ce date personale prelucrează Burgerash când comanzi online, de ce, cât timp le păstrăm, cookies și drepturile tale conform GDPR.",
   alternates: { canonical: "/confidentialitate" },
 };
 

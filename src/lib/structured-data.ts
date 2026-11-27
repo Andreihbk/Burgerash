@@ -73,7 +73,8 @@ export function restaurantJsonLd() {
       priceRange: `${Math.min(...burgerPrices)}-${Math.max(...burgerPrices)} RON`,
     }),
     currenciesAccepted: "RON",
-    paymentAccepted: "Cash, Card",
+    // Owner decision: card online only (Netopia), no cash.
+    paymentAccepted: "Card",
     acceptsReservations: false,
     areaServed: { "@type": "Place", name: "Sector 6, București" },
     ...(CONTACT.phone && { telephone: CONTACT.phone }),

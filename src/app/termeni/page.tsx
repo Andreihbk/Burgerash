@@ -6,7 +6,11 @@ import { ANPC_PATH, DELIVERY_PATH, PRIVACY_PATH } from "@/lib/legal";
 import { DELIVERY_RADIUS_KM, SITE_ADDRESS } from "@/lib/site";
 import { FREE_DELIVERY_THRESHOLD } from "@/lib/pricing";
 
-export const metadata: Metadata = { title: "Termeni și condiții", alternates: { canonical: "/termeni" } };
+export const metadata: Metadata = {
+  title: "Termeni și condiții",
+  description: "Termenii și condițiile pentru comenzile online de la Burgerash, Sector 6, București: comandă, preț, plată cu cardul, livrare și ridicare.",
+  alternates: { canonical: "/termeni" },
+};
 
 export default function TermeniPage() {
   return (
