@@ -35,6 +35,11 @@ export function useLiveOrders({
   const [fresh, setFresh] = useState<Set<string>>(new Set());
 
   const knownIds = useRef<Set<string>>(new Set());
+  // Latest list for the Realtime handler (it is created once per subscription).
+  const ordersRef = useRef<Order[]>([]);
+  useEffect(() => {
+    ordersRef.current = orders;
+  }, [orders]);
   const firstLoad = useRef(true);
   const markFresh = useCallback((ids: string[]) => {
     if (ids.length === 0) return;
@@ -108,14 +113,10 @@ export function useLiveOrders({
           return;
         }
         // UPDATE of a known order: merge fields, keep the items we already have.
-        let missing = false;
-        setOrders((prev) => {
-          if (!prev.some((o) => o.id === row.id)) {
-            missing = true;
-            return prev;
-          }
-          return prev.map((o) => (o.id === row.id ? { ...o, ...row, items: o.items } : o));
-        });
+        // Checked on a ref, not inside the setOrders updater: React runs updaters later, so a flag set there
+        // was still false here and an order coming back to "DE PREDAT" only showed after a reload.
+        const missing = !ordersRef.current.some((o) => o.id === row.id);
+        setOrders((prev) => prev.map((o) => (o.id === row.id ? { ...o, ...row, items: o.items } : o)));
         if (missing && refetchMissing) {
           // It came back from another column/screen and is not in state: fetch it again.
           const full = await fetchFull(row.id);
