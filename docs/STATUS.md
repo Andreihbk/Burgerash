@@ -1,5 +1,7 @@
 # Burgerash - Launch status (audit of 2026-11-19, read-only)
 
+> **Outdated (2026-11-19).** Kept for history. Current status: `docs/PLAN.md` and `docs/AUDIT-2026-11-27.md`.
+
 Git: branch `main`, clean, in sync with origin (HEAD ee3ae54).
 Health: `npm run build` OK, `npm run lint` OK, `npm test` OK (56 tests, 9 files).
 `npx tsc --noEmit` FAILS with 2 errors, both in `src/lib/ebriza-payload.test.ts` (lines 26 and 66: `subtotal`

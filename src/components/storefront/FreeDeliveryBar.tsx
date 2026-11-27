@@ -7,11 +7,11 @@ export default function FreeDeliveryBar({ subtotal }: { subtotal: number }) {
   const pct = Math.min(100, Math.round((subtotal / FREE_DELIVERY_THRESHOLD) * 100));
   return (
     <div className="py-1">
-      <p className="font-nunito font-bold text-xs text-[#332420] mb-1.5" aria-live="polite">
+      <p className="font-nunito font-bold text-xs text-charcoal mb-1.5" aria-live="polite">
         {left > 0 ? (
-          <>Mai ai <span className="font-black text-[#790D20]">{formatLei(left)}</span> până la livrare gratuită</>
+          <>Mai ai <span className="font-black text-wine">{formatLei(left)}</span> până la livrare gratuită</>
         ) : (
-          <span className="font-black text-[#790D20]">Ai livrare gratuită!</span>
+          <span className="font-black text-wine">Ai livrare gratuită!</span>
         )}
       </p>
       <div
@@ -20,9 +20,9 @@ export default function FreeDeliveryBar({ subtotal }: { subtotal: number }) {
         aria-valuemin={0}
         aria-valuemax={100}
         aria-valuenow={pct}
-        className="h-3 rounded-full border-2 border-[#332420] bg-[#F5E6CC] overflow-hidden"
+        className="h-3 rounded-full border-2 border-charcoal bg-sand overflow-hidden"
       >
-        <div className="h-full bg-[#790D20] transition-[width] duration-300 motion-reduce:transition-none" style={{ width: `${pct}%` }} />
+        <div className="h-full bg-wine transition-[width] duration-300 motion-reduce:transition-none" style={{ width: `${pct}%` }} />
       </div>
     </div>
   );

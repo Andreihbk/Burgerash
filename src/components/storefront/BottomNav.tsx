@@ -33,15 +33,15 @@ export default function BottomNav() {
 
   const behavior: ScrollBehavior = prefersReducedMotion() ? "auto" : "smooth";
   const item = (on: boolean) =>
-    `relative flex flex-1 flex-col items-center justify-center gap-0.5 font-bebas text-[13px] tracking-wider transition-colors ${
-      on ? "text-[#F5E6CC]" : "text-[#F5E6CC]/60"
+    `relative flex flex-1 flex-col items-center justify-center gap-0.5 font-display text-[13px] tracking-wider transition-colors ${
+      on ? "text-sand" : "text-sand/60"
     }`;
-  const dot = (on: boolean) => (on ? <span aria-hidden className="absolute top-1.5 h-1 w-6 rounded-full bg-[#F5E6CC]" /> : null);
+  const dot = (on: boolean) => (on ? <span aria-hidden className="absolute top-1.5 h-1 w-6 rounded-full bg-sand" /> : null);
 
   return (
     <nav
       aria-label="Navigare rapidă"
-      className="md:hidden fixed inset-x-0 bottom-0 z-40 bg-[#790D20] border-t-2 border-[#332420]"
+      className="md:hidden fixed inset-x-0 bottom-0 z-40 bg-wine border-t-2 border-charcoal"
       style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
     >
       <div className="flex" style={{ height: BOTTOM_NAV_HEIGHT }}>
@@ -59,7 +59,7 @@ export default function BottomNav() {
           <span className="relative">
             <ShoppingBag className="w-5 h-5" aria-hidden />
             {totalItems > 0 && (
-              <span className="absolute -top-2 -right-3 min-w-5 h-5 px-1 grid place-items-center rounded-full bg-[#F5E6CC] text-[#790D20] font-nunito font-black text-[11px] border-2 border-[#332420]">
+              <span className="absolute -top-2 -right-3 min-w-5 h-5 px-1 grid place-items-center rounded-full bg-sand text-wine font-nunito font-black text-[11px] border-2 border-charcoal">
                 {totalItems}
               </span>
             )}

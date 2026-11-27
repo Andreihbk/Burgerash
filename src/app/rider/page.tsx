@@ -10,6 +10,7 @@ import SignOutButton from "@/components/SignOutButton";
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { RIDERS } from "@/lib/riders";
 import { isSupabaseConfigured, supabase } from "@/lib/supabase";
+import { sortOldestFirst } from "@/lib/staff-format";
 import type { Order } from "@/types/database";
 import { Display } from "@/components/Display";
 
@@ -31,10 +32,6 @@ function readRider(): string | null {
   }
 }
 const readRiderServer = () => null;
-
-function sortOldestFirst(list: Order[]): Order[] {
-  return [...list].sort((a, b) => a.created_at.localeCompare(b.created_at));
-}
 
 function money(n: number): string {
   return `${Number(n).toFixed(2).replace(".", ",")} RON`;
@@ -159,9 +156,9 @@ export default function RiderPage() {
   const list = sortOldestFirst(orders);
 
   return (
-    <div className="min-h-screen bg-[#F5E6CC] text-[#332420] flex flex-col">
-      <header className="bg-[#332420] text-[#F5E6CC] px-4 py-3 flex items-center justify-between gap-3">
-        <Link href="/" className="font-bebas text-2xl tracking-wide min-h-11 inline-flex items-center gap-2">
+    <div className="min-h-screen bg-sand text-charcoal flex flex-col">
+      <header className="bg-charcoal text-sand px-4 py-3 flex items-center justify-between gap-3">
+        <Link href="/" className="font-display text-2xl tracking-wide min-h-11 inline-flex items-center gap-2">
           <span aria-hidden>&larr;</span>
           <BrandLogo variant="icon" tone="sand" className="h-8 w-auto" />
         </Link>
@@ -176,21 +173,21 @@ export default function RiderPage() {
       </header>
 
       {(error || !isSupabaseConfigured) && (
-        <div role="alert" className="bg-[#790D20] text-[#F5E6CC] px-4 py-3 font-nunito font-bold">
+        <div role="alert" className="bg-wine text-sand px-4 py-3 font-nunito font-bold">
           {error ?? "Supabase nu este configurat."}
         </div>
       )}
 
       {!rider ? (
         <main className="flex-1 p-4 flex flex-col gap-4">
-          <h1 className="font-bebas text-4xl tracking-wide"><Display>CINE EȘTI?</Display></h1>
+          <h1 className="font-display text-4xl tracking-wide"><Display>CINE EȘTI?</Display></h1>
           <div className="flex flex-col gap-3">
             {RIDERS.map((name) => (
               <button
                 key={name}
                 type="button"
                 onClick={() => choose(name)}
-                className="min-h-16 border-2 border-[#332420] bg-transparent font-bebas text-3xl tracking-wide shadow-[4px_4px_0_0_#332420] active:translate-x-0.5 active:translate-y-0.5"
+                className="min-h-16 border-2 border-charcoal bg-transparent font-display text-3xl tracking-wide shadow-[4px_4px_0_0_var(--color-charcoal)] active:translate-x-0.5 active:translate-y-0.5"
               >
                 <Display>{name}</Display>
               </button>
@@ -200,7 +197,7 @@ export default function RiderPage() {
       ) : (
         <main className="flex-1 p-3 flex flex-col gap-4 pb-28">
           <div className="flex items-baseline justify-between gap-2">
-            <h1 className="font-bebas text-3xl tracking-wide">
+            <h1 className="font-display text-3xl tracking-wide">
               <Display>{rider} · {list.length} {list.length === 1 ? "COMANDĂ" : "COMENZI"}</Display>
             </h1>
             <button
@@ -226,13 +223,13 @@ export default function RiderPage() {
       {undo && (
         <div
           role="status"
-          className="fixed bottom-0 inset-x-0 bg-[#332420] text-[#F5E6CC] px-4 py-3 flex items-center justify-between gap-3"
+          className="fixed bottom-0 inset-x-0 bg-charcoal text-sand px-4 py-3 flex items-center justify-between gap-3"
         >
           <span className="font-nunito font-bold">{undo.order_number} livrat</span>
           <button
             type="button"
             onClick={undoDeliver}
-            className="min-h-11 px-5 border-2 border-[#F5E6CC] font-bebas text-xl tracking-wide"
+            className="min-h-11 px-5 border-2 border-sand font-display text-xl tracking-wide"
           >
             <Display>ANULEAZĂ</Display>
           </button>
@@ -247,31 +244,31 @@ function RiderCard({ order, onDelivered }: { order: Order; onDelivered: (order: 
   const mapsHref = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(order.delivery_address ?? "")}`;
 
   return (
-    <article className="bg-[#F5E6CC] border-2 border-[#332420] shadow-[4px_4px_0_0_#332420]">
-      <header className="px-4 pt-3 pb-2 border-b-2 border-[#332420] flex items-baseline justify-between gap-2">
-        <span className="font-bebas text-3xl tracking-wide leading-none"><Display>{order.order_number}</Display></span>
+    <article className="bg-sand border-2 border-charcoal shadow-[4px_4px_0_0_var(--color-charcoal)]">
+      <header className="px-4 pt-3 pb-2 border-b-2 border-charcoal flex items-baseline justify-between gap-2">
+        <span className="font-display text-3xl tracking-wide leading-none"><Display>{order.order_number}</Display></span>
         <span className="font-nunito font-extrabold text-lg">{order.customer_name}</span>
       </header>
 
-      <div className="px-4 py-3 font-nunito flex flex-col gap-1 border-b-2 border-[#332420]">
+      <div className="px-4 py-3 font-nunito flex flex-col gap-1 border-b-2 border-charcoal">
         <p className="text-xl font-extrabold leading-tight">{order.delivery_address}</p>
         {order.delivery_details && <p className="text-base font-semibold">{order.delivery_details}</p>}
-        {order.order_note && <p className="text-base font-bold text-[#790D20]">Notă: {order.order_note}</p>}
+        {order.order_note && <p className="text-base font-bold text-wine">Notă: {order.order_note}</p>}
       </div>
 
       <div
-        className={`px-4 py-3 flex items-baseline justify-between gap-2 border-b-2 border-[#332420] ${
-          pay.due ? "bg-[#790D20] text-[#F5E6CC]" : ""
+        className={`px-4 py-3 flex items-baseline justify-between gap-2 border-b-2 border-charcoal ${
+          pay.due ? "bg-wine text-sand" : ""
         }`}
       >
         <span className="font-mono text-sm font-bold">{pay.label}</span>
-        <span className="font-bebas text-4xl tracking-wide leading-none"><Display>{money(order.total_amount)}</Display></span>
+        <span className="font-display text-4xl tracking-wide leading-none"><Display>{money(order.total_amount)}</Display></span>
       </div>
 
       <div className="p-3 grid grid-cols-2 gap-2">
         <a
           href={`tel:${order.customer_phone}`}
-          className="min-h-16 border-2 border-[#332420] flex items-center justify-center font-bebas text-3xl tracking-wide"
+          className="min-h-16 border-2 border-charcoal flex items-center justify-center font-display text-3xl tracking-wide"
         >
           <Display>SUNĂ</Display>
         </a>
@@ -279,14 +276,14 @@ function RiderCard({ order, onDelivered }: { order: Order; onDelivered: (order: 
           href={mapsHref}
           target="_blank"
           rel="noopener noreferrer"
-          className="min-h-16 border-2 border-[#332420] flex items-center justify-center font-bebas text-3xl tracking-wide"
+          className="min-h-16 border-2 border-charcoal flex items-center justify-center font-display text-3xl tracking-wide"
         >
           <Display>HARTĂ</Display>
         </a>
         <button
           type="button"
           onClick={() => onDelivered(order)}
-          className="col-span-2 min-h-16 bg-[#790D20] text-[#F5E6CC] font-bebas text-3xl tracking-wide"
+          className="col-span-2 min-h-16 bg-wine text-sand font-display text-3xl tracking-wide"
         >
           <Display>LIVRAT ✓</Display>
         </button>

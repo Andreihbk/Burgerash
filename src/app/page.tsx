@@ -26,7 +26,7 @@ export default function Home() {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd }} />
-      <div className="min-h-screen bg-[#F5E6CC] text-[#332420] font-nunito pb-40 md:pb-24 overflow-x-clip">
+      <div className="min-h-screen bg-sand text-charcoal font-nunito pb-40 md:pb-24 overflow-x-clip">
         <SiteHeader />
         <HeroBoard />
         <CategoryBar />
@@ -36,11 +36,11 @@ export default function Home() {
           <TodayStatus />
 
           <div id={MENU_TOP_ID} className="mb-8">
-            <p className="font-mono text-xs font-bold tracking-widest text-[#790D20]">01 · COMANDĂ ONLINE</p>
-            <h2 data-reveal className="font-bebas text-4xl sm:text-5xl text-[#332420] leading-none">
+            <p className="font-mono text-xs font-bold tracking-widest text-wine">01 · COMANDĂ ONLINE</p>
+            <h2 data-reveal className="font-display text-4xl sm:text-5xl text-charcoal leading-none">
               <Display>MENIU</Display>
             </h2>
-            <p className="mt-2 font-nunito font-semibold text-base text-[#332420]/70">Pregătim zilnic. Când se termină, se termină.</p>
+            <p className="mt-2 font-nunito font-semibold text-base text-charcoal/70">Pregătim zilnic. Când se termină, se termină.</p>
           </div>
 
           <MenuSections />

@@ -21,7 +21,7 @@ const nunito = Nunito({
   display: "swap",
 });
 
-// Display/headings (.font-bebas). Used with the designer's written permission.
+// Display/headings (.font-display). Used with the designer's written permission.
 // No digits and no Romanian diacritics: digits render in Nunito, text goes through stripDiacritics.
 // WOFF2 subset of docs/brand/fonts/eatvetica.otf to the unicode-range below (208 KB -> 22 KB, audit R4).
 // To rebuild: pyftsubset docs/brand/fonts/eatvetica.otf --unicodes="U+0020-002F,U+003A-007E,U+00A0-024F,U+2000-206F"

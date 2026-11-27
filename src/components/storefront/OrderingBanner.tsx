@@ -6,7 +6,7 @@ export default function OrderingBanner() {
   return (
     <div
       role="status"
-      className="mb-6 rounded-lg border-2 border-[#790D20] bg-[#790D20] px-4 py-3 text-center font-nunito text-base font-black text-[#F5E6CC]"
+      className="mb-6 rounded-lg border-2 border-wine bg-wine px-4 py-3 text-center font-nunito text-base font-black text-sand"
     >
       {ORDERING_CLOSED_BANNER}
     </div>

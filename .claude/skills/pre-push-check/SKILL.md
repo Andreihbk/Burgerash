@@ -1,9 +1,9 @@
 ---
 name: pre-push-check
-description: Use before committing or pushing, or when asked to check, review, or ship changes. Runs build, lint, secret and RLS checks for this public repo.
+description: Use before committing or pushing, or when asked to check, review, or ship changes. Runs build, lint, secret and RLS checks (repo is private now, same secret rules as a public repo).
 ---
 
-# Pre-push check (the repo is PUBLIC)
+# Pre-push check (repo is private now; keep the same secret rules as if it were public)
 
 Run in order and report a short pass/fail list:
 

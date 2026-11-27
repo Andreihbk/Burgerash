@@ -1,5 +1,15 @@
--- !!! WARNING: Do not re-run on the live DB; use migrations (supabase/migrations).
--- !!! Re-running this file re-creates the open "Public access" policies.
+-- !!! WARNING: only for a NEW, EMPTY Supabase project. Never run it on the live DB.
+-- !!! After this file, run every file in supabase/migrations in order (they add the real RLS policies).
+-- !!! Safety (audit R8): the guard below stops the whole script if public.orders already exists,
+-- !!! and this file no longer creates any open "Public access" policy (RLS on + no policy = closed).
+
+do $$
+begin
+  if to_regclass('public.orders') is not null then
+    raise exception 'schema.sql is for an empty database only: public.orders already exists. Use supabase/migrations.';
+  end if;
+end;
+$$;
 
 -- ==========================================
 -- BURGERASH SUPABASE SCHEMA + REALTIME
@@ -176,19 +186,14 @@ begin
 end;
 $$;
 
--- RLS & Politici permisive pentru MVP.
--- REPLACED by migrations/20261120000000_staff_rls.sql (L.0b). Always run the migrations after this file.
+-- RLS on, with NO policies here: every table stays closed until the migrations run.
+-- The real policies and grants live in migrations/20261120000000_staff_rls.sql (L.0b) and later files.
+-- (The old MVP "Public access ... using (true)" policies were removed from this file in audit R8.)
 alter table public.categories enable row level security;
 alter table public.products enable row level security;
 alter table public.modifiers enable row level security;
 alter table public.orders enable row level security;
 alter table public.order_items enable row level security;
-
-create policy "Public access categories" on public.categories for all using (true) with check (true);
-create policy "Public access products" on public.products for all using (true) with check (true);
-create policy "Public access modifiers" on public.modifiers for all using (true) with check (true);
-create policy "Public access orders" on public.orders for all using (true) with check (true);
-create policy "Public access order_items" on public.order_items for all using (true) with check (true);
 
 -- Activare Realtime pentru KDS (/kitchen), Dispatch (/dispatch) și Rider (/rider)
 alter publication supabase_realtime add table public.orders;

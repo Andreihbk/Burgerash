@@ -21,18 +21,18 @@ export default function MenuItem({ product }: { product: Product }) {
 
   return (
     <li
-      className={`relative group flex items-center gap-3 bg-[#F5E6CC] border-2 border-[#332420] rounded-xl p-2.5 pr-3 shadow-[3px_3px_0px_0px_#332420] md:flex-col md:items-stretch md:gap-0 md:p-5 md:shadow-[5px_5px_0px_0px_#332420] md:hover:translate-y-[-3px] md:transition-all ${soldOut ? "opacity-60 md:opacity-100" : ""}`}
+      className={`relative group flex items-center gap-3 bg-sand border-2 border-charcoal rounded-xl p-2.5 pr-3 shadow-[3px_3px_0px_0px_var(--color-charcoal)] md:flex-col md:items-stretch md:gap-0 md:p-5 md:shadow-[5px_5px_0px_0px_var(--color-charcoal)] md:hover:translate-y-[-3px] md:transition-all ${soldOut ? "opacity-60 md:opacity-100" : ""}`}
     >
       {/* Phones: the whole row opens the product detail (customize modal). */}
       <button
         type="button"
         onClick={() => openCustomize(product)}
-        className="md:hidden absolute inset-0 rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#790D20]"
+        className="md:hidden absolute inset-0 rounded-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-wine"
         aria-label={`Vezi ${product.name}, ${product.price} lei`}
       />
 
       {/* Sticker instead of photo (product visuals are SVG stickers, see CLAUDE.md) */}
-      <div className="shrink-0 grid place-items-center w-[4.5rem] h-[4.5rem] md:w-full md:h-52 md:mb-4 rounded-lg bg-[#790D20]/10 border border-[#790D20]/20">
+      <div className="shrink-0 grid place-items-center w-[4.5rem] h-[4.5rem] md:w-full md:h-52 md:mb-4 rounded-lg bg-wine/10 border border-wine/20">
         <BurgerStamp
           product={product}
           className="h-16 w-16 md:h-44 md:w-44 rotate-[-6deg] md:group-hover:rotate-0 md:transition-transform md:duration-300 md:drop-shadow-[4px_4px_0px_rgba(51,36,32,0.25)]"
@@ -40,37 +40,37 @@ export default function MenuItem({ product }: { product: Product }) {
       </div>
 
       <div className="flex-1 min-w-0 md:flex-none">
-        <h4 className="font-bebas text-xl/tight md:text-3xl tracking-wide text-[#332420] md:mb-2">
+        <h4 className="font-display text-xl/tight md:text-3xl tracking-wide text-charcoal md:mb-2">
           <Display>{product.name}</Display>
         </h4>
 
-        <p className="font-nunito font-semibold text-xs/snug text-[#332420]/70 line-clamp-2 md:line-clamp-none md:font-bold md:text-sm md:text-[#332420]/75 md:mb-3">
+        <p className="font-nunito font-semibold text-xs/snug text-charcoal/70 line-clamp-2 md:line-clamp-none md:font-bold md:text-sm md:text-charcoal/75 md:mb-3">
           {product.description}
         </p>
 
-        <p className="md:hidden mt-1 font-nunito font-black text-base text-[#790D20]">
+        <p className="md:hidden mt-1 font-nunito font-black text-base text-wine">
           {product.price} <span className="text-xs font-bold">LEI</span>
-          {product.weight_label && <span className="ml-2 font-mono text-[10px] font-normal text-[#332420]/60">{product.weight_label}</span>}
+          {product.weight_label && <span className="ml-2 font-mono text-[10px] font-normal text-charcoal/80">{product.weight_label}</span>}
         </p>
 
         {product.allergens === null && (
-          <p className="hidden md:block font-nunito text-xs text-[#332420]/60 mb-3">Alergeni: întreabă-ne</p>
+          <p className="hidden md:block font-nunito text-xs text-charcoal/60 mb-3">Alergeni: întreabă-ne</p>
         )}
       </div>
 
-      <div className="relative z-10 shrink-0 md:flex md:items-center md:justify-between md:pt-4 md:border-t-2 md:border-[#332420]/10 md:mt-auto md:gap-2">
+      <div className="relative z-10 shrink-0 md:flex md:items-center md:justify-between md:pt-4 md:border-t-2 md:border-charcoal/10 md:mt-auto md:gap-2">
         <div className="hidden md:block">
-          <span className="text-[10px] font-mono text-[#332420]/60 block">
+          <span className="text-[10px] font-mono text-charcoal/60 block">
             {product.weight_label ? `GRAMAJ ${product.weight_label}` : "PREȚ"}
           </span>
-          <span className="font-nunito font-black text-2xl text-[#332420]">
+          <span className="font-nunito font-black text-2xl text-charcoal">
             {product.price} <span className="text-sm font-bold">LEI</span>
           </span>
         </div>
 
         <div className="md:hidden">
           {soldOut ? (
-            <span className="block font-bebas text-sm tracking-wide text-[#790D20] border-2 border-dashed border-[#790D20] rounded-md px-2 py-1">
+            <span className="block font-display text-sm tracking-wide text-wine border-2 border-dashed border-wine rounded-md px-2 py-1">
               <Display>EPUIZAT</Display>
             </span>
           ) : (
@@ -81,7 +81,7 @@ export default function MenuItem({ product }: { product: Product }) {
                 notifyAdded(product.name);
               }}
               aria-label={`Adaugă ${product.name} în coș`}
-              className="grid place-items-center w-11 h-11 rounded-full bg-[#790D20] text-[#F5E6CC] border-2 border-[#332420] shadow-[2px_2px_0px_0px_#332420] active:translate-y-px disabled:opacity-50 disabled:pointer-events-none"
+              className="grid place-items-center w-11 h-11 rounded-full bg-wine text-sand border-2 border-charcoal shadow-[2px_2px_0px_0px_var(--color-charcoal)] active:translate-y-px disabled:opacity-50 disabled:pointer-events-none"
             >
               <Plus className="w-5 h-5 stroke-[3]" />
             </button>
