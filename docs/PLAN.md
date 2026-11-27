@@ -101,6 +101,9 @@ High priority, not a launch gate by itself: **Ebriza integration** (E.1-E.5, L.2
       `SOCIAL_LINKS` (site.ts) when they exist, Search Console + claim the Google Business Profile (off-site).
 - [x] P.6 Vercel Web Analytics + Speed Insights (`SiteAnalytics.tsx`, cookieless, no keys; staff and /comanda/ pages
       not counted). Turn both on in the Vercel dashboard.
+- [ ] R.1-R.15 Audit 2026-11-27 (SEO, speed, code): findings + ready prompts in `docs/AUDIT-2026-11-27.md`.
+      Phase 1 first (R1 map on demand, R2 sold-out without supabase-js at load, R3 menu rendered once, R4 fonts, R5 SEO fixes).
+      Baseline `/` mobile Lighthouse 63 (TBT 870 ms, LCP 4.6 s, 1,739 DOM nodes), desktop 98.
 
 ## Phase 1 - Ebriza adapter (works in mock mode, no credentials needed)
 - [x] 1.1 Fix `src/types/ebriza.ts` against `.claude/skills/ebriza-api/reference.md`.
