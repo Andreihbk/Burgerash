@@ -16,6 +16,8 @@ Nothing here is built yet. Do not set `NEXT_PUBLIC_ORDERING_ENABLED=true` in Pro
    - Done 2026-11-19: /termeni, /confidentialitate, /livrare-retur, /anpc; company data in `src/lib/legal.ts` (all
      `[DE COMPLETAT]`, owner must fill before launch); footer links + SAL/SOL; required terms checkbox at checkout,
      validated server-side (`terms_accepted`). Texts are a draft: have a lawyer review before launch.
+   - 2026-11-27: company name, CUI, Reg. Com. and address filled from the registration certificate (SOLE KIDS S.R.L.).
+     Still `[DE COMPLETAT]`: company EMAIL and PHONE in `src/lib/legal.ts`.
 3. [ ] **B.3 Delivery radius** (see L.4): 1 km from the shop. Shop coordinates pending from the owner.
    - [x] Public map section above the footer showing the radius. DONE + locked (owner OK 2026-11-20): MapLibre GL +
      OpenFreeMap tiles, GeoJSON circle, `SITE_COORDS` + `DELIVERY_RADIUS_KM = 1` in `src/lib/site.ts`. Do not restyle.

@@ -31,7 +31,14 @@ No generic marketing lines.
 ## Usability
 - Tap targets >= 44px.
 - Readable contrast on sand.
-- No video.
+- Video: ONE short loop on the site, nowhere else (Andrei, 2026-11-27). Rules:
+  - 6-10 s, muted, no sound track, seamless loop, no text burned in. Mood only (plită, window, slow-mo), never as menu data.
+  - Small: 1-2 MB max. MP4 (H.264) + WebM, 720p wide / 720x1280 vertical, no audio track. Lives in public/videos/.
+  - Poster image first (a frame of the clip as JPG). `preload="none"`, starts only when in view (lazy).
+  - No autoplay with prefers-reduced-motion or Save-Data / data-saver: show the poster only.
+  - `playsInline muted loop`, no controls, aria-hidden (decorative). Never above the COMANDĂ button on mobile.
+  - Mobile speed must stay ~85 (PageSpeed). If it drops, the poster replaces the video.
+  - Build it only when the real clip arrives (spec for the photographer: docs/PHOTOS.md "Video").
 - Marketing photos: mood only, never as product images. Rules in docs/PHOTOS.md.
 - Mobile-first (375px).
 

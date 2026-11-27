@@ -21,6 +21,7 @@ Staff apps must keep working if Ebriza is slow or down.
   crispy-bacon #EE9E23 (wine text). Drink stickers (same rule): cola #E61A27, fanta #F58220,
   sprite #008B47, water #2E7DBA. These + the 3 brand tokens are the ONLY allowed colors.
   Exception: Glovo #FFC244 and Wolt #009DE0, ONLY on the two partner-app buttons (PartnerApps.tsx).
+  Exception: the official ANPC SAL/SOL banner images (legally required) keep their own colours, ONLY in the footer.
 - Fonts: Eatvetica for display/headings (designer's written permission), Nunito for body and all digits,
   Roboto Mono for small accents. No other fonts. Eatvetica has no Romanian diacritics: keep stripDiacritics
   on display text and digits in Nunito (`<Display>`).

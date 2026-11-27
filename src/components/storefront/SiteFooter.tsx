@@ -4,8 +4,15 @@ import { GOOGLE_MAPS_URL, INSTAGRAM_URL, SITE_ADDRESS } from "@/lib/site";
 import { scheduleLines } from "@/lib/hours";
 import { ANPC_SAL_URL, ANPC_SOL_URL, LEGAL_LINKS } from "@/lib/legal";
 
-const BADGE =
-  "inline-block border-2 border-charcoal px-2 py-1 font-bold text-charcoal hover:bg-wine hover:text-sand hover:border-wine transition-colors";
+// ANPC banners (Ordin ANPC 449/2022): ~250x50, each links to the official page. Text versions in brand colours until
+// the official ANPC images are added; the lawyer confirms the final form before launch.
+const ANPC_BANNER =
+  "group flex w-[250px] h-[50px] items-center gap-2.5 border-2 border-charcoal rounded-md bg-sand px-2.5 text-left hover:bg-wine hover:border-wine transition-colors";
+
+const ANPC_BANNERS = [
+  { href: ANPC_SAL_URL, code: "SAL", text: "Soluționarea alternativă a litigiilor" },
+  { href: ANPC_SOL_URL, code: "SOL", text: "Soluționarea online a litigiilor" },
+] as const;
 
 export default function SiteFooter() {
   return (
@@ -41,12 +48,17 @@ export default function SiteFooter() {
       </div>
 
       <div className="mt-6 flex flex-wrap items-center justify-center sm:justify-start gap-3">
-        <a href={ANPC_SAL_URL} target="_blank" rel="noopener noreferrer" className={BADGE}>
-          ANPC SAL
-        </a>
-        <a href={ANPC_SOL_URL} target="_blank" rel="noopener noreferrer" className={BADGE}>
-          SOL
-        </a>
+        {ANPC_BANNERS.map((b) => (
+          <a key={b.code} href={b.href} target="_blank" rel="noopener noreferrer" className={ANPC_BANNER}>
+            <span className="shrink-0 font-nunito font-black text-xl leading-none text-wine group-hover:text-sand">
+              {b.code}
+            </span>
+            <span className="flex flex-col leading-tight text-charcoal group-hover:text-sand">
+              <span className="font-mono text-[9px] font-bold tracking-wider">ANPC</span>
+              <span className="font-nunito font-bold text-[11px]">{b.text}</span>
+            </span>
+          </a>
+        ))}
       </div>
     </footer>
   );

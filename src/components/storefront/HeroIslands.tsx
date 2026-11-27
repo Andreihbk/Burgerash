@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { INITIAL_PRODUCTS } from "@/lib/catalog";
 import { heroStatusLine } from "@/lib/hours";
-import { isOrderingEnabled, OPENING_SOON } from "@/lib/ordering";
+import { isOrderingEnabled } from "@/lib/ordering";
 import { useUiStore } from "@/store/uiStore";
 import { useCartStore } from "@/store/cartStore";
 import { Bike, ShoppingBag } from "lucide-react";
@@ -134,20 +134,19 @@ export function HeroOrderButton() {
   );
 }
 
-/** One status line with an LED dot. Empty until the client knows the time (no false "open" claim in SSR). */
+/**
+ * One status line with an LED dot. Empty until the client knows the time (no false "open" claim in SSR).
+ * Pre-launch: not shown at all (the red band + "Azi la Burgerash" card already say we open soon).
+ */
 export function HeroStatusLine() {
   const status = useStorefrontStatus();
+  if (!isOrderingEnabled()) return null;
   return (
     <p
       className="mt-4 min-h-8 flex items-center gap-2 font-nunito font-bold text-sm sm:text-base text-charcoal"
       aria-live="polite"
     >
-      {!isOrderingEnabled() ? (
-        <>
-          <span aria-hidden className="w-3 h-3 rounded-full shrink-0 border-2 border-wine opacity-50" />
-          {OPENING_SOON}
-        </>
-      ) : status && (
+      {status && (
         <>
           <span
             aria-hidden
