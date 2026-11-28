@@ -49,10 +49,17 @@ body {
   overflow-x: clip;
 }
 
-/* Text Selection */
+/* Text Selection (desktop + Android). iPhone Safari ignores ::selection and always uses the system colour. */
 ::selection {
   background-color: #790D20;
   color: #F5E6CC;
+}
+
+/* Phones: brand colour for the tap flash, the text cursor and form controls (checkbox, radio, range). */
+html {
+  -webkit-tap-highlight-color: rgba(121, 13, 32, 0.18);
+  accent-color: #790D20;
+  caret-color: #790D20;
 }
 
 /* Cart badge bump after "add to cart" */
